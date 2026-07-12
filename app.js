@@ -1903,6 +1903,7 @@ function initAdminTableTools() {
   scopes.forEach((scope) => {
     const searchInput = scope.querySelector("[data-admin-search]");
     const filterButtons = Array.from(scope.querySelectorAll("[data-admin-filter]"));
+    const selectFilters = Array.from(scope.querySelectorAll("[data-admin-select-filter]"));
     const getRows = () => Array.from(scope.querySelectorAll("[data-admin-row]"));
     const countTarget = scope.querySelector("[data-admin-count]");
     const emptyTarget = scope.querySelector("[data-admin-empty]");
@@ -1934,6 +1935,24 @@ function initAdminTableTools() {
       const group = button.closest(".admin-filter-group");
       const groupButtons = group ? Array.from(group.querySelectorAll("[data-admin-filter]")) : filterButtons;
       groupButtons.forEach((item) => setButtonActive(item, item === button));
+    }
+
+    function applySelectFilter(select) {
+      const filterValue = select.value || "all";
+      const optionFields = Array.from(select.options)
+        .map((option) => option.value || "")
+        .filter((value) => value.includes(":"))
+        .map((value) => value.split(":")[0])
+        .filter(Boolean);
+      const uniqueFields = Array.from(new Set(optionFields));
+
+      if (filterValue === "all") {
+        uniqueFields.forEach((field) => delete activeFilters[field]);
+        return;
+      }
+
+      const [field, expected] = filterValue.split(":");
+      if (field && expected) activeFilters[field] = expected;
     }
 
     function rowMatchesFilter(row) {
@@ -1995,6 +2014,13 @@ function initAdminTableTools() {
       });
     });
 
+    selectFilters.forEach((select) => {
+      select.addEventListener("change", () => {
+        applySelectFilter(select);
+        applyFilters();
+      });
+    });
+
     searchInput?.addEventListener("input", applyFilters);
     dateStart?.addEventListener("change", applyFilters);
     dateEnd?.addEventListener("change", applyFilters);
@@ -2009,6 +2035,7 @@ function initAdminTableTools() {
       .map((value) => value.trim())
       .filter(Boolean)
       .forEach(applyFilterValue);
+    selectFilters.forEach(applySelectFilter);
 
     applyFilters();
   });
@@ -4712,6 +4739,7 @@ function initAdminProjectOrderModal() {
       event.preventDefault();
       event.stopPropagation();
       row.dataset.status = "done";
+      row.dataset.state = "done";
       if (row.children[0]) row.children[0].innerHTML = statusMarkup("done");
       updateSearch(row);
       showAdminToast("업무가 완료 처리되었습니다.");
@@ -4755,6 +4783,7 @@ function initAdminProjectOrderModal() {
 
     row.dataset.adminRow = "";
     row.dataset.status = workStatus;
+    row.dataset.state = workStatus === "done" ? "done" : "progress";
     row.dataset.kind = projectKind === "홈페이지" ? "website" : projectKind === "마케팅" ? "marketing" : "design";
     row.dataset.channel = "site";
     row.dataset.date = dueDate;

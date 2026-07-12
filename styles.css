@@ -5506,6 +5506,55 @@ h3 {
   background: #f8fafc;
 }
 
+.admin-work-filter-panel {
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: end;
+}
+
+.admin-work-filter-panel .admin-search-field {
+  grid-row: span 2;
+}
+
+.admin-primary-filter {
+  justify-content: flex-end;
+}
+
+.admin-primary-filter button {
+  min-width: 72px;
+}
+
+.admin-sub-filter-row {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.admin-sub-filter-row > label {
+  display: grid;
+  gap: 6px;
+  min-width: 128px;
+}
+
+.admin-sub-filter-row span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.admin-sub-filter-row select {
+  min-height: 34px;
+  padding: 0 32px 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--white);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .admin-search-field {
   display: grid;
   gap: 7px;
@@ -5573,6 +5622,16 @@ h3 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 180px));
   gap: 8px;
+}
+
+.admin-date-fields.compact {
+  grid-template-columns: repeat(2, minmax(118px, 1fr));
+  align-items: end;
+}
+
+.admin-date-fields.compact input {
+  min-height: 34px;
+  font-size: 13px;
 }
 
 .admin-date-fields label {
@@ -10798,6 +10857,26 @@ th {
 }
 
 @media (max-width: 900px) {
+  .admin-work-filter-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-work-filter-panel .admin-search-field,
+  .admin-sub-filter-row {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .admin-primary-filter,
+  .admin-sub-filter-row {
+    justify-content: flex-start;
+  }
+
+  .admin-sub-filter-row > label,
+  .admin-date-fields.compact {
+    flex: 1 1 150px;
+  }
+
   .admin-project-shell .admin-table-scroll {
     overflow-x: visible;
   }

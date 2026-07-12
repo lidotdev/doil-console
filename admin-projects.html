@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-fit-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-filter-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -43,29 +43,19 @@
                 <article><span>계산서 미처리</span><strong>2</strong></article>
               </div>
 
-              <div class="admin-search-panel">
+              <div class="admin-search-panel admin-work-filter-panel">
                 <label class="admin-search-field"><span>업무 검색</span><input type="search" data-admin-search placeholder="상태, 고객명, 업무명, 담당자, 메모 검색"></label>
-                <div class="admin-filter-group">
+                <div class="admin-filter-group admin-primary-filter">
                   <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
-                  <button type="button" data-admin-filter="status:today" aria-pressed="false">오늘 마감</button>
-                  <button type="button" data-admin-filter="status:delayed" aria-pressed="false">지연</button>
-                  <button type="button" data-admin-filter="status:waiting" aria-pressed="false">자료대기</button>
-                  <button type="button" data-admin-filter="status:review" aria-pressed="false">검수중</button>
-                  <button type="button" data-admin-filter="status:done" aria-pressed="false">완료</button>
+                  <button type="button" data-admin-filter="state:progress" aria-pressed="false">진행중</button>
+                  <button type="button" data-admin-filter="state:done" aria-pressed="false">완료</button>
+                  <button type="button" data-admin-filter="state:cancel" aria-pressed="false">취소</button>
                 </div>
-                <div class="admin-filter-group">
-                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">유형 전체</button>
-                  <button type="button" data-admin-filter="kind:design" aria-pressed="false">디자인</button>
-                  <button type="button" data-admin-filter="kind:website" aria-pressed="false">홈페이지</button>
-                  <button type="button" data-admin-filter="kind:marketing" aria-pressed="false">마케팅</button>
+                <div class="admin-sub-filter-row">
+                  <label><span>주문채널</span><select data-admin-select-filter><option value="all">전체</option><option value="channel:site">자사몰</option><option value="channel:phone">유선/채팅</option><option value="channel:kmong">크몽</option></select></label>
+                  <label><span>유형</span><select data-admin-select-filter><option value="all">전체</option><option value="kind:design">디자인</option><option value="kind:website">홈페이지</option><option value="kind:marketing">마케팅</option></select></label>
+                  <div class="admin-date-fields compact"><label><span>시작일</span><input type="date" data-admin-date-start></label><label><span>종료일</span><input type="date" data-admin-date-end></label></div>
                 </div>
-                <div class="admin-filter-group">
-                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">채널 전체</button>
-                  <button type="button" data-admin-filter="channel:site" aria-pressed="false">자사몰</button>
-                  <button type="button" data-admin-filter="channel:phone" aria-pressed="false">유선/채팅</button>
-                  <button type="button" data-admin-filter="channel:kmong" aria-pressed="false">크몽</button>
-                </div>
-                <div class="admin-date-fields"><label><span>시작일</span><input type="date" data-admin-date-start></label><label><span>종료일</span><input type="date" data-admin-date-end></label></div>
               </div>
 
               <div class="admin-table-scroll">
@@ -84,16 +74,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr data-admin-row data-status="today" data-kind="design" data-channel="site" data-date="2026-07-12" data-search="오늘 마감 가나다식품 상세페이지 제작 330000 홍길동 계산서 미발행">
+                    <tr data-admin-row data-status="today" data-state="progress" data-kind="design" data-channel="site" data-date="2026-07-12" data-search="오늘 마감 가나다식품 상세페이지 제작 330000 홍길동 계산서 미발행">
                       <td><span class="status-pill blue">작업중</span></td><td>2026.07.12</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>가나다식품</button></td><td><strong>상세페이지 제작</strong><small>디자인</small></td><td><strong>330,000원</strong><small>카드결제</small></td><td><span class="invoice-status requested">미발행</span></td><td>홍길동</td><td>상품 사진 보완 필요</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="done">완료</button></div></td>
                     </tr>
-                    <tr data-admin-row data-status="delayed" data-kind="marketing" data-channel="kmong" data-date="2026-07-10" data-search="지연 크몽 고객 쇼핑몰 배너 제작 1000000 김담당 계산서 미발행">
+                    <tr data-admin-row data-status="delayed" data-state="progress" data-kind="marketing" data-channel="kmong" data-date="2026-07-10" data-search="지연 크몽 고객 쇼핑몰 배너 제작 1000000 김담당 계산서 미발행">
                       <td><span class="status-pill orange">지연</span></td><td>2026.07.10</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>크몽 고객</button></td><td><strong>쇼핑몰 배너 제작</strong><small>마케팅</small></td><td><strong>1,000,000원</strong><small>플랫폼 정산</small></td><td><span class="invoice-status requested">미발행</span></td><td>김담당</td><td>시안 재전송</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="done">완료</button></div></td>
                     </tr>
-                    <tr data-admin-row data-status="waiting" data-kind="website" data-channel="phone" data-date="2026-07-15" data-search="자료대기 ABC몰 랜딩페이지 제작 440000 박실장 계산서 발행">
+                    <tr data-admin-row data-status="waiting" data-state="progress" data-kind="website" data-channel="phone" data-date="2026-07-15" data-search="자료대기 ABC몰 랜딩페이지 제작 440000 박실장 계산서 발행">
                       <td><span class="status-pill gray">자료대기</span></td><td>2026.07.15</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>ABC몰</button></td><td><strong>랜딩페이지 제작</strong><small>홈페이지</small></td><td><strong>440,000원</strong><small>계좌이체</small></td><td><span class="invoice-status done">발행</span></td><td>박실장</td><td>회사소개 자료 대기</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="done">완료</button></div></td>
                     </tr>
-                    <tr data-admin-row data-status="review" data-kind="design" data-channel="phone" data-date="2026-07-13" data-search="검수중 무기명 블로그 스킨 제작 220000 이담당 계산서 해당없음">
+                    <tr data-admin-row data-status="review" data-state="progress" data-kind="design" data-channel="phone" data-date="2026-07-13" data-search="검수중 무기명 블로그 스킨 제작 220000 이담당 계산서 해당없음">
                       <td><span class="status-pill green">검수중</span></td><td>2026.07.13</td><td><span class="status-pill gray">무기명</span></td><td><strong>블로그 스킨 제작</strong><small>디자인</small></td><td><strong>220,000원</strong><small>무통장입금</small></td><td><span class="invoice-status none">해당없음</span></td><td>이담당</td><td>최종 확인 대기</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="done">완료</button></div></td>
                     </tr>
                   </tbody>
@@ -134,7 +124,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-fit-1"></script>
+    <script src="app.js?v=20260712-work-filter-1"></script>
   </body>
 </html>
 
