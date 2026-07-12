@@ -4990,7 +4990,7 @@ function initAdminProjectOrderModal() {
   }
 
   function updateSearch(row) {
-    row.dataset.search = Array.from(row.children)
+    row.dataset.search = `${Array.from(row.children)
       .map((cell) => {
         const statusSelect = cell.querySelector("[data-project-status-select]");
         if (statusSelect) return statusSelect.selectedOptions[0]?.textContent || "";
@@ -4999,7 +4999,7 @@ function initAdminProjectOrderModal() {
         return (cell.textContent || "").replace(/\s+/g, " ").trim();
       })
       .join(" ")
-      .replace(/-/g, "");
+      .replace(/-/g, "")} ${row.dataset.memo || ""}`.trim();
   }
 
   function refreshScope(row) {
@@ -5022,7 +5022,7 @@ function initAdminProjectOrderModal() {
     if (row.dataset.projectStatusBound === "true") return;
     row.dataset.projectStatusBound = "true";
     applyProjectStatus(row, row.dataset.status, true);
-    applyInvoiceStatus(row, row.dataset.invoice || cleanText(row.children[7]), true);
+    applyInvoiceStatus(row, row.dataset.invoice || cleanText(row.children[8]), true);
 
     row.addEventListener("change", (event) => {
       const select = event.target.closest("[data-project-status-select]");
@@ -5051,13 +5051,11 @@ function initAdminProjectOrderModal() {
     });
 
     row.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-project-action='edit']");
+      const button = event.target.closest("[data-project-action='edit'], [data-project-action='memo']");
       if (!button) return;
       event.preventDefault();
       event.stopPropagation();
-      if (button.dataset.projectAction === "edit") {
-        openModal(row);
-      }
+      openModal(row, button.dataset.projectAction === "memo" ? "memo" : "edit");
     });
   }
 
@@ -5078,15 +5076,15 @@ function initAdminProjectOrderModal() {
     return isFinishedStatus && (invoiceStatus === "issued" || invoiceStatus === "none");
   }
 
-  function rowGrossAmount(row) {
-    return parseMoney(row.dataset.grossAmount || row.children[4]?.querySelector("strong")?.textContent || row.children[4]?.textContent || "");
+  function rowProfitAmount(row) {
+    return parseMoney(row.dataset.profitAmount || row.children[7]?.querySelector("strong")?.textContent || row.children[7]?.textContent || "");
   }
 
   function updateActualSalesSummary() {
     const target = document.querySelector("[data-work-actual-sales] strong");
     if (!target || !tableBody) return;
     const total = Array.from(tableBody.querySelectorAll("[data-admin-row]")).reduce((sum, row) => {
-      return isCompletedWork(row) ? sum + rowGrossAmount(row) : sum;
+      return isCompletedWork(row) ? sum + rowProfitAmount(row) : sum;
     }, 0);
     target.textContent = formatMoney(total);
   }
@@ -5110,7 +5108,7 @@ function initAdminProjectOrderModal() {
     const normalized = normalizeInvoiceStatus(status);
     const meta = invoiceStatusMeta(normalized);
     row.dataset.invoice = normalized;
-    if (row.children[7]) row.children[7].innerHTML = invoiceMarkup(normalized);
+    if (row.children[8]) row.children[8].innerHTML = invoiceMarkup(normalized);
     updateProjectCompletion(row);
     updateSearch(row);
     if (!silent) {
@@ -5119,7 +5117,7 @@ function initAdminProjectOrderModal() {
     }
   }
 
-  function openModal(row = null) {
+  function openModal(row = null, focusTarget = "edit") {
     activeEditRow = row;
     form?.reset();
     const today = todayValue();
@@ -5133,11 +5131,11 @@ function initAdminProjectOrderModal() {
       setSelectedProjectName(savedProjectName, form.elements.projectKind.value);
       form.elements.workStatus.value = normalizeProjectStatus(row.dataset.status);
       form.elements.dueDate.value = row.dataset.date || today;
-      form.elements.managerName.value = cleanText(cells[8]);
-      form.elements.grossAmount.value = cleanText(cells[4]?.querySelector("strong")).replace(/[^\d]/g, "");
-      form.elements.paymentStatus.value = row.dataset.paymentStatus || (cleanText(cells[6]?.querySelector("small")).split("·")[0] || "").trim() || "계좌이체";
-      form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[7]));
-      form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[9]);
+      form.elements.managerName.value = cleanText(cells[9]);
+      form.elements.grossAmount.value = row.dataset.grossAmount || cleanText(cells[4]?.querySelector("strong")).replace(/[^\d]/g, "");
+      form.elements.paymentStatus.value = row.dataset.paymentStatus || (cleanText(cells[7]?.querySelector("small")).split("·")[0] || "").trim() || "계좌이체";
+      form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[8]));
+      form.elements.orderMemo.value = row.dataset.memo || "";
     } else if (form) {
       if (form.elements.dueDate) form.elements.dueDate.value = today;
       if (form.elements.managerName) form.elements.managerName.value = currentAdminId();
@@ -5150,7 +5148,11 @@ function initAdminProjectOrderModal() {
     syncProjectPickers();
     modal.hidden = false;
     document.body.classList.add("modal-open");
-    modal.querySelector("input, select, textarea, button")?.focus();
+    if (focusTarget === "memo") {
+      form?.elements?.orderMemo?.focus();
+    } else {
+      modal.querySelector("input, select, textarea, button")?.focus();
+    }
   }
 
   function closeModal() {
@@ -5210,7 +5212,8 @@ function initAdminProjectOrderModal() {
     const channel = paymentChannel(paymentStatus);
     const feeInfo = calculateFee(channel, amount);
     const feeAmount = Math.round(feeInfo.fee);
-    const netAmount = Math.max(0, amount - feeAmount);
+    const reserveAmount = amountParts.vat;
+    const profitAmount = Math.max(0, amount - reserveAmount - feeAmount);
     const wasEdit = Boolean(activeEditRow);
     const row = activeEditRow || document.createElement("tr");
 
@@ -5224,11 +5227,12 @@ function initAdminProjectOrderModal() {
     row.dataset.paymentStatus = paymentStatus;
     row.dataset.grossAmount = String(amount);
     row.dataset.supplyAmount = String(amountParts.supply);
-    row.dataset.vatAmount = String(amountParts.vat);
+    row.dataset.vatAmount = String(reserveAmount);
+    row.dataset.reserveAmount = String(reserveAmount);
     row.dataset.feeAmount = String(feeAmount);
-    row.dataset.netAmount = String(netAmount);
+    row.dataset.profitAmount = String(profitAmount);
     row.dataset.invoice = invoiceStatus;
-    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>VAT ${formatMoney(amountParts.vat)}</small></td><td><strong>${formatMoney(feeAmount)}</strong><small>${escapeHtml(feeLabel(feeInfo, paymentStatus))}</small></td><td><strong>${formatMoney(netAmount)}</strong><small>${escapeHtml(paymentStatus)}</small></td><td>${invoiceMarkup(invoiceStatus)}</td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button></div></td>`;
+    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amountParts.supply)}</strong><small>${escapeHtml(paymentStatus)}</small></td><td><strong>${formatMoney(reserveAmount)}</strong><small>부가세</small></td><td><strong>${formatMoney(feeAmount)}</strong><small>${escapeHtml(feeLabel(feeInfo, paymentStatus))}</small></td><td><strong>${formatMoney(profitAmount)}</strong><small>${escapeHtml(paymentStatus)}</small></td><td>${invoiceMarkup(invoiceStatus)}</td><td>${escapeHtml(managerName)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="memo">메모</button></div></td>`;
     updateSearch(row);
     if (!wasEdit) {
       tableBody.appendChild(row);
@@ -5251,9 +5255,6 @@ function initAdminProjectOrderModal() {
     activeCompleteRow.dataset.deliverableFile = fileName;
     activeCompleteRow.dataset.completeComment = comment;
     activeCompleteRow.dataset.memo = comment;
-    if (activeCompleteRow.children[9]) {
-      activeCompleteRow.children[9].innerHTML = `${escapeHtml(comment)}<small>${escapeHtml(fileName)}</small>`;
-    }
     applyProjectStatus(activeCompleteRow, "ended");
     closeCompleteModal();
   });
