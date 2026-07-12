@@ -1776,118 +1776,48 @@ function initAdminUtilityMenus() {
   const sideNav = document.querySelector(".admin-side-nav");
   if (!sideNav) return;
 
-  const dashboardLink = sideNav.querySelector('a[href="admin.html"]');
-  const projectLink = sideNav.querySelector('a[href="admin-projects.html"]');
-  const settingsLink = sideNav.querySelector('a[href="admin-settings.html"]');
+  const path = window.location.pathname;
+  const isDashboard = path.endsWith("admin.html") || path.endsWith("index.html") || path.endsWith("/");
+  const isCustomers = path.endsWith("admin-customers.html") || path.endsWith("admin-customer-detail.html");
+  const isProjects = path.endsWith("admin-projects.html") || path.endsWith("admin-tasks.html");
+  const isWebsitePage = path.endsWith("admin-websites.html");
+  const isLogPage = path.endsWith("admin-logs.html");
+  const isWebsiteSection = isWebsitePage || isLogPage;
+  const isSettlementPage = path.endsWith("admin-settlement.html");
+  const isBillingPage = path.endsWith("admin-billing.html");
+  const isBillingSection = isSettlementPage || isBillingPage;
+  const isSettings = path.endsWith("admin-settings.html");
 
-  function makeItem(href, icon, label, badge) {
-    const item = document.createElement("a");
-    item.className = "client-menu-item";
-    item.href = href;
-    item.innerHTML = badge
-      ? `<span class="client-menu-label"><img class="client-menu-icon" src="${icon}" alt=""><span>${label}</span></span><span class="client-menu-badge">${badge}</span>`
-      : `<img class="client-menu-icon" src="${icon}" alt=""><span>${label}</span>`;
-    if (window.location.pathname.endsWith(href)) item.classList.add("active");
-    return item;
-  }
-
-  function makeWebsiteGroup() {
-    const path = window.location.pathname;
-    const isWebsitePage = path.endsWith("admin-websites.html");
-    const isLogPage = path.endsWith("admin-logs.html");
-    const isWebsiteSection = isWebsitePage || isLogPage;
-    const group = document.createElement("div");
-    group.className = `client-side-group${isWebsiteSection ? " is-open" : ""}`;
-    group.dataset.adminWebsiteGroup = "";
-    group.innerHTML = `
+  sideNav.innerHTML = `
+    <div class="client-side-head"><strong>DOIL Admin</strong></div>
+    <a class="client-menu-item${isDashboard ? " active" : ""}" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt="" aria-hidden="true"><span>대시보드</span></a>
+    <a class="client-menu-item${isCustomers ? " active" : ""}" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt="" aria-hidden="true"><span>회원</span></a>
+    <a class="client-menu-item${isProjects ? " active" : ""}" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt="" aria-hidden="true"><span>업무</span></span><span class="client-menu-badge">2</span></a>
+    <div class="client-side-group${isWebsiteSection ? " is-open" : ""}" data-admin-website-group>
       <button class="client-menu-item client-manage-toggle${isWebsiteSection ? " active" : ""}" type="button" aria-expanded="${isWebsiteSection ? "true" : "false"}">
-        <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></span>
+        <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-websites.svg" alt="" aria-hidden="true"><span>홈페이지</span></span>
         <span class="client-menu-arrow"></span>
       </button>
       <div class="client-side-submenu">
-        <a class="client-menu-item${isWebsitePage ? " active" : ""}" href="admin-websites.html#website-management"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지 관리</span></a>
-        <a class="client-menu-item" href="admin-websites.html#domain-dns-management"><img class="client-menu-icon" src="assets/client-files.svg" alt=""><span>도메인/DNS 관리</span></a>
-        <a class="client-menu-item${isLogPage ? " active" : ""}" href="admin-logs.html?filter=area:website"><img class="client-menu-icon" src="assets/client-files.svg" alt=""><span>수정 로그</span></a>
+        <a class="client-menu-item${isWebsitePage ? " active" : ""}" href="admin-websites.html#website-management"><img class="client-menu-icon" src="assets/client-websites.svg" alt="" aria-hidden="true"><span>홈페이지 관리</span></a>
+        <a class="client-menu-item" href="admin-websites.html#domain-dns-management"><img class="client-menu-icon" src="assets/client-files.svg" alt="" aria-hidden="true"><span>도메인/DNS 관리</span></a>
+        <a class="client-menu-item${isLogPage ? " active" : ""}" href="admin-logs.html?filter=area:website"><img class="client-menu-icon" src="assets/client-files.svg" alt="" aria-hidden="true"><span>수정 로그</span></a>
       </div>
-    `;
-    const toggle = group.querySelector(".client-manage-toggle");
-    if (toggle) toggle.dataset.toggleReady = "true";
-    toggle?.addEventListener("click", () => {
-      const nextOpen = !group.classList.contains("is-open");
-      group.classList.toggle("is-open", nextOpen);
-      toggle.setAttribute("aria-expanded", String(nextOpen));
-    });
-    return group;
-  }
-
-  function makeBillingGroup() {
-    const path = window.location.pathname;
-    const isSettlementPage = path.endsWith("admin-settlement.html");
-    const isBillingPage = path.endsWith("admin-billing.html");
-    const isBillingSection = isSettlementPage || isBillingPage;
-    const group = document.createElement("div");
-    group.className = `client-side-group${isBillingSection ? " is-open" : ""}`;
-    group.dataset.adminBillingGroup = "";
-    group.innerHTML = `
+    </div>
+    <div class="client-side-group${isBillingSection ? " is-open" : ""}" data-admin-billing-group>
       <button class="client-menu-item client-manage-toggle${isBillingSection ? " active" : ""}" type="button" aria-expanded="${isBillingSection ? "true" : "false"}">
-        <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span>
+        <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt="" aria-hidden="true"><span>매출/매입</span></span>
         <span class="client-menu-arrow"></span>
       </button>
       <div class="client-side-submenu">
-        <a class="client-menu-item${isSettlementPage ? " active" : ""}" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a>
-        <a class="client-menu-item${isBillingPage ? " active" : ""}" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a>
+        <a class="client-menu-item${isSettlementPage ? " active" : ""}" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt="" aria-hidden="true"><span>정산</span></a>
+        <a class="client-menu-item${isBillingPage ? " active" : ""}" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt="" aria-hidden="true"><span>매출/매입</span></a>
       </div>
-    `;
-    const toggle = group.querySelector(".client-manage-toggle");
-    if (toggle) toggle.dataset.toggleReady = "true";
-    toggle?.addEventListener("click", () => {
-      const nextOpen = !group.classList.contains("is-open");
-      group.classList.toggle("is-open", nextOpen);
-      toggle.setAttribute("aria-expanded", String(nextOpen));
-    });
-    return group;
-  }
-
-  let websiteGroup = sideNav.querySelector("[data-admin-website-group]") || sideNav.querySelector('a[href^="admin-websites.html"]')?.closest(".client-side-group");
-  const legacyWebsiteLink = sideNav.querySelector('a[href="admin-websites.html"]');
-  if (!websiteGroup) {
-    websiteGroup = makeWebsiteGroup();
-    if (legacyWebsiteLink) legacyWebsiteLink.replaceWith(websiteGroup);
-    else if (projectLink?.nextSibling) sideNav.insertBefore(websiteGroup, projectLink.nextSibling);
-    else if (projectLink) sideNav.appendChild(websiteGroup);
-  } else {
-    websiteGroup.dataset.adminWebsiteGroup = "";
-  }
-  const isLogPage = window.location.pathname.endsWith("admin-logs.html");
-  const websiteToggle = websiteGroup.querySelector(".client-manage-toggle");
-  const websiteSubmenu = websiteGroup.querySelector(".client-side-submenu");
-  if (!websiteSubmenu?.querySelector('a[href^="admin-logs.html"]')) {
-    const logSubLink = makeItem("admin-logs.html?filter=area:website", "assets/client-files.svg", "수정 로그");
-    if (isLogPage) logSubLink.classList.add("active");
-    websiteSubmenu?.appendChild(logSubLink);
-  }
-  if (isLogPage) {
-    websiteGroup.classList.add("is-open");
-    websiteToggle?.classList.add("active");
-    websiteToggle?.setAttribute("aria-expanded", "true");
-  }
-
-  let billingGroup = sideNav.querySelector("[data-admin-billing-group]");
-  const legacyBillingLink = sideNav.querySelector('a[href="admin-billing.html"]');
-  const legacyInvoiceLink = sideNav.querySelector('a[href="admin-billing.html#tax-invoices"]');
-  if (!billingGroup) {
-    billingGroup = makeBillingGroup();
-    if (legacyBillingLink) legacyBillingLink.replaceWith(billingGroup);
-    else if (websiteGroup?.nextSibling) sideNav.insertBefore(billingGroup, websiteGroup.nextSibling);
-    else sideNav.appendChild(billingGroup);
-  }
-  legacyInvoiceLink?.remove();
-
-  sideNav.querySelector('a[href="admin-logs.html"]')?.remove();
+    </div>
+    <a class="client-menu-item${isSettings ? " active" : ""}" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt="" aria-hidden="true"><span>설정</span></a>
+  `;
 
   sideNav.querySelectorAll(".client-side-group .client-manage-toggle").forEach((toggle) => {
-    if (toggle.dataset.toggleReady === "true") return;
-    toggle.dataset.toggleReady = "true";
     toggle.addEventListener("click", () => {
       const group = toggle.closest(".client-side-group");
       const nextOpen = !group?.classList.contains("is-open");
