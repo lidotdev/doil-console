@@ -8,7 +8,6 @@
 - `admin-customers.html`: 회원
 - `admin-projects.html`: 업무
 - `admin-websites.html`: 홈페이지
-- `admin-portfolio.html`: 포트폴리오
 - `admin-settlement.html`, `admin-billing.html`: 매출/매입
 - `admin-settings.html`: 설정
 
