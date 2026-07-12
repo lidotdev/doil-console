@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-invoice-2">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-picker-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -94,17 +94,46 @@
                 </div>
                 <form class="admin-customer-form admin-project-order-form">
                   <div class="admin-form-grid two">
-                    <label><span>회원 선택</span><input type="text" name="customerName" placeholder="고객명 검색 또는 수기 입력"></label>
-                    <label><span>업무명</span><input type="text" name="projectName" placeholder="예: 상세페이지 제작"></label>
-                    <label><span>업무 유형</span><select name="projectKind"><option>디자인</option><option>홈페이지</option><option>마케팅</option></select></label>
-                    <label><span>상태</span><select name="workStatus"><option value="received">주문접수</option><option value="working">작업중</option><option value="ended">종료</option><option value="cancel">취소</option></select></label>
+                    <label>
+                      <span>회원 검색</span>
+                      <div class="admin-field-with-action">
+                        <input type="text" name="customerName" list="projectCustomerOptions" autocomplete="off" placeholder="회원명 검색 후 선택">
+                        <button class="admin-line-button" type="button" data-project-customer-apply>적용</button>
+                      </div>
+                      <small data-project-customer-hint>회원 목록에서 선택해 주세요.</small>
+                    </label>
                     <label><span>마감일</span><input type="date" name="dueDate"></label>
-                    <label><span>담당자</span><input type="text" name="managerName" placeholder="담당자명"></label>
-                    <label><span>총액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"><small class="admin-tax-preview" data-project-tax-preview>공급가액 0원 · 부가세 0원</small></label>
-                    <label><span>결제상태</span><select name="paymentStatus"><option>입금확인중</option><option>결제완료</option><option>외부채널정산</option><option>취소</option></select></label>
-                    <label><span>계산서</span><select name="invoiceStatus"><option value="unissued">미발행</option><option value="issued">발행</option><option value="none">해당없음</option></select></label>
-                    <label><span>첨부파일</span><input type="file" name="workFile"></label>
-                    <label class="wide"><span>내부 메모</span><textarea name="orderMemo" rows="4" placeholder="작업 범위, 확인사항, 처리 메모"></textarea></label>
+                    <datalist id="projectCustomerOptions">
+                      <option value="가나다식품"></option>
+                      <option value="ABC몰"></option>
+                      <option value="홍길동"></option>
+                      <option value="크몽 고객"></option>
+                      <option value="무기명"></option>
+                    </datalist>
+                    <datalist id="projectNameOptions">
+                      <option value="상세페이지"></option>
+                      <option value="랜딩페이지"></option>
+                      <option value="쇼핑몰 배너"></option>
+                      <option value="블로그 스킨"></option>
+                      <option value="홈페이지 제작"></option>
+                      <option value="SNS 콘텐츠"></option>
+                      <option value="유지보수"></option>
+                    </datalist>
+                    <label><span>업무 유형</span><select name="projectKind"><option>디자인</option><option>홈페이지</option><option>마케팅</option></select></label>
+                    <label>
+                      <span>업무명</span>
+                      <div class="admin-field-with-action">
+                        <input type="text" name="projectName" list="projectNameOptions" autocomplete="off" placeholder="예: 상세페이지">
+                        <button class="admin-line-button" type="button" data-project-name-add hidden>추가</button>
+                      </div>
+                      <small data-project-name-hint>정해둔 업무명에서 선택해 주세요.</small>
+                    </label>
+                    <input type="hidden" name="workStatus" value="received">
+                    <input type="hidden" name="managerName" value="lidotdev">
+                    <input type="hidden" name="invoiceStatus" value="unissued">
+                    <label><span>금액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"><small class="admin-tax-preview" data-project-tax-preview>공급가액 0원 · 부가세 0원</small></label>
+                    <label><span>결제수단</span><select name="paymentStatus"><option>계좌이체</option><option>카드결제</option><option>무통장입금</option><option>플랫폼 정산</option><option>현금</option></select></label>
+                    <label class="wide"><span>요청사항 메모</span><textarea name="orderMemo" rows="4" placeholder="작업 범위, 확인사항, 처리 메모"></textarea></label>
                   </div>
                   <div class="admin-modal-actions">
                     <button class="admin-line-button" type="button" data-project-order-close>취소</button>

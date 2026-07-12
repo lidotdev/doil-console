@@ -6693,6 +6693,13 @@ h3 {
   font-weight: 900;
 }
 
+.admin-form-grid small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .admin-form-grid input,
 .admin-form-grid select,
 .admin-form-grid textarea {
@@ -6706,8 +6713,42 @@ h3 {
   font-size: 14px;
 }
 
+.admin-project-order-form .admin-form-grid input,
+.admin-project-order-form .admin-form-grid select,
+.admin-project-order-form .admin-field-with-action .admin-line-button {
+  height: 46px;
+  min-height: 46px;
+  box-sizing: border-box;
+}
+
+.admin-project-order-form .admin-form-grid input,
+.admin-project-order-form .admin-form-grid select {
+  padding-block: 0;
+  line-height: 44px;
+}
+
+.admin-project-order-form .admin-form-grid label {
+  align-content: start;
+}
+
+.admin-project-order-form .admin-form-grid label:not(.wide) small {
+  min-height: 16px;
+}
+
 .admin-form-grid textarea {
   resize: vertical;
+}
+
+.admin-field-with-action {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-field-with-action .admin-line-button {
+  padding-inline: 14px;
+  white-space: nowrap;
 }
 
 .admin-form-actions {

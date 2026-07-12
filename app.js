@@ -4659,6 +4659,10 @@ function initAdminProjectOrderModal() {
   const modalTitle = modal.querySelector("#workOrderModalTitle");
   const submitButton = modal.querySelector("[data-project-order-submit]");
   const taxPreview = modal.querySelector("[data-project-tax-preview]");
+  const customerApplyButton = modal.querySelector("[data-project-customer-apply]");
+  const projectNameAddButton = modal.querySelector("[data-project-name-add]");
+  const customerHint = modal.querySelector("[data-project-customer-hint]");
+  const projectNameHint = modal.querySelector("[data-project-name-hint]");
   const tableBody = document.querySelector(".admin-project-table tbody");
   const completeModal = document.querySelector("[data-project-complete-modal]");
   const completeForm = completeModal?.querySelector("form");
@@ -4692,6 +4696,83 @@ function initAdminProjectOrderModal() {
     if (!taxPreview || !form?.elements?.grossAmount) return;
     const parts = taxParts(parseMoney(form.elements.grossAmount.value));
     taxPreview.textContent = `공급가액 ${formatMoney(parts.supply)} · 부가세 ${formatMoney(parts.vat)}`;
+  }
+
+  function datalistValues(id) {
+    return Array.from(document.getElementById(id)?.options || [])
+      .map((option) => option.value.trim())
+      .filter(Boolean);
+  }
+
+  function valueExists(value, values) {
+    return values.some((item) => item === String(value || "").trim());
+  }
+
+  function addDatalistValue(id, value) {
+    const datalist = document.getElementById(id);
+    const cleanValue = String(value || "").trim();
+    if (!datalist || !cleanValue || valueExists(cleanValue, datalistValues(id))) return;
+    const option = document.createElement("option");
+    option.value = cleanValue;
+    datalist.appendChild(option);
+  }
+
+  function normalizeProjectName(value) {
+    return {
+      "상세페이지 제작": "상세페이지",
+      "랜딩페이지 제작": "랜딩페이지",
+      "쇼핑몰 배너 제작": "쇼핑몰 배너",
+      "블로그 스킨 제작": "블로그 스킨"
+    }[String(value || "").trim()] || String(value || "").trim();
+  }
+
+  function syncProjectPickers() {
+    if (!form) return;
+    const customerInput = form.elements.customerName;
+    const projectInput = form.elements.projectName;
+    const customerValue = customerInput?.value.trim() || "";
+    const projectValue = projectInput?.value.trim() || "";
+    const customerOk = !customerValue || valueExists(customerValue, datalistValues("projectCustomerOptions"));
+    const projectOk = !projectValue || valueExists(projectValue, datalistValues("projectNameOptions"));
+
+    if (customerInput) {
+      customerInput.setCustomValidity(customerOk ? "" : "회원 목록에서 검색해 선택해 주세요.");
+    }
+    if (customerHint) {
+      customerHint.textContent = customerValue
+        ? customerOk ? "선택된 회원입니다." : "회원 목록에서 검색해 선택해 주세요."
+        : "회원 목록에서 선택해 주세요.";
+    }
+    if (projectInput) {
+      projectInput.setCustomValidity(projectOk ? "" : "업무명을 목록에서 선택하거나 추가해 주세요.");
+    }
+    if (projectNameAddButton) {
+      projectNameAddButton.hidden = !projectValue || projectOk;
+    }
+    if (projectNameHint) {
+      projectNameHint.textContent = projectValue
+        ? projectOk ? "사용 가능한 업무명입니다." : "목록에 없는 업무명입니다. 추가 후 등록할 수 있습니다."
+        : "정해둔 업무명에서 선택해 주세요.";
+    }
+  }
+
+  function validateProjectPickers() {
+    syncProjectPickers();
+    const customerInput = form?.elements?.customerName;
+    const projectInput = form?.elements?.projectName;
+    if (customerInput && !customerInput.checkValidity()) {
+      customerInput.reportValidity();
+      return false;
+    }
+    if (projectInput && !projectInput.checkValidity()) {
+      projectInput.reportValidity();
+      return false;
+    }
+    return true;
+  }
+
+  function currentAdminId() {
+    return localStorage.getItem("doilAdminId") || localStorage.getItem("adminUserId") || document.body.dataset.adminId || "lidotdev";
   }
 
   function todayValue() {
@@ -4907,12 +4988,16 @@ function initAdminProjectOrderModal() {
   }
 
   function updateProjectCompletion(row) {
-    const isFinishedStatus = normalizeProjectStatus(row.dataset.status) === "ended";
-    const invoiceStatus = normalizeInvoiceStatus(row.dataset.invoice);
-    const isComplete = isFinishedStatus && invoiceStatus === "issued";
+    const isComplete = isCompletedWork(row);
     row.classList.toggle("is-work-complete", isComplete);
     row.dataset.complete = isComplete ? "true" : "false";
     updateActualSalesSummary();
+  }
+
+  function isCompletedWork(row) {
+    const isFinishedStatus = normalizeProjectStatus(row.dataset.status) === "ended";
+    const invoiceStatus = normalizeInvoiceStatus(row.dataset.invoice);
+    return isFinishedStatus && (invoiceStatus === "issued" || invoiceStatus === "none");
   }
 
   function rowGrossAmount(row) {
@@ -4923,8 +5008,7 @@ function initAdminProjectOrderModal() {
     const target = document.querySelector("[data-work-actual-sales] strong");
     if (!target || !tableBody) return;
     const total = Array.from(tableBody.querySelectorAll("[data-admin-row]")).reduce((sum, row) => {
-      const isActualSale = normalizeProjectStatus(row.dataset.status) === "ended" && normalizeInvoiceStatus(row.dataset.invoice) === "issued";
-      return isActualSale ? sum + rowGrossAmount(row) : sum;
+      return isCompletedWork(row) ? sum + rowGrossAmount(row) : sum;
     }, 0);
     target.textContent = formatMoney(total);
   }
@@ -4966,7 +5050,9 @@ function initAdminProjectOrderModal() {
     if (row && form) {
       const cells = Array.from(row.children);
       form.elements.customerName.value = cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]);
-      form.elements.projectName.value = cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]);
+      const savedProjectName = normalizeProjectName(cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]));
+      addDatalistValue("projectNameOptions", savedProjectName);
+      form.elements.projectName.value = savedProjectName;
       form.elements.projectKind.value = cleanText(cells[3]?.querySelector("small")) || "디자인";
       form.elements.workStatus.value = normalizeProjectStatus(row.dataset.status);
       form.elements.dueDate.value = row.dataset.date || today;
@@ -4975,10 +5061,14 @@ function initAdminProjectOrderModal() {
       form.elements.paymentStatus.value = (cleanText(cells[4]?.querySelector("small")).split("·")[0] || "").trim() || "입금확인중";
       form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[5]));
       form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[7]);
-    } else if (form?.elements?.dueDate) {
-      form.elements.dueDate.value = today;
+    } else if (form) {
+      if (form.elements.dueDate) form.elements.dueDate.value = today;
+      if (form.elements.managerName) form.elements.managerName.value = currentAdminId();
+      if (form.elements.workStatus) form.elements.workStatus.value = "received";
+      if (form.elements.invoiceStatus) form.elements.invoiceStatus.value = "unissued";
     }
     updateTaxPreview();
+    syncProjectPickers();
     modal.hidden = false;
     document.body.classList.add("modal-open");
     modal.querySelector("input, select, textarea, button")?.focus();
@@ -5023,6 +5113,7 @@ function initAdminProjectOrderModal() {
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!tableBody) return;
+    if (!validateProjectPickers()) return;
 
     const customerName = form.elements.customerName?.value.trim() || "신규 고객";
     const projectName = form.elements.projectName?.value.trim() || "신규 업무";
@@ -5080,6 +5171,29 @@ function initAdminProjectOrderModal() {
   });
 
   form?.elements?.grossAmount?.addEventListener("input", updateTaxPreview);
+  form?.elements?.customerName?.addEventListener("input", syncProjectPickers);
+  form?.elements?.projectName?.addEventListener("input", syncProjectPickers);
+  customerApplyButton?.addEventListener("click", () => {
+    syncProjectPickers();
+    const customerInput = form?.elements?.customerName;
+    if (!customerInput) return;
+    if (!customerInput.checkValidity()) {
+      customerInput.reportValidity();
+      return;
+    }
+    if (customerInput.value.trim()) {
+      showAdminToast(`${customerInput.value.trim()} 회원을 적용했습니다.`);
+    }
+  });
+  projectNameAddButton?.addEventListener("click", () => {
+    const projectInput = form?.elements?.projectName;
+    const projectName = normalizeProjectName(projectInput?.value);
+    if (!projectName) return;
+    addDatalistValue("projectNameOptions", projectName);
+    if (projectInput) projectInput.value = projectName;
+    syncProjectPickers();
+    showAdminToast(`${projectName} 업무명을 추가했습니다.`);
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
