@@ -3234,7 +3234,7 @@ function initAdminChannelFeeCalculator() {
       const net = amount - fee;
 
       if (rateTarget) rateTarget.textContent = isKmong ? `${(rate * 100).toFixed(1)}%` : "0%";
-      if (tierTarget) tierTarget.textContent = isKmong ? tier.label : "자사몰/유선은 플랫폼 수수료 없음";
+      if (tierTarget) tierTarget.textContent = isKmong ? tier.label : "직접주문/유선은 플랫폼 수수료 없음";
       if (feeTarget) feeTarget.textContent = fee > 0 ? `-${formatMoney(fee)}` : "0원";
       if (netTarget) netTarget.textContent = formatMoney(net);
       if (amountInput && document.activeElement !== amountInput) amountInput.value = amount ? amount.toLocaleString("ko-KR") : "";
@@ -3313,7 +3313,7 @@ function initAdminChannelSettings() {
     form.elements.settlement.value = row.dataset.settlement || "입금 확인일";
     form.elements.status.value = row.dataset.status || "active";
     form.elements.memo.value = row.querySelector("td small")?.textContent || "";
-    if (deleteButton) deleteButton.hidden = row.dataset.channelName === "자사몰";
+    if (deleteButton) deleteButton.hidden = row.dataset.channelName === "직접주문";
     modal.querySelector("#channelModalTitle").textContent = "외부채널 수정";
     setModalOpen(true);
     form.elements.channelName?.focus();
@@ -4723,7 +4723,7 @@ function initAdminProjectOrderModal() {
 
   function channelLabel(value) {
     return {
-      site: "자사몰",
+      site: "직접주문",
       phone: "유선/채팅",
       kmong: "크몽",
       external: "기타 거래처"
