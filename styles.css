@@ -5518,13 +5518,17 @@ h3 {
 }
 
 .member-count-filter button {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .member-count-filter strong {
   color: inherit;
-  font-size: 15px;
-  font-weight: 950;
+  font-size: inherit;
+  font-weight: 400;
   line-height: 1;
 }
 
@@ -10789,7 +10793,50 @@ th {
 }
 
 .admin-member-table {
-  min-width: 1180px;
+  min-width: 1320px;
+  table-layout: fixed;
+}
+
+.admin-member-table th:nth-child(1),
+.admin-member-table td:nth-child(1) {
+  width: 72px;
+}
+
+.admin-member-table th:nth-child(2),
+.admin-member-table td:nth-child(2) {
+  width: 180px;
+}
+
+.admin-member-table th:nth-child(3),
+.admin-member-table td:nth-child(3) {
+  width: 150px;
+}
+
+.admin-member-table th:nth-child(4),
+.admin-member-table td:nth-child(4),
+.admin-member-table th:nth-child(5),
+.admin-member-table td:nth-child(5) {
+  width: 130px;
+}
+
+.admin-member-table th:nth-child(6),
+.admin-member-table td:nth-child(6) {
+  width: 130px;
+}
+
+.admin-member-table th:nth-child(7),
+.admin-member-table td:nth-child(7) {
+  width: 150px;
+}
+
+.admin-member-table th:nth-child(8),
+.admin-member-table td:nth-child(8) {
+  width: 220px;
+}
+
+.admin-member-table th:nth-child(9),
+.admin-member-table td:nth-child(9) {
+  width: 150px;
 }
 
 .admin-member-table tbody tr {

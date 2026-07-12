@@ -2287,10 +2287,11 @@ function initMemberLiteManagement() {
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
     const memberType = form.elements.memberType?.value || "사업자";
+    const isPersonal = memberType === "개인";
     const name = form.elements.memberName?.value.trim() || "신규 회원";
-    const businessNumber = form.elements.businessNumber?.value.trim() || "-";
-    const industry = form.elements.industry?.value.trim() || "-";
-    const businessType = form.elements.businessType?.value.trim() || "-";
+    const businessNumber = isPersonal ? "" : form.elements.businessNumber?.value.trim() || "";
+    const industry = isPersonal ? "" : form.elements.industry?.value.trim() || "";
+    const businessType = isPersonal ? "" : form.elements.businessType?.value.trim() || "";
     const totalAmount = money(form.elements.totalAmount?.value);
     const manager = form.elements.manager?.value.trim() || name;
     const phone = form.elements.phone?.value.trim() || "-";
@@ -2300,10 +2301,10 @@ function initMemberLiteManagement() {
 
     row.dataset.adminRow = "";
     row.dataset.memberRow = "";
-    row.dataset.type = memberType === "개인" ? "personal" : "business";
+    row.dataset.type = isPersonal ? "personal" : "business";
     row.dataset.detailUrl = `admin-customer-detail.html?customer=${key}`;
     row.dataset.search = `${memberType} ${name} ${businessNumber} ${industry} ${businessType} ${totalAmount} ${manager} ${phone} ${email}`;
-    row.innerHTML = `<td>${memberType}</td><td><strong>${businessNumber}</strong><small>${name}</small></td><td>${industry}</td><td>${businessType}</td><td><strong>${totalAmount}</strong></td><td>${manager}</td><td>${phone}</td><td>${email}</td>`;
+    row.innerHTML = `<td>${memberType}</td><td>${isPersonal ? "" : `<strong>${name}</strong>`}</td><td>${businessNumber}</td><td>${industry}</td><td>${businessType}</td><td>${manager}</td><td>${phone}</td><td>${email}</td><td><strong>${totalAmount}</strong></td>`;
     row.addEventListener("click", () => {
       window.location.href = row.dataset.detailUrl;
     });

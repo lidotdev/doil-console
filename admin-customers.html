@@ -42,7 +42,7 @@
               <div class="admin-search-panel compact">
                 <label class="admin-search-field">
                   <span>회원 검색</span>
-                  <input type="search" data-admin-search placeholder="상호명, 사업자등록번호, 업종, 담당자, 연락처, 이메일 검색">
+                  <input type="search" data-admin-search placeholder="구분, 상호명, 사업자등록번호, 업종, 업태, 성함, 연락처, 이메일 검색">
                 </label>
                 <div class="admin-filter-group member-count-filter" data-member-count-filter>
                   <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체 <strong data-member-count="all">3</strong></button>
@@ -55,45 +55,49 @@
                 <thead>
                   <tr>
                     <th>구분</th>
+                    <th>상호명</th>
                     <th>사업자등록번호</th>
                     <th>업종</th>
                     <th>업태</th>
-                    <th>누적거래액</th>
-                    <th>담당자</th>
+                    <th>성함(대표자명)</th>
                     <th>연락처</th>
                     <th>이메일</th>
+                    <th>누적거래금액</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr data-admin-row data-type="business" data-member-row data-detail-url="admin-customer-detail.html?customer=ganada" data-search="사업자 가나다식품 8502101340 광고디자인 서비스업 7150000 홍길동 01012345678 client@example.com">
                     <td>사업자</td>
-                    <td><strong>850-21-01340</strong><small>가나다식품</small></td>
+                    <td><strong>가나다식품</strong></td>
+                    <td>850-21-01340</td>
                     <td>광고디자인</td>
                     <td>서비스업</td>
-                    <td><strong>7,150,000원</strong></td>
                     <td>홍길동</td>
                     <td>010-1234-5678</td>
                     <td>client@example.com</td>
+                    <td><strong>7,150,000원</strong></td>
                   </tr>
                   <tr data-admin-row data-type="business" data-member-row data-detail-url="admin-customer-detail.html?customer=abcmall" data-search="사업자 ABC몰 1234567890 쇼핑몰 도소매 1430000 김담당 01055556666 abc@example.com">
                     <td>사업자</td>
-                    <td><strong>123-45-67890</strong><small>ABC몰</small></td>
+                    <td><strong>ABC몰</strong></td>
+                    <td>123-45-67890</td>
                     <td>쇼핑몰</td>
                     <td>도소매</td>
-                    <td><strong>1,430,000원</strong></td>
                     <td>김담당</td>
                     <td>010-5555-6666</td>
                     <td>abc@example.com</td>
+                    <td><strong>1,430,000원</strong></td>
                   </tr>
                   <tr data-admin-row data-type="personal" data-member-row data-detail-url="admin-customer-detail.html?customer=hong" data-search="개인 홍길동 개인 01022223333 hong@example.com 220000">
                     <td>개인</td>
-                    <td><strong>-</strong><small>홍길동</small></td>
-                    <td>개인 의뢰</td>
-                    <td>-</td>
-                    <td><strong>220,000원</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td>홍길동</td>
                     <td>010-2222-3333</td>
                     <td>hong@example.com</td>
+                    <td><strong>220,000원</strong></td>
                   </tr>
                 </tbody>
               </table>
