@@ -4658,6 +4658,7 @@ function initAdminProjectOrderModal() {
   const form = modal.querySelector("form");
   const modalTitle = modal.querySelector("#workOrderModalTitle");
   const submitButton = modal.querySelector("[data-project-order-submit]");
+  const taxPreview = modal.querySelector("[data-project-tax-preview]");
   const tableBody = document.querySelector(".admin-project-table tbody");
   const completeModal = document.querySelector("[data-project-complete-modal]");
   const completeForm = completeModal?.querySelector("form");
@@ -4671,7 +4672,7 @@ function initAdminProjectOrderModal() {
     { min: 700001, max: 2000000, rate: 0.094 },
     { min: 2000001, max: Infinity, rate: 0.044 }
   ];
-  const projectStatusFlow = ["received", "registered", "working", "completed", "delivered"];
+  const projectStatusFlow = ["received", "working", "ended"];
 
   function parseMoney(value) {
     return Number(String(value || "").replace(/[^\d]/g, "")) || 0;
@@ -4679,6 +4680,18 @@ function initAdminProjectOrderModal() {
 
   function formatMoney(value) {
     return `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}원`;
+  }
+
+  function taxParts(total) {
+    const gross = Math.max(0, Math.round(total || 0));
+    const supply = Math.round(gross / 1.1);
+    return { gross, supply, vat: gross - supply };
+  }
+
+  function updateTaxPreview() {
+    if (!taxPreview || !form?.elements?.grossAmount) return;
+    const parts = taxParts(parseMoney(form.elements.grossAmount.value));
+    taxPreview.textContent = `공급가액 ${formatMoney(parts.supply)} · 부가세 ${formatMoney(parts.vat)}`;
   }
 
   function todayValue() {
@@ -4727,29 +4740,30 @@ function initAdminProjectOrderModal() {
 
   function normalizeProjectStatus(status) {
     return {
+      registered: "received",
       today: "working",
       delayed: "working",
-      waiting: "registered",
-      review: "completed",
-      done: "delivered"
+      waiting: "received",
+      review: "ended",
+      completed: "ended",
+      delivered: "ended",
+      done: "ended"
     }[status] || status || "received";
   }
 
   function projectStatusMeta(status) {
     return {
-      received: ["주문접수", "gray"],
-      registered: ["업무등록", "blue"],
-      working: ["작업중", "orange"],
-      completed: ["작업완료", "green"],
-      delivered: ["전달완료", "green"],
-      cancel: ["취소", "red"]
-    }[normalizeProjectStatus(status)] || ["주문접수", "gray"];
+      received: ["주문접수", "green"],
+      working: ["작업중", "blue"],
+      ended: ["종료", "gray"],
+      cancel: ["취소", "gray"]
+    }[normalizeProjectStatus(status)] || ["주문접수", "green"];
   }
 
   function rowStateForStatus(status) {
     const normalized = normalizeProjectStatus(status);
     if (normalized === "cancel") return "cancel";
-    if (normalized === "completed" || normalized === "delivered") return "done";
+    if (normalized === "ended") return "done";
     return "progress";
   }
 
@@ -4757,10 +4771,8 @@ function initAdminProjectOrderModal() {
     const normalized = normalizeProjectStatus(status);
     const options = [
       ["received", "주문접수"],
-      ["registered", "업무등록"],
       ["working", "작업중"],
-      ["completed", "작업완료"],
-      ["delivered", "전달완료"],
+      ["ended", "종료"],
       ["cancel", "취소"]
     ];
     const meta = projectStatusMeta(normalized);
@@ -4827,7 +4839,7 @@ function initAdminProjectOrderModal() {
         select.value = current;
         return;
       }
-      if (next === "completed" && current !== "completed") {
+      if (next === "ended" && current !== "ended") {
         select.value = current;
         openCompleteModal(row);
         return;
@@ -4861,17 +4873,15 @@ function initAdminProjectOrderModal() {
     if (!button) return;
     const status = normalizeProjectStatus(row.dataset.status);
     const labels = {
-      received: "다음",
-      registered: "시작",
-      working: "완료",
-      completed: "전달",
-      delivered: "완료됨",
+      received: "시작",
+      working: "종료",
+      ended: "종료됨",
       cancel: "취소됨"
     };
     button.dataset.projectAction = "next";
     button.textContent = labels[status] || "다음";
-    button.disabled = status === "delivered" || status === "cancel";
-    button.classList.toggle("primary", status === "working" || status === "completed");
+    button.disabled = status === "ended" || status === "cancel";
+    button.classList.toggle("primary", status === "working");
   }
 
   function applyProjectStatus(row, status, silent = false) {
@@ -4903,12 +4913,13 @@ function initAdminProjectOrderModal() {
       form.elements.dueDate.value = row.dataset.date || today;
       form.elements.managerName.value = cleanText(cells[6]);
       form.elements.grossAmount.value = cleanText(cells[4]?.querySelector("strong")).replace(/[^\d]/g, "");
-      form.elements.paymentStatus.value = cleanText(cells[4]?.querySelector("small")) || "입금확인중";
+      form.elements.paymentStatus.value = (cleanText(cells[4]?.querySelector("small")).split("·")[0] || "").trim() || "입금확인중";
       form.elements.invoiceStatus.value = cleanText(cells[5]) || "미발행";
       form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[7]);
     } else if (form?.elements?.dueDate) {
       form.elements.dueDate.value = today;
     }
+    updateTaxPreview();
     modal.hidden = false;
     document.body.classList.add("modal-open");
     modal.querySelector("input, select, textarea, button")?.focus();
@@ -4922,7 +4933,7 @@ function initAdminProjectOrderModal() {
 
   function openCompleteModal(row) {
     if (!completeModal || !completeForm) {
-      applyProjectStatus(row, "completed");
+      applyProjectStatus(row, "ended");
       return;
     }
     activeCompleteRow = row;
@@ -4964,6 +4975,7 @@ function initAdminProjectOrderModal() {
     const invoiceStatus = form.elements.invoiceStatus?.value || "미발행";
     const memo = form.elements.orderMemo?.value.trim() || "-";
     const amount = parseMoney(form.elements.grossAmount?.value);
+    const amountParts = taxParts(amount);
     const invoiceClass = invoiceStatus === "발행" ? "done" : invoiceStatus === "해당없음" ? "none" : "requested";
     const wasEdit = Boolean(activeEditRow);
     const row = activeEditRow || document.createElement("tr");
@@ -4975,7 +4987,9 @@ function initAdminProjectOrderModal() {
     row.dataset.channel = "site";
     row.dataset.date = dueDate;
     row.dataset.memo = memo;
-    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>${escapeHtml(paymentStatus)}</small></td><td><span class="invoice-status ${invoiceClass}">${escapeHtml(invoiceStatus)}</span></td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="next">다음</button></div></td>`;
+    row.dataset.supplyAmount = String(amountParts.supply);
+    row.dataset.vatAmount = String(amountParts.vat);
+    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>${escapeHtml(paymentStatus)} · VAT ${formatMoney(amountParts.vat)}</small></td><td><span class="invoice-status ${invoiceClass}">${escapeHtml(invoiceStatus)}</span></td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="next">다음</button></div></td>`;
     updateSearch(row);
     if (!wasEdit) {
       tableBody.appendChild(row);
@@ -4993,16 +5007,18 @@ function initAdminProjectOrderModal() {
     if (!activeCompleteRow) return;
     const file = completeForm.elements.deliverableFile?.files?.[0];
     const fileName = file?.name || "작업물 미첨부";
-    const comment = completeForm.elements.completeComment?.value.trim() || "완료 코멘트 없음";
+    const comment = completeForm.elements.completeComment?.value.trim() || "종료 코멘트 없음";
     activeCompleteRow.dataset.deliverableFile = fileName;
     activeCompleteRow.dataset.completeComment = comment;
     activeCompleteRow.dataset.memo = comment;
     if (activeCompleteRow.children[7]) {
       activeCompleteRow.children[7].innerHTML = `${escapeHtml(comment)}<small>${escapeHtml(fileName)}</small>`;
     }
-    applyProjectStatus(activeCompleteRow, "completed");
+    applyProjectStatus(activeCompleteRow, "ended");
     closeCompleteModal();
   });
+
+  form?.elements?.grossAmount?.addEventListener("input", updateTaxPreview);
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;

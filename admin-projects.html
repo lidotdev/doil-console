@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-complete-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-stage-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -40,7 +40,7 @@
                 <div class="admin-filter-group admin-primary-filter">
                   <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
                   <button type="button" data-admin-filter="state:progress" aria-pressed="false">진행중</button>
-                  <button type="button" data-admin-filter="state:done" aria-pressed="false">완료</button>
+                  <button type="button" data-admin-filter="state:done" aria-pressed="false">종료</button>
                   <button type="button" data-admin-filter="state:cancel" aria-pressed="false">취소</button>
                 </div>
                 <div class="admin-sub-filter-row">
@@ -96,10 +96,10 @@
                     <label><span>회원 선택</span><input type="text" name="customerName" placeholder="고객명 검색 또는 수기 입력"></label>
                     <label><span>업무명</span><input type="text" name="projectName" placeholder="예: 상세페이지 제작"></label>
                     <label><span>업무 유형</span><select name="projectKind"><option>디자인</option><option>홈페이지</option><option>마케팅</option></select></label>
-                    <label><span>상태</span><select name="workStatus"><option value="received">주문접수</option><option value="registered">업무등록</option><option value="working">작업중</option><option value="completed">작업완료</option><option value="delivered">전달완료</option><option value="cancel">취소</option></select></label>
+                    <label><span>상태</span><select name="workStatus"><option value="received">주문접수</option><option value="working">작업중</option><option value="ended">종료</option><option value="cancel">취소</option></select></label>
                     <label><span>마감일</span><input type="date" name="dueDate"></label>
                     <label><span>담당자</span><input type="text" name="managerName" placeholder="담당자명"></label>
-                    <label><span>금액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"></label>
+                    <label><span>총액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"><small class="admin-tax-preview" data-project-tax-preview>공급가액 0원 · 부가세 0원</small></label>
                     <label><span>결제상태</span><select name="paymentStatus"><option>입금확인중</option><option>결제완료</option><option>외부채널정산</option><option>취소</option></select></label>
                     <label><span>계산서</span><select name="invoiceStatus"><option>미발행</option><option>발행대기</option><option>발행</option><option>해당없음</option></select></label>
                     <label><span>첨부파일</span><input type="file" name="workFile"></label>
@@ -117,7 +117,7 @@
               <div class="admin-modal-backdrop" data-project-complete-close></div>
               <section class="admin-modal-panel admin-project-work-panel" role="dialog" aria-modal="true" aria-labelledby="workCompleteModalTitle">
                 <div class="admin-modal-head">
-                  <div><span>WORK COMPLETE</span><h3 id="workCompleteModalTitle">작업완료 처리</h3></div>
+                  <div><span>WORK END</span><h3 id="workCompleteModalTitle">종료 처리</h3></div>
                   <button class="admin-modal-close" type="button" aria-label="닫기" data-project-complete-close>×</button>
                 </div>
                 <form class="admin-customer-form admin-project-complete-form">
@@ -128,7 +128,7 @@
                   </div>
                   <div class="admin-modal-actions">
                     <button class="admin-line-button" type="button" data-project-complete-close>취소</button>
-                    <button class="admin-line-button primary" type="submit">작업완료</button>
+                    <button class="admin-line-button primary" type="submit">종료</button>
                   </div>
                 </form>
               </section>
@@ -137,7 +137,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-complete-1"></script>
+    <script src="app.js?v=20260712-work-stage-1"></script>
   </body>
 </html>
 
