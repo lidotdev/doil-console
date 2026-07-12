@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>설정 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260712-admin-channel-settings-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>설정</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></a>
+            <a class="client-menu-item" href="admin-contents.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-news.svg" alt=""><span>소식/블로그</span></span><span class="client-menu-badge">3</span></a>
+            <a class="client-menu-item" href="admin-documents.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>서류/파일</span></a>
+            <a class="client-menu-item active" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel" data-admin-channel-settings>
+              <div class="panel-title">
+                <div>
+                  <h3>외부채널 및 수수료율 설정</h3>
+                  <p>업무 등록 시 거래채널을 선택하면 이 설정값으로 수수료와 실수령액이 자동 계산됩니다.</p>
+                </div>
+                <button class="admin-line-button primary" type="button" data-channel-add>채널 추가</button>
+              </div>
+
+              <div class="admin-note-box">
+                <strong>설정 기준</strong>
+                <p>자사 거래는 수수료 0%가 기본이고, 크몽처럼 금액대별 수수료가 다른 외부채널은 구간형으로 등록합니다. 채널별 계산 방식은 업무 등록과 매출/매입 화면에서 함께 사용됩니다.</p>
+              </div>
+
+              <div class="admin-table-wrap">
+                <table class="admin-data-table admin-channel-table">
+                  <thead>
+                    <tr>
+                      <th>채널명</th>
+                      <th>유형</th>
+                      <th>수수료 방식</th>
+                      <th>수수료율/구간</th>
+                      <th>정산 기준</th>
+                      <th>상태</th>
+                      <th>관리</th>
+                    </tr>
+                  </thead>
+                  <tbody data-channel-table-body>
+                    <tr data-channel-row data-channel-name="자사몰" data-channel-type="자사" data-fee-mode="none" data-fee-rules="0%" data-settlement="입금 확인일" data-status="active">
+                      <td><strong>자사몰</strong><small>유선, 채팅, 직접 결제</small></td>
+                      <td>자사</td>
+                      <td>없음</td>
+                      <td>0%</td>
+                      <td>입금 확인일</td>
+                      <td><span class="status-pill green">사용중</span></td>
+                      <td><button class="admin-line-button" type="button" data-channel-edit>수정</button></td>
+                    </tr>
+                    <tr data-channel-row data-channel-name="크몽" data-channel-type="외부채널" data-fee-mode="tier" data-fee-rules="1~700,000원 16.4% / 700,001~2,000,000원 9.4% / 2,000,001원 이상 4.4%" data-settlement="플랫폼 정산완료일" data-status="active">
+                      <td><strong>크몽</strong><small>외부 주문번호 기준 관리</small></td>
+                      <td>외부채널</td>
+                      <td>금액 구간형</td>
+                      <td><span class="admin-fee-rules">1~700,000원 16.4%<br>700,001~2,000,000원 9.4%<br>2,000,001원 이상 4.4%</span></td>
+                      <td>플랫폼 정산완료일</td>
+                      <td><span class="status-pill green">사용중</span></td>
+                      <td><button class="admin-line-button" type="button" data-channel-edit>수정</button></td>
+                    </tr>
+                    <tr data-channel-row data-channel-name="숨고" data-channel-type="외부채널" data-fee-mode="fixed" data-fee-rules="12%" data-settlement="입금 확인일" data-status="paused">
+                      <td><strong>숨고</strong><small>견적형 외부채널</small></td>
+                      <td>외부채널</td>
+                      <td>고정 수수료</td>
+                      <td>12%</td>
+                      <td>입금 확인일</td>
+                      <td><span class="status-pill gray">사용중지</span></td>
+                      <td><button class="admin-line-button" type="button" data-channel-edit>수정</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title">
+                <h3>수수료 계산 미리보기</h3>
+              </div>
+              <div class="admin-form-grid compact" data-channel-fee-calculator>
+                <label><span>거래채널</span><select data-fee-channel><option value="site">자사몰</option><option value="kmong">크몽</option></select></label>
+                <label><span>판매금액</span><input type="text" data-fee-amount value="1000000"></label>
+                <article class="admin-summary-card"><span>적용 수수료</span><strong data-fee-rate>0%</strong><small data-fee-tier>자사몰/유선은 플랫폼 수수료 없음</small></article>
+                <article class="admin-summary-card"><span>수수료</span><strong class="admin-negative" data-fee-value>0원</strong></article>
+                <article class="admin-summary-card"><span>실수령액</span><strong data-fee-net>1,000,000원</strong></article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="admin-modal" data-channel-modal hidden>
+      <div class="admin-modal-backdrop" data-channel-modal-close></div>
+      <section class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="channelModalTitle">
+        <div class="admin-modal-head">
+          <h3 id="channelModalTitle">외부채널 추가</h3>
+          <button class="admin-modal-close" type="button" data-channel-modal-close aria-label="닫기">×</button>
+        </div>
+        <form class="admin-form-grid" data-channel-form>
+          <label><span>채널명</span><input name="channelName" type="text" placeholder="예: 크몽" required></label>
+          <label><span>유형</span><select name="channelType"><option>외부채널</option><option>자사</option></select></label>
+          <label><span>수수료 방식</span><select name="feeMode"><option value="fixed">고정 수수료</option><option value="tier">금액 구간형</option><option value="none">없음</option></select></label>
+          <label><span>고정 수수료율</span><input name="fixedRate" type="number" min="0" max="100" step="0.1" placeholder="예: 12"></label>
+          <label class="wide"><span>구간형 수수료</span><textarea name="tierRules" rows="4" placeholder="예: 1~700,000원 16.4% / 700,001~2,000,000원 9.4%"></textarea></label>
+          <label><span>정산 기준</span><select name="settlement"><option>입금 확인일</option><option>플랫폼 정산완료일</option><option>거래일</option></select></label>
+          <label><span>상태</span><select name="status"><option value="active">사용중</option><option value="paused">사용중지</option></select></label>
+          <label class="wide"><span>메모</span><input name="memo" type="text" placeholder="업무 등록 시 참고할 내부 메모"></label>
+          <div class="admin-form-actions wide">
+            <button class="admin-line-button danger" type="button" data-channel-delete hidden>삭제</button>
+            <span></span>
+            <button class="admin-line-button" type="button" data-channel-modal-close>취소</button>
+            <button class="admin-line-button primary" type="submit">저장</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script src="app.js?v=20260712-admin-channel-settings-1"></script>
+  </body>
+</html>

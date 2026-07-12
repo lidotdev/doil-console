@@ -1,0 +1,56 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>소식/블로그 관리 | DOIL SERVICE</title><meta name="robots" content="noindex,nofollow,noarchive"><link rel="icon" type="image/png" href="assets/doil-logo-symbol.png"><link rel="stylesheet" href="styles.css?v=20260710-admin-tools-1"></head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header"><a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a><button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button><nav class="top-nav client-page-title"><span>소식/블로그</span></nav><div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div></header>
+    <main class="page-main"><section class="section app-section client-app admin-app page-app"><div class="client-layout"><aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴"><div class="client-side-head"><strong>DOIL Admin</strong></div><a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a><a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a><a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a><a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a><a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></a><a class="client-menu-item active" href="admin-contents.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-news.svg" alt=""><span>소식/블로그</span></span><span class="client-menu-badge">3</span></a><a class="client-menu-item" href="admin-documents.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>서류/파일</span></a><a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a></aside><div class="client-page-shell admin-page-shell">
+      <section class="panel" data-admin-filter-scope><div class="panel-title"><h3>소식 관리</h3><button type="button" data-admin-content-open="create">게시글 작성</button></div><div class="admin-search-panel"><label class="admin-search-field"><span>소식 검색</span><input type="search" data-admin-search placeholder="제목, 구분, 노출상태 검색"></label><div class="admin-filter-group"><button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button><button type="button" data-admin-filter="type:notice" aria-pressed="false">공지사항</button><button type="button" data-admin-filter="type:event" aria-pressed="false">이벤트</button><button type="button" data-admin-filter="type:post" aria-pressed="false">게시글</button><button type="button" data-admin-filter="pin:yes" aria-pressed="false">상단고정</button></div></div><table class="admin-data-table"><thead><tr><th>구분</th><th>제목</th><th>고객 알림</th><th>고정</th><th>노출</th><th>작성일</th><th>처리</th></tr></thead><tbody><tr data-admin-row data-type="notice" data-pin="yes" data-search="공지사항 세금계산서 발행 기준 안내 상단고정"><td>공지사항</td><td>세금계산서 발행 기준 안내</td><td><span class="status-pill blue">알림 1</span></td><td>상단고정</td><td>공개</td><td>2026.07.09</td><td><button class="admin-line-button" type="button" data-admin-content-open="edit">수정</button></td></tr><tr data-admin-row data-type="event" data-pin="no" data-search="이벤트 7월 포트폴리오 캐시 적립 이벤트"><td>이벤트</td><td>7월 포트폴리오 캐시 적립 이벤트</td><td><span class="status-pill blue">알림 1</span></td><td>일반</td><td>공개</td><td>2026.07.08</td><td><button class="admin-line-button" type="button" data-admin-content-open="edit">수정</button></td></tr><tr data-admin-row data-type="post" data-pin="no" data-search="게시글 디자인 자료를 빠르게 정리하는 방법"><td>게시글</td><td>디자인 자료를 빠르게 정리하는 방법</td><td><span class="status-pill gray">읽음</span></td><td>일반</td><td>공개</td><td>2026.07.05</td><td><button class="admin-line-button" type="button" data-admin-content-open="edit">수정</button></td></tr></tbody></table><p class="admin-empty" data-admin-empty hidden>조건에 맞는 소식이 없습니다.</p></section>
+      <section class="panel"><div class="panel-title"><h3>블로그</h3><a class="inline-file-link" href="admin-blog.html">블로그 에디터 열기</a></div><div class="admin-note-box"><strong>홈페이지와 연결</strong><p>공개 블로그 글은 홈페이지 블로그 목록과 RSS에 반영되어야 하고, 클라이언트 소식은 고객 포털의 알림 숫자와 연결되어야 합니다.</p></div></section>
+      <div class="admin-modal" data-admin-content-modal hidden>
+        <div class="admin-modal-backdrop" data-admin-content-close></div>
+        <section class="admin-modal-panel admin-modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="adminContentModalTitle">
+          <div class="admin-modal-head">
+            <div><span>Content Editor</span><h3 id="adminContentModalTitle">소식 작성</h3></div>
+            <button type="button" class="admin-modal-close" data-admin-content-close aria-label="닫기">×</button>
+          </div>
+          <form class="admin-customer-form" data-admin-content-form>
+            <div class="admin-form-grid two">
+              <label><span>구분</span><select name="type"><option>공지사항</option><option>이벤트</option><option>게시글</option></select></label>
+              <label><span>제목</span><input name="title" type="text" placeholder="제목을 입력하세요"></label>
+              <label><span>노출 상태</span><select name="visibility"><option>공개</option><option>비공개</option><option>예약</option></select></label>
+              <label><span>상단 고정</span><select name="pin"><option>일반</option><option>상단고정</option></select></label>
+              <label><span>고객 알림</span><select name="notify"><option>알림 없음</option><option>알림 발송</option></select></label>
+              <label><span>작성일</span><input name="date" type="date" value="2026-07-10"></label>
+              <label class="admin-market-thumb-upload wide">
+                <span>대표 이미지</span>
+                <input name="thumbnail" type="file" accept="image/*" data-admin-content-thumbnail>
+                <div class="admin-market-thumb-preview" data-admin-content-thumbnail-preview><strong>THUMBNAIL</strong><small>공지/이벤트/게시글 대표 이미지를 업로드합니다.</small></div>
+              </label>
+              <div class="admin-market-editor wide">
+                <span>본문 내용</span>
+                <div class="editor-toolbar admin-editor-toolbar">
+                  <button type="button" data-wysiwyg-command="formatBlock" data-wysiwyg-value="h2" data-wysiwyg-target="#adminContentEditor">제목</button>
+                  <button type="button" data-wysiwyg-command="formatBlock" data-wysiwyg-value="p" data-wysiwyg-target="#adminContentEditor">문단</button>
+                  <button type="button" data-wysiwyg-command="bold" data-wysiwyg-target="#adminContentEditor">굵게</button>
+                  <button type="button" data-wysiwyg-command="italic" data-wysiwyg-target="#adminContentEditor">기울임</button>
+                  <button type="button" data-wysiwyg-command="insertUnorderedList" data-wysiwyg-target="#adminContentEditor">목록</button>
+                  <button type="button" data-wysiwyg-command="createLink" data-wysiwyg-target="#adminContentEditor">링크</button>
+                </div>
+                <div id="adminContentEditor" class="rich-editor admin-market-rich-editor" contenteditable="true" data-wysiwyg-editor data-placeholder="고객에게 보여줄 공지사항, 이벤트, 게시글 내용을 작성하세요."></div>
+                <input name="contentHtml" type="hidden" data-admin-content-output>
+              </div>
+            </div>
+            <div class="admin-modal-actions">
+              <button type="button" class="admin-line-button" data-admin-content-close>취소</button>
+              <button type="submit" class="admin-line-button primary">저장</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div></div></section></main><script src="app.js?v=20260710-admin-wysiwyg-1"></script>
+  </body>
+</html>
+
+
+
+

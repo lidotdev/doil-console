@@ -1,0 +1,141 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원 관리 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260712-member-lite-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>회원 관리</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item active" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-websites.html"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group" data-admin-billing-group><button class="client-menu-item client-manage-toggle" type="button" aria-expanded="false"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span><span class="client-menu-arrow"></span></button><div class="client-side-submenu"><a class="client-menu-item" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a><a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a></div></div>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell admin-full-shell">
+            <section class="panel" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>회원 목록</h3>
+                <div class="admin-title-actions">
+                  <input class="admin-hidden-copy-source" type="text" value="https://doilservice.co.kr/signup.html?source=admin-invite" readonly data-member-invite-link aria-label="고객 직접 등록 링크">
+                  <button class="admin-line-button" type="button" data-copy-member-link>등록 링크 복사</button>
+                  <button class="admin-line-button primary" type="button" data-simple-customer-open>회원등록</button>
+                </div>
+              </div>
+              <div class="admin-search-panel compact">
+                <label class="admin-search-field">
+                  <span>회원 검색</span>
+                  <input type="search" data-admin-search placeholder="상호명, 사업자등록번호, 업종, 담당자, 연락처, 이메일 검색">
+                </label>
+                <div class="admin-filter-group member-count-filter" data-member-count-filter>
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체 <strong data-member-count="all">3</strong></button>
+                  <button type="button" data-admin-filter="type:business" aria-pressed="false">사업자 <strong data-member-count="business">2</strong></button>
+                  <button type="button" data-admin-filter="type:personal" aria-pressed="false">개인 <strong data-member-count="personal">1</strong></button>
+                </div>
+              </div>
+
+              <table class="admin-data-table admin-member-table admin-clickable-table">
+                <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>사업자등록번호</th>
+                    <th>업종</th>
+                    <th>업태</th>
+                    <th>누적거래액</th>
+                    <th>담당자</th>
+                    <th>연락처</th>
+                    <th>이메일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-admin-row data-type="business" data-member-row data-detail-url="admin-customer-detail.html?customer=ganada" data-search="사업자 가나다식품 8502101340 광고디자인 서비스업 7150000 홍길동 01012345678 client@example.com">
+                    <td>사업자</td>
+                    <td><strong>850-21-01340</strong><small>가나다식품</small></td>
+                    <td>광고디자인</td>
+                    <td>서비스업</td>
+                    <td><strong>7,150,000원</strong></td>
+                    <td>홍길동</td>
+                    <td>010-1234-5678</td>
+                    <td>client@example.com</td>
+                  </tr>
+                  <tr data-admin-row data-type="business" data-member-row data-detail-url="admin-customer-detail.html?customer=abcmall" data-search="사업자 ABC몰 1234567890 쇼핑몰 도소매 1430000 김담당 01055556666 abc@example.com">
+                    <td>사업자</td>
+                    <td><strong>123-45-67890</strong><small>ABC몰</small></td>
+                    <td>쇼핑몰</td>
+                    <td>도소매</td>
+                    <td><strong>1,430,000원</strong></td>
+                    <td>김담당</td>
+                    <td>010-5555-6666</td>
+                    <td>abc@example.com</td>
+                  </tr>
+                  <tr data-admin-row data-type="personal" data-member-row data-detail-url="admin-customer-detail.html?customer=hong" data-search="개인 홍길동 개인 01022223333 hong@example.com 220000">
+                    <td>개인</td>
+                    <td><strong>-</strong><small>홍길동</small></td>
+                    <td>개인 의뢰</td>
+                    <td>-</td>
+                    <td><strong>220,000원</strong></td>
+                    <td>홍길동</td>
+                    <td>010-2222-3333</td>
+                    <td>hong@example.com</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 회원이 없습니다.</p>
+            </section>
+
+            <div class="admin-modal" data-simple-customer-modal hidden>
+              <div class="admin-modal-backdrop" data-simple-customer-close></div>
+              <section class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="simpleCustomerTitle">
+                <div class="admin-modal-head">
+                  <div><span>Member</span><h3 id="simpleCustomerTitle">회원 등록</h3></div>
+                  <button type="button" class="admin-modal-close" data-simple-customer-close aria-label="닫기">×</button>
+                </div>
+                <form class="admin-customer-form" data-simple-customer-form>
+                  <div class="admin-form-grid two">
+                    <label><span>구분</span><select name="memberType"><option>사업자</option><option>개인</option></select></label>
+                    <label><span>상호명/이름</span><input name="memberName" type="text" placeholder="예: 가나다식품"></label>
+                    <label><span>사업자등록번호</span><input name="businessNumber" type="text" placeholder="000-00-00000"></label>
+                    <label><span>업종</span><input name="industry" type="text" placeholder="예: 광고디자인"></label>
+                    <label><span>업태</span><input name="businessType" type="text" placeholder="예: 서비스업"></label>
+                    <label><span>누적거래액</span><input name="totalAmount" type="text" placeholder="0"></label>
+                    <label><span>담당자</span><input name="manager" type="text" placeholder="담당자명"></label>
+                    <label><span>연락처</span><input name="phone" type="tel" placeholder="010-0000-0000"></label>
+                    <label class="wide"><span>이메일</span><input name="email" type="email" placeholder="client@example.com"></label>
+                    <label class="wide"><span>사업자등록증 업로드</span><input name="businessCertificate" type="file" accept="image/*,.pdf"></label>
+                  </div>
+                  <div class="admin-modal-actions">
+                    <button type="button" class="admin-line-button" data-simple-customer-close>취소</button>
+                    <button type="submit" class="admin-line-button primary">등록</button>
+                  </div>
+                </form>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260712-member-lite-1"></script>
+  </body>
+</html>
+
+
+
+

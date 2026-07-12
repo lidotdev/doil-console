@@ -1,0 +1,141 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원 상세 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260712-member-lite-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>회원 상세</span></nav>
+      <div class="header-actions"><a class="login-link" href="admin-customers.html">회원목록</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item active" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-websites.html"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group" data-admin-billing-group><button class="client-menu-item client-manage-toggle" type="button" aria-expanded="false"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span><span class="client-menu-arrow"></span></button><div class="client-side-submenu"><a class="client-menu-item" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a><a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a></div></div>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell admin-full-shell">
+            <section class="panel member-detail-hero">
+              <div>
+                <a class="admin-back-link" href="admin-customers.html">← 회원 목록</a>
+                <h3 data-member-detail-name>가나다식품</h3>
+                <p>850-21-01340 · 광고디자인 · 서비스업</p>
+              </div>
+              <div class="member-detail-summary">
+                <span>누적거래액</span>
+                <strong>7,150,000원</strong>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title">
+                <h3>사업자정보</h3>
+                <button class="admin-line-button primary" type="button" data-member-edit-toggle>편집</button>
+              </div>
+              <form class="member-detail-form" data-member-detail-form>
+                <div class="admin-form-grid two">
+                  <label><span>구분</span><select name="memberType" disabled><option>사업자</option><option>개인</option></select></label>
+                  <label><span>상호명/이름</span><input name="memberName" type="text" value="가나다식품" disabled></label>
+                  <label><span>사업자등록번호</span><input name="businessNumber" type="text" value="850-21-01340" disabled></label>
+                  <label><span>업종</span><input name="industry" type="text" value="광고디자인" disabled></label>
+                  <label><span>업태</span><input name="businessType" type="text" value="서비스업" disabled></label>
+                  <label><span>담당자</span><input name="manager" type="text" value="홍길동" disabled></label>
+                  <label><span>연락처</span><input name="phone" type="tel" value="010-1234-5678" disabled></label>
+                  <label><span>이메일</span><input name="email" type="email" value="client@example.com" disabled></label>
+                </div>
+                <div class="admin-modal-actions member-edit-actions" hidden>
+                  <button class="admin-line-button" type="button" data-member-edit-cancel>취소</button>
+                  <button class="admin-line-button primary" type="submit">저장</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title">
+                <h3>누적거래액 정보</h3>
+                <span class="status-pill blue">4건</span>
+              </div>
+              <table class="admin-data-table admin-member-trade-table">
+                <thead>
+                  <tr>
+                    <th>년</th>
+                    <th>월</th>
+                    <th>일</th>
+                    <th>종목</th>
+                    <th>결제수단</th>
+                    <th>결제처</th>
+                    <th>공급가액</th>
+                    <th>부가세</th>
+                    <th>수수료</th>
+                    <th>순수익</th>
+                    <th>계산서</th>
+                    <th>원본</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2026</td><td>07</td><td>10</td><td>상세페이지 제작</td><td>현금</td><td>자사몰</td><td>300,000원</td><td>30,000원</td><td>0원</td><td><strong>330,000원</strong></td><td><span class="invoice-status requested">발행대기</span></td><td><button class="inline-file-link" type="button">다운로드</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026</td><td>06</td><td>22</td><td>홈페이지 제작</td><td>PG</td><td>카드</td><td>500,000원</td><td>50,000원</td><td>0원</td><td><strong>550,000원</strong></td><td><span class="invoice-status done">발행완료</span></td><td><button class="inline-file-link" type="button">다운로드</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026</td><td>05</td><td>18</td><td>SNS 콘텐츠</td><td>PG</td><td>크몽</td><td>100,000원</td><td>10,000원</td><td>9,400원</td><td><strong>100,600원</strong></td><td><span class="invoice-status done">발행완료</span></td><td><button class="inline-file-link" type="button">다운로드</button></td>
+                  </tr>
+                  <tr>
+                    <td>2026</td><td>04</td><td>02</td><td>로고 제작</td><td>현금</td><td>현금</td><td>200,000원</td><td>20,000원</td><td>0원</td><td><strong>220,000원</strong></td><td><span class="invoice-status none">해당없음</span></td><td><button class="inline-file-link" type="button">다운로드</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title">
+                <h3>고객 서류함</h3>
+                <label class="admin-line-button primary member-upload-button">
+                  서류 업로드
+                  <input type="file" multiple data-member-document-upload>
+                </label>
+              </div>
+              <ul class="member-document-list" data-member-document-list>
+                <li>
+                  <div><strong>사업자등록증.pdf</strong><small>기본서류 · 2026.07.10 업로드</small></div>
+                  <div class="admin-row-actions"><button class="admin-line-button" type="button">다운로드</button><button class="admin-line-button danger" type="button" data-member-document-delete>삭제</button></div>
+                </li>
+                <li>
+                  <div><strong>통장사본.jpg</strong><small>정산서류 · 2026.06.22 업로드</small></div>
+                  <div class="admin-row-actions"><button class="admin-line-button" type="button">다운로드</button><button class="admin-line-button danger" type="button" data-member-document-delete>삭제</button></div>
+                </li>
+                <li>
+                  <div><strong>위임장.pdf</strong><small>기타서류 · 2026.05.18 업로드</small></div>
+                  <div class="admin-row-actions"><button class="admin-line-button" type="button">다운로드</button><button class="admin-line-button danger" type="button" data-member-document-delete>삭제</button></div>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260712-member-lite-1"></script>
+  </body>
+</html>
+
+
+
+

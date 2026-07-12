@@ -1,0 +1,207 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>홈페이지 수정 로그 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260711-admin-logs-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>홈페이지 수정 로그</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <div class="client-side-group is-open" data-admin-website-group>
+              <button class="client-menu-item client-manage-toggle active" type="button" aria-expanded="true">
+                <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></span>
+                <span class="client-menu-arrow"></span>
+              </button>
+              <div class="client-side-submenu">
+                <a class="client-menu-item" href="admin-websites.html#website-management"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지 관리</span></a>
+                <a class="client-menu-item" href="admin-websites.html#domain-dns-management"><img class="client-menu-icon" src="assets/client-files.svg" alt=""><span>도메인/DNS 관리</span></a>
+                <a class="client-menu-item active" href="admin-logs.html?filter=area:website"><img class="client-menu-icon" src="assets/client-files.svg" alt=""><span>수정 로그</span></a>
+              </div>
+            </div>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></a>
+            <a class="client-menu-item" href="admin-contents.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-news.svg" alt=""><span>소식/블로그</span></span><span class="client-menu-badge">3</span></a>
+            <a class="client-menu-item" href="admin-documents.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>서류/파일</span></a>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel admin-log-summary">
+              <div class="panel-title">
+                <h3>홈페이지 접근/수정 로그</h3>
+                <span class="status-pill blue">최근 30일</span>
+              </div>
+              <div class="admin-status-row">
+                <span><small>전체 로그</small><strong>8건</strong><small>조회/수정/발급 포함</small></span>
+                <span><small>수정 작업</small><strong>3건</strong><small>고객정보, 홈페이지, 상품</small></span>
+                <span><small>민감 정보 조회</small><strong>2건</strong><small>서류, 결제 상세</small></span>
+                <span><small>정산 처리</small><strong>2건</strong><small>계산서/입금확인</small></span>
+              </div>
+              <div class="admin-note-box">
+                <strong>기록 기준</strong>
+                <p>단순 조회와 실제 수정은 반드시 구분합니다. 고객정보, 결제정보, 보관서류, 홈페이지 관리자 접근, 파일 다운로드는 담당자와 시각, 대상, 변경 전후 요약을 남겨야 합니다.</p>
+              </div>
+            </section>
+
+            <section class="panel" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>로그 목록</h3>
+                <span class="status-pill blue" data-admin-count>8건</span>
+              </div>
+              <div class="admin-search-panel">
+                <label class="admin-search-field">
+                  <span>로그 검색</span>
+                  <input type="search" data-admin-search placeholder="담당자, 고객명, 도메인, 거래번호, 작업내용 검색">
+                </label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">영역 전체</button>
+                  <button type="button" data-admin-filter="area:website" aria-pressed="false">홈페이지</button>
+                  <button type="button" data-admin-filter="area:customer" aria-pressed="false">고객</button>
+                  <button type="button" data-admin-filter="area:billing" aria-pressed="false">매출/매입</button>
+                  <button type="button" data-admin-filter="area:file" aria-pressed="false">서류/파일</button>
+                  <button type="button" data-admin-filter="area:portfolio" aria-pressed="false">포트폴리오</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">작업 전체</button>
+                  <button type="button" data-admin-filter="action:view" aria-pressed="false">보기</button>
+                  <button type="button" data-admin-filter="action:edit" aria-pressed="false">수정</button>
+                  <button type="button" data-admin-filter="action:issue" aria-pressed="false">발급/확인</button>
+                  <button type="button" data-admin-filter="action:download" aria-pressed="false">다운로드</button>
+                  <button type="button" data-admin-filter="action:login" aria-pressed="false">로그인</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">위험도 전체</button>
+                  <button type="button" data-admin-filter="risk:normal" aria-pressed="false">일반</button>
+                  <button type="button" data-admin-filter="risk:sensitive" aria-pressed="false">민감</button>
+                  <button type="button" data-admin-filter="risk:critical" aria-pressed="false">중요</button>
+                </div>
+                <div class="admin-date-fields"><label><span>시작일</span><input type="date" data-admin-date-start></label><label><span>종료일</span><input type="date" data-admin-date-end></label></div>
+              </div>
+              <div class="admin-table-scroll">
+                <table class="admin-data-table admin-log-table">
+                  <thead>
+                    <tr>
+                      <th>시각</th>
+                      <th>담당자</th>
+                      <th>영역</th>
+                      <th>작업</th>
+                      <th>대상</th>
+                      <th>상세 내용</th>
+                      <th>결과</th>
+                      <th>접속 정보</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-admin-row data-area="website" data-action="login" data-risk="sensitive" data-date="2026-07-11" data-search="도일운영 홈페이지 관리자 로그인 ganada doilsite kr 관리자 접근">
+                      <td><strong>2026.07.11 09:42</strong><small>오늘</small></td>
+                      <td><strong>도일운영</strong><small>admin01</small></td>
+                      <td><span class="status-pill blue">홈페이지</span></td>
+                      <td><span class="status-pill orange">관리자 접근</span><small>로그인</small></td>
+                      <td><strong>ganada.doilsite.kr</strong><small>가나다식품</small></td>
+                      <td><strong>고객 사이트 관리자 로그인</strong><small>콘텐츠 수정 전 상태 확인. 변경사항 없음.</small></td>
+                      <td><span class="status-pill green">성공</span></td>
+                      <td><small>IP 121.162.10.24 · Chrome</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="website" data-action="edit" data-risk="critical" data-date="2026-07-11" data-search="도일디자인 홈페이지 수정 hongstudio 메인 이미지 교체">
+                      <td><strong>2026.07.11 09:18</strong><small>오늘</small></td>
+                      <td><strong>도일디자인</strong><small>designer02</small></td>
+                      <td><span class="status-pill blue">홈페이지</span></td>
+                      <td><span class="status-pill red">수정</span><small>콘텐츠 변경</small></td>
+                      <td><strong>hongstudio.kr</strong><small>홍길동</small></td>
+                      <td><strong>메인 이미지 교체</strong><small>기존 hero-main-01.jpg → hero-main-02.jpg, 모바일 표시 확인 완료.</small></td>
+                      <td><span class="status-pill green">반영완료</span></td>
+                      <td><small>IP 121.162.10.24 · Edge</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="billing" data-action="issue" data-risk="critical" data-date="2026-07-10" data-search="정산 세금계산서 발급 가나다식품 PAY-20260710-001">
+                      <td><strong>2026.07.10 16:20</strong><small>어제</small></td>
+                      <td><strong>정산담당</strong><small>billing01</small></td>
+                      <td><span class="status-pill orange">매출/매입</span></td>
+                      <td><span class="status-pill red">발급</span><small>세금계산서</small></td>
+                      <td><strong>#PAY-20260710-001</strong><small>가나다식품</small></td>
+                      <td><strong>세금계산서 발급완료</strong><small>공급가액 300,000원 / 부가세 30,000원 / 합계 330,000원.</small></td>
+                      <td><span class="status-pill green">완료</span></td>
+                      <td><small>IP 121.162.10.24 · Chrome</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="billing" data-action="issue" data-risk="critical" data-date="2026-07-10" data-search="입금확인 ABC몰 PAY-20260709-002 무통장입금">
+                      <td><strong>2026.07.10 13:05</strong><small>어제</small></td>
+                      <td><strong>도일운영</strong><small>admin01</small></td>
+                      <td><span class="status-pill orange">매출/매입</span></td>
+                      <td><span class="status-pill orange">입금확인</span><small>무통장입금</small></td>
+                      <td><strong>#PAY-20260709-002</strong><small>ABC몰</small></td>
+                      <td><strong>입금확인중 → 결제완료</strong><small>입금은행/금액/예금주 확인 후 처리. 계산서 발행요청 유지.</small></td>
+                      <td><span class="status-pill green">완료</span></td>
+                      <td><small>IP 121.162.10.24 · Chrome</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="file" data-action="view" data-risk="sensitive" data-date="2026-07-09" data-search="보관서류 보기 사업자등록증 가나다식품">
+                      <td><strong>2026.07.09 15:32</strong><small>2일 전</small></td>
+                      <td><strong>도일운영</strong><small>admin01</small></td>
+                      <td><span class="status-pill gray">서류/파일</span></td>
+                      <td><span class="status-pill blue">보기</span><small>다운로드 없음</small></td>
+                      <td><strong>가나다식품</strong><small>사업자등록증</small></td>
+                      <td><strong>기본서류 열람</strong><small>사업자등록증 미리보기만 진행. 파일 다운로드 기록 없음.</small></td>
+                      <td><span class="status-pill green">성공</span></td>
+                      <td><small>IP 121.162.10.24 · Chrome</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="file" data-action="download" data-risk="critical" data-date="2026-07-09" data-search="보관서류 다운로드 신분증 홍길동">
+                      <td><strong>2026.07.09 11:40</strong><small>2일 전</small></td>
+                      <td><strong>도일운영</strong><small>admin01</small></td>
+                      <td><span class="status-pill gray">서류/파일</span></td>
+                      <td><span class="status-pill red">다운로드</span><small>민감서류</small></td>
+                      <td><strong>홍길동</strong><small>신분증</small></td>
+                      <td><strong>보관서류 다운로드</strong><small>고객 요청 응대 목적. 다운로드 파일명 id-card-hong-20260709.pdf.</small></td>
+                      <td><span class="status-pill green">성공</span></td>
+                      <td><small>IP 121.162.10.24 · Edge</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="customer" data-action="edit" data-risk="critical" data-date="2026-07-08" data-search="고객정보 수정 ABC몰 아이디 연락처">
+                      <td><strong>2026.07.08 17:08</strong><small>3일 전</small></td>
+                      <td><strong>도일운영</strong><small>admin01</small></td>
+                      <td><span class="status-pill blue">고객</span></td>
+                      <td><span class="status-pill red">수정</span><small>계정정보</small></td>
+                      <td><strong>ABC몰</strong><small>사업자고객</small></td>
+                      <td><strong>담당자 연락처 수정</strong><small>010-5555-1111 → 010-5555-6666. 아이디 변경 없음.</small></td>
+                      <td><span class="status-pill green">반영완료</span></td>
+                      <td><small>IP 121.162.10.24 · Chrome</small></td>
+                    </tr>
+                    <tr data-admin-row data-area="portfolio" data-action="edit" data-risk="normal" data-date="2026-07-07" data-search="포트폴리오 수정 상세페이지 템플릿 노출">
+                      <td><strong>2026.07.07 10:14</strong><small>4일 전</small></td>
+                      <td><strong>도일디자인</strong><small>designer02</small></td>
+                      <td><span class="status-pill blue">포트폴리오</span></td>
+                      <td><span class="status-pill orange">수정</span><small>노출정보</small></td>
+                      <td><strong>프리미엄 상세페이지 제작</strong><small>포트폴리오</small></td>
+                      <td><strong>썸네일 및 공개 상태 수정</strong><small>썸네일 preview-detail-02.png 교체, 홈페이지 포트폴리오 공개 유지.</small></td>
+                      <td><span class="status-pill green">반영완료</span></td>
+                      <td><small>IP 121.162.10.24 · Chrome</small></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 로그가 없습니다.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260711-admin-logs-1"></script>
+  </body>
+</html>
+
+
+
+

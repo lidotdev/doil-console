@@ -1,0 +1,154 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>업무 관리 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260711-internal-ops-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>업무 관리</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item active" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-websites.html"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group" data-admin-billing-group><button class="client-menu-item client-manage-toggle" type="button" aria-expanded="false"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span><span class="client-menu-arrow"></span></button><div class="client-side-submenu"><a class="client-menu-item" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a><a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a></div></div>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell admin-project-shell">
+            <section class="panel" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>업무</h3>
+                <button class="admin-line-button primary" type="button" data-project-order-open>업무 등록</button>
+              </div>
+
+              <div class="admin-project-entry" data-channel-fee-calculator>
+                <div class="admin-project-entry-head">
+                  <strong>거래채널 수수료 계산</strong>
+                  <span>거래채널과 판매금액을 입력하면 수수료, 부가세, 순수익을 바로 확인합니다.</span>
+                </div>
+                <div class="admin-project-entry-grid">
+                  <label><span>거래채널</span><select data-fee-channel><option value="site">자사</option><option value="phone">유선/채팅</option><option value="kmong">크몽</option><option value="external">기타 거래처</option></select></label>
+                  <label><span>판매금액</span><input type="text" inputmode="numeric" data-fee-amount value="1000000" placeholder="금액 입력"></label>
+                  <div class="admin-fee-result"><span>적용 수수료</span><strong data-fee-rate>0%</strong><small data-fee-tier>자사/유선은 기본 수수료 없음</small></div>
+                  <div class="admin-fee-result negative"><span>수수료</span><strong data-fee-value>0원</strong><small>거래처별 수수료 정책 반영</small></div>
+                  <div class="admin-fee-result"><span>순수익</span><strong data-fee-net>1,000,000원</strong><small>판매금액 - 수수료</small></div>
+                </div>
+              </div>
+
+              <div class="admin-search-panel">
+                <label class="admin-search-field"><span>업무 검색</span><input type="search" data-admin-search placeholder="거래번호, 고객명, 연락처, 거래채널, 업무명 검색"></label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
+                  <button type="button" data-admin-filter="kind:design" aria-pressed="false">디자인</button>
+                  <button type="button" data-admin-filter="kind:website" aria-pressed="false">홈페이지</button>
+                  <button type="button" data-admin-filter="kind:marketing" aria-pressed="false">마케팅</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">채널 전체</button>
+                  <button type="button" data-admin-filter="channel:site" aria-pressed="false">자사몰</button>
+                  <button type="button" data-admin-filter="channel:phone" aria-pressed="false">유선/채팅</button>
+                  <button type="button" data-admin-filter="channel:kmong" aria-pressed="false">크몽</button>
+                </div>
+                <div class="admin-date-fields"><label><span>시작일</span><input type="date" data-admin-date-start></label><label><span>종료일</span><input type="date" data-admin-date-end></label></div>
+              </div>
+
+              <div class="admin-table-scroll">
+                <table class="admin-data-table admin-project-table admin-work-table admin-clickable-table">
+                  <thead>
+                    <tr>
+                      <th>거래번호</th>
+                      <th>거래일</th>
+                      <th>거래채널</th>
+                      <th>고객명</th>
+                      <th>구분</th>
+                      <th>업무명</th>
+                      <th>결제수단</th>
+                      <th>판매금액</th>
+                      <th>부가세</th>
+                      <th>수수료</th>
+                      <th>순수익</th>
+                      <th>계산서</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-admin-row data-status="progress" data-kind="design" data-channel="site" data-date="2026-07-07" data-search="DOIL-20260707-001 가나다식품 01012345678 상세페이지 디자인 자사 카드결제">
+                      <td>20260707-자사몰-D001</td><td>2026.07.07</td><td>자사몰</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>가나다식품</button></td><td>디자인</td><td>상세페이지 제작</td><td>카드결제</td><td>330,000원</td><td>30,000원</td><td>0원</td><td><strong>330,000원</strong></td><td><span class="invoice-status requested">미발행</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="progress" data-kind="marketing" data-channel="kmong" data-date="2026-07-09" data-search="EXT-KM-20260709-001 크몽 고객 KM20260709-001 배너 마케팅 크몽">
+                      <td>20260709-크몽-M001</td><td>2026.07.09</td><td><span class="invoice-status requested">크몽</span></td><td><button class="admin-text-button" type="button" data-admin-customer-popover>크몽 고객</button></td><td>마케팅</td><td>쇼핑몰 배너 제작</td><td>플랫폼 정산</td><td>1,000,000원</td><td>90,909원</td><td><span class="admin-negative" data-tooltip="크몽 금액대별 수수료 9.4%">-94,000원</span></td><td><strong>906,000원</strong></td><td><span class="invoice-status requested">미발행</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="done" data-kind="website" data-channel="phone" data-date="2026-07-08" data-search="DOIL-20260708-004 가나다식품 랜딩페이지 홈페이지 유선 채팅 계좌이체">
+                      <td>20260708-유선-H001</td><td>2026.07.08</td><td>유선/채팅</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>가나다식품</button></td><td>홈페이지</td><td>랜딩페이지 제작</td><td>계좌이체</td><td>440,000원</td><td>40,000원</td><td>0원</td><td><strong>440,000원</strong></td><td><span class="invoice-status done">발행</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="cancel" data-kind="design" data-channel="phone" data-date="2026-06-30" data-search="DOIL-20260630-005 무기명 블로그 스킨 디자인 취소">
+                      <td>20260630-유선-D002</td><td>2026.06.30</td><td>유선/채팅</td><td><span class="status-pill gray">무기명</span></td><td>디자인</td><td>블로그 스킨 제작</td><td>-</td><td>0원</td><td>0원</td><td>0원</td><td><strong>0원</strong></td><td><span class="invoice-status none">미발행</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 업무가 없습니다.</p>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title"><h3>업무 관리 원칙</h3></div>
+              <div class="admin-note-box">
+                <strong>고객에게 진행상태를 보여주지 않습니다.</strong>
+                <p>이 페이지는 내부 공유용입니다. 업무 등록과 수정은 매출/매입, 계산서, 홈페이지 운영 정보로만 연결하고 고객 화면에는 노출하지 않습니다.</p>
+              </div>
+            </section>
+
+            <div class="admin-modal" data-project-order-modal hidden>
+              <div class="admin-modal-backdrop" data-project-order-close></div>
+              <section class="admin-modal-panel admin-project-work-panel" role="dialog" aria-modal="true" aria-labelledby="workOrderModalTitle">
+                <div class="admin-modal-head">
+                  <div><span>WORK ORDER</span><h3 id="workOrderModalTitle">업무 등록</h3></div>
+                  <button class="admin-modal-close" type="button" aria-label="닫기" data-project-order-close>×</button>
+                </div>
+                <form class="admin-customer-form admin-project-order-form">
+                  <div class="admin-form-grid two">
+                    <label><span>거래채널</span><select name="channel"><option value="site">자사</option><option value="phone">유선/채팅</option><option value="kmong">크몽</option><option value="external">기타 거래처</option></select></label>
+                    <label><span>거래일</span><input type="date" name="orderDate"></label>
+                    <label><span>고객 연동</span><input type="text" name="customerName" placeholder="고객명 검색 또는 수기 입력"></label>
+                    <label class="admin-check-field"><input type="checkbox" name="anonymous"><span>무기명 거래</span></label>
+                    <label><span>구분</span><select name="projectKind"><option>디자인</option><option>홈페이지</option><option>마케팅</option></select></label>
+                    <label><span>업무명</span><input type="text" name="projectName" placeholder="예: 상세페이지 제작"></label>
+                    <label><span>결제수단</span><select name="paymentMethod"><option>카드결제</option><option>계좌이체</option><option>무통장입금</option><option>플랫폼 정산</option><option>기타</option></select></label>
+                    <label><span>판매금액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"></label>
+                    <label><span>계산서</span><select name="invoiceStatus"><option>미발행</option><option>발행</option></select></label>
+                    <label><span>외부 거래번호</span><input type="text" name="externalOrderNo" placeholder="크몽 등 외부 주문번호"></label>
+                    <label class="wide"><span>업무 메모</span><textarea name="orderMemo" rows="4" placeholder="작업 범위, 수수료 특이사항, 고객 요청사항 등을 남겨주세요."></textarea></label>
+                  </div>
+                  <p class="admin-project-work-hint" data-project-order-hint>저장 시 거래번호가 자동 생성되고 매출/매입에 반영됩니다.</p>
+                  <div class="admin-modal-actions">
+                    <button class="admin-line-button" type="button" data-project-order-close>취소</button>
+                    <button class="admin-line-button primary" type="submit">등록</button>
+                  </div>
+                </form>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260711-internal-ops-1"></script>
+  </body>
+</html>
+
+
+
+

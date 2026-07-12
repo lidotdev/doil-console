@@ -1,0 +1,172 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>블로그 에디터 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260710-admin-blog-fix-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html" aria-label="DOIL Admin home">
+        <img class="brand-logo" src="assets/doil-logo-symbol.png" alt="">
+        <span>DOIL Admin</span>
+      </a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="top-nav client-page-title" aria-label="현재 페이지">
+        <span>블로그 에디터</span>
+      </nav>
+      <div class="header-actions">
+        <a class="login-link" href="index.html">홈페이지</a>
+        <a class="header-cta" href="login.html">로그아웃</a>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></a>
+            <a class="client-menu-item active" href="admin-contents.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-news.svg" alt=""><span>소식/블로그</span></span><span class="client-menu-badge">3</span></a>
+            <a class="client-menu-item" href="admin-documents.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>서류/파일</span></a>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel">
+              <div class="panel-title">
+                <h3>블로그 글 작성</h3>
+                <a class="inline-file-link" href="admin-contents.html">소식 목록으로</a>
+              </div>
+              <div class="admin-note-box">
+                <strong>홈페이지 블로그와 SEO 정보가 함께 연결됩니다.</strong>
+                <p>제목, 썸네일, 본문, SEO 제목과 설명을 작성하면 이후 홈페이지 블로그 목록과 RSS에 반영되는 구조로 연결하면 됩니다.</p>
+              </div>
+            </section>
+
+            <div class="blog-admin-layout">
+              <section class="panel blog-editor-panel">
+                <div class="field-grid">
+                  <label>
+                    글 제목
+                    <input id="blogTitleInput" type="text" placeholder="예: 상세페이지 제작 전 준비하면 좋은 자료">
+                  </label>
+                  <label>
+                    카테고리
+                    <select>
+                      <option>Guide</option>
+                      <option>Branding</option>
+                      <option>Content</option>
+                      <option>Notice</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label class="thumbnail-uploader" for="thumbnailInput">
+                  <input id="thumbnailInput" type="file" accept="image/*">
+                  <span class="thumbnail-preview" id="thumbnailPreview">THUMBNAIL</span>
+                  <strong>대표 썸네일 설정</strong>
+                  <small>블로그 목록 카드와 공유 이미지에 사용할 썸네일을 업로드합니다.</small>
+                </label>
+
+                <div class="editor-toolbar" aria-label="본문 편집 도구">
+                  <button type="button" data-wysiwyg-command="formatBlock" data-wysiwyg-value="h2">제목</button>
+                  <button type="button" data-wysiwyg-command="formatBlock" data-wysiwyg-value="p">문단</button>
+                  <button type="button" data-wysiwyg-command="bold">굵게</button>
+                  <button type="button" data-wysiwyg-command="italic">기울임</button>
+                  <button type="button" data-wysiwyg-command="insertUnorderedList">목록</button>
+                  <button type="button" data-wysiwyg-command="createLink">링크</button>
+                </div>
+                <div id="blogEditor" class="rich-editor" contenteditable="true" role="textbox" aria-label="블로그 본문 작성" data-wysiwyg-editor data-placeholder="블로그 글을 작성해보세요. 실제 블로그처럼 문단, 제목, 목록을 구성할 수 있습니다."></div>
+              </section>
+
+              <aside class="panel blog-meta-panel">
+                <div class="panel-title">
+                  <h3>발행 설정</h3>
+                  <span class="status-pill orange">임시저장</span>
+                </div>
+                <label>
+                  URL 슬러그
+                  <input id="blogSlugInput" type="text" placeholder="detail-page-guide">
+                </label>
+                <label>
+                  SEO 제목
+                  <input id="seoTitleInput" type="text" maxlength="60" placeholder="검색 결과에 표시될 제목">
+                </label>
+                <label>
+                  SEO 설명
+                  <textarea id="seoDescriptionInput" maxlength="160" placeholder="검색 결과에 표시될 설명을 작성하세요."></textarea>
+                </label>
+                <label>
+                  공개 상태
+                  <select>
+                    <option>임시저장</option>
+                    <option>예약 발행</option>
+                    <option>공개</option>
+                    <option>비공개</option>
+                  </select>
+                </label>
+                <div class="search-preview">
+                  <span>검색 미리보기</span>
+                  <strong id="searchPreviewTitle">블로그 글 제목이 표시됩니다.</strong>
+                  <small id="searchPreviewUrl">https://doilservice.co.kr/blog/</small>
+                  <p id="searchPreviewDescription">SEO 설명을 작성하면 검색 결과에 보일 문장이 미리 표시됩니다.</p>
+                </div>
+                <div class="admin-modal-actions">
+                  <button type="button" class="admin-line-button">임시저장</button>
+                  <button type="button" class="admin-line-button primary">발행하기</button>
+                </div>
+              </aside>
+            </div>
+
+            <section class="panel">
+              <div class="panel-title">
+                <h3>최근 작성 글</h3>
+                <a class="text-button" href="admin-contents.html?filter=type:post">게시글만 보기</a>
+              </div>
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>제목</th>
+                    <th>카테고리</th>
+                    <th>상태</th>
+                    <th>최근 수정</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>상세페이지 제작 전 준비하면 좋은 자료</td>
+                    <td>Guide</td>
+                    <td><span class="status-pill green">공개</span></td>
+                    <td>2026.07.07</td>
+                  </tr>
+                  <tr>
+                    <td>브랜드 톤을 빠르게 맞추는 방법</td>
+                    <td>Branding</td>
+                    <td><span class="status-pill orange">임시저장</span></td>
+                    <td>2026.07.07</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260710-admin-blog-fix-1"></script>
+  </body>
+</html>
+
+
+
+

@@ -1,0 +1,90 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>정산 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260712-settlement-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>정산</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-websites.html"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group is-open" data-admin-billing-group>
+              <button class="client-menu-item client-manage-toggle active" type="button" aria-expanded="true">
+                <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span>
+                <span class="client-menu-arrow"></span>
+              </button>
+              <div class="client-side-submenu">
+                <a class="client-menu-item active" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a>
+                <a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a>
+              </div>
+            </div>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>정산</h3>
+                <span class="status-pill blue" data-admin-count>5건</span>
+              </div>
+              <div class="admin-search-panel">
+                <label class="admin-search-field">
+                  <span>정산 검색</span>
+                  <input type="search" data-admin-search placeholder="거래처, 거래번호, 정산상태 검색">
+                </label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
+                  <button type="button" data-admin-filter="status:waiting" aria-pressed="false">확인대기</button>
+                  <button type="button" data-admin-filter="status:done" aria-pressed="false">정산완료</button>
+                  <button type="button" data-admin-filter="status:invoice" aria-pressed="false">계산서 필요</button>
+                </div>
+              </div>
+              <div class="admin-table-scroll">
+                <table class="admin-data-table admin-clickable-table">
+                  <thead><tr><th>정산일</th><th>거래처</th><th>내용</th><th>총액</th><th>수수료/매입</th><th>정산액</th><th>상태</th></tr></thead>
+                  <tbody>
+                    <tr data-admin-row data-status="invoice" data-search="가나다식품 세금계산서 발행대기 상세페이지">
+                      <td>2026.07.10</td><td>가나다식품</td><td><strong>상세페이지 제작</strong><small>계산서 발행 후 완료 처리</small></td><td>330,000원</td><td>0원</td><td><strong>330,000원</strong></td><td><span class="invoice-status requested invoice-urgent"><b>!</b> 계산서 필요</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="waiting" data-search="ABC몰 홈페이지 제작 입금확인중">
+                      <td>2026.07.09</td><td>ABC몰</td><td><strong>홈페이지 제작</strong><small>입금 확인 필요</small></td><td>550,000원</td><td>0원</td><td><strong>550,000원</strong></td><td><span class="status-pill orange">확인대기</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="done" data-search="크몽 쇼핑몰 배너 수수료 정산완료">
+                      <td>2026.07.09</td><td>크몽</td><td><strong>쇼핑몰 배너 제작</strong><small>외부채널 수수료 차감</small></td><td>1,000,000원</td><td><span class="admin-negative">-94,000원</span></td><td><strong>906,000원</strong></td><td><span class="status-pill green">정산완료</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="done" data-search="호스팅사 서버 비용 매입">
+                      <td>2026.07.10</td><td>호스팅사</td><td><strong>서버/호스팅 비용</strong><small>매월 반복 매입</small></td><td>-</td><td><span class="admin-negative">-99,000원</span></td><td><strong class="admin-negative">-99,000원</strong></td><td><span class="status-pill green">반영완료</span></td>
+                    </tr>
+                    <tr data-admin-row data-status="done" data-search="자료몰 이미지 소스 구매 매입">
+                      <td>2026.07.09</td><td>자료몰</td><td><strong>이미지 소스 구매</strong><small>일회성 매입</small></td><td>-</td><td><span class="admin-negative">-120,000원</span></td><td><strong class="admin-negative">-120,000원</strong></td><td><span class="status-pill green">반영완료</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 정산 내역이 없습니다.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260712-settlement-1"></script>
+  </body>
+</html>
+

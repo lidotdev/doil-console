@@ -1,0 +1,153 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>매출/매입 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260712-sales-purchase-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>매출/매입</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-websites.html"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></a>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group is-open" data-admin-billing-group>
+              <button class="client-menu-item client-manage-toggle active" type="button" aria-expanded="true">
+                <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span>
+                <span class="client-menu-arrow"></span>
+              </button>
+              <div class="client-side-submenu">
+                <a class="client-menu-item" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a>
+                <a class="client-menu-item active" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a>
+              </div>
+            </div>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>매출/매입</h3>
+                <div class="admin-title-actions">
+                  <button class="admin-line-button" type="button">엑셀 다운로드</button>
+                  <button class="admin-line-button primary" type="button" data-purchase-modal-open>매입등록</button>
+                </div>
+              </div>
+              <div class="admin-sales-grid">
+                <article><span>이번달 매출</span><strong>2,256,000원</strong><small>업무 등록 매출 연동</small></article>
+                <article><span>이번달 매입</span><strong>319,000원</strong><small>반복/일회성 매입 포함</small></article>
+                <article><span>수수료</span><strong>94,000원</strong><small>외부 거래처 수수료</small></article>
+                <article><span>예상 순수익</span><strong>1,843,000원</strong><small>매출 - 매입 - 수수료</small></article>
+              </div>
+
+              <div class="admin-search-panel">
+                <label class="admin-search-field">
+                  <span>거래 검색</span>
+                  <input type="search" data-admin-search placeholder="거래번호, 고객명, 업무명, 결제처 검색">
+                </label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
+                  <button type="button" data-admin-filter="type:sales" aria-pressed="false">매출</button>
+                  <button type="button" data-admin-filter="type:purchase" aria-pressed="false">매입</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">상태 전체</button>
+                  <button type="button" data-admin-filter="status:paid" aria-pressed="false">결제완료</button>
+                  <button type="button" data-admin-filter="status:waiting" aria-pressed="false">입금확인중</button>
+                  <button type="button" data-admin-filter="invoice:requested" aria-pressed="false">계산서 발행대기</button>
+                  <button type="button" data-admin-filter="invoice:issued" aria-pressed="false">계산서 발행완료</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">거래처 전체</button>
+                  <button type="button" data-admin-filter="channel:site" aria-pressed="false">자사</button>
+                  <button type="button" data-admin-filter="channel:kmong" aria-pressed="false">크몽</button>
+                  <button type="button" data-admin-filter="channel:purchase" aria-pressed="false">매입처</button>
+                </div>
+                <div class="admin-date-fields">
+                  <label><span>시작일</span><input type="date" data-admin-date-start></label>
+                  <label><span>종료일</span><input type="date" data-admin-date-end></label>
+                </div>
+              </div>
+
+              <div class="admin-table-scroll">
+                <table class="admin-data-table admin-clickable-table">
+                  <thead>
+                    <tr><th>구분</th><th>거래일</th><th>거래번호</th><th>거래처</th><th>내용</th><th>결제수단</th><th>공급가액</th><th>부가세</th><th>수수료</th><th>합계/순수익</th><th>계산서</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-admin-row data-type="sales" data-status="paid" data-invoice="requested" data-channel="site" data-date="2026-07-10" data-search="가나다식품 상세페이지 제작 자사 카드결제 계산서 발행대기">
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.10</td><td>20260710-자사-D001</td><td>가나다식품</td><td><strong>상세페이지 제작</strong><small>업무 등록 매출</small></td><td>카드결제</td><td>300,000원</td><td>30,000원</td><td>0원</td><td><strong>330,000원</strong></td><td><span class="invoice-status requested invoice-urgent"><b>!</b> 발행대기</span></td>
+                    </tr>
+                    <tr data-admin-row data-type="sales" data-status="paid" data-invoice="issued" data-channel="kmong" data-date="2026-07-09" data-search="크몽 쇼핑몰 배너 제작 플랫폼 정산 수수료">
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.09</td><td>20260709-크몽-M001</td><td>크몽 고객</td><td><strong>쇼핑몰 배너 제작</strong><small>외부채널 업무 매출</small></td><td>플랫폼 정산</td><td>909,091원</td><td>90,909원</td><td><span class="admin-negative" data-tooltip="크몽 수수료율 9.4%">-94,000원</span></td><td><strong>906,000원</strong></td><td><span class="invoice-status done">발행완료</span></td>
+                    </tr>
+                    <tr data-admin-row data-type="sales" data-status="waiting" data-invoice="requested" data-channel="site" data-date="2026-07-09" data-search="ABC몰 홈페이지 제작 무통장입금 입금확인중 계산서">
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.09</td><td>20260709-자사-H001</td><td>ABC몰</td><td><strong>홈페이지 제작</strong><small>입금 확인 후 매출 확정</small></td><td>무통장입금</td><td>500,000원</td><td>50,000원</td><td>0원</td><td><strong>550,000원</strong></td><td><span class="invoice-status requested">발행요청</span></td>
+                    </tr>
+                    <tr data-admin-row data-type="purchase" data-status="paid" data-invoice="none" data-channel="purchase" data-date="2026-07-10" data-search="서버 호스팅 비용 매입 운영비">
+                      <td><span class="status-pill orange">매입</span></td><td>2026.07.10</td><td>BUY-20260710-001</td><td>호스팅사</td><td><strong>서버/호스팅 비용</strong><small>매월 반복 매입</small></td><td>카드결제</td><td>90,000원</td><td>9,000원</td><td>-</td><td><strong class="admin-negative">-99,000원</strong></td><td><span class="invoice-status none">해당없음</span></td>
+                    </tr>
+                    <tr data-admin-row data-type="purchase" data-status="paid" data-invoice="issued" data-channel="purchase" data-date="2026-07-09" data-search="이미지 소스 구매 매입 자료">
+                      <td><span class="status-pill orange">매입</span></td><td>2026.07.09</td><td>BUY-20260709-002</td><td>자료몰</td><td><strong>이미지 소스 구매</strong><small>일회성 매입</small></td><td>계좌이체</td><td>109,091원</td><td>10,909원</td><td>-</td><td><strong class="admin-negative">-120,000원</strong></td><td><span class="invoice-status done">수취완료</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 매출/매입 내역이 없습니다.</p>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title"><h3>운영 기준</h3></div>
+              <div class="admin-note-box">
+                <strong>업무 매출 연동</strong>
+                <p>업무 등록 시 판매금액, 부가세, 수수료, 순수익이 매출 항목으로 자동 연동됩니다. 매입은 별도 등록 버튼으로 운영비, 외주비, 자료구매 등을 입력합니다.</p>
+              </div>
+            </section>
+            <div class="admin-modal" data-purchase-modal hidden>
+              <div class="admin-modal-backdrop" data-purchase-modal-close></div>
+              <section class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
+                <div class="admin-modal-head">
+                  <div><span>Purchase</span><h3 id="purchaseModalTitle">매입 등록</h3></div>
+                  <button class="admin-modal-close" type="button" data-purchase-modal-close aria-label="닫기">×</button>
+                </div>
+                <form class="admin-customer-form" data-purchase-form>
+                  <div class="admin-form-grid two">
+                    <label><span>매입일</span><input name="date" type="date" required></label>
+                    <label><span>거래처</span><input name="vendor" type="text" placeholder="예: 호스팅사, 외주 디자이너" required></label>
+                    <label><span>분류</span><select name="category"><option>운영비</option><option>외주비</option><option>자료구매</option><option>소프트웨어</option><option>기타</option></select></label>
+                    <label><span>결제수단</span><select name="method"><option>카드결제</option><option>계좌이체</option><option>무통장입금</option><option>현금</option><option>기타</option></select></label>
+                    <label><span>공급가액</span><input name="supply" type="text" inputmode="numeric" placeholder="공급가액"></label>
+                    <label><span>부가세</span><input name="vat" type="text" inputmode="numeric" placeholder="부가세"></label>
+                    <label><span>계산서/증빙</span><select name="invoice"><option>수취완료</option><option>수취대기</option><option>해당없음</option></select></label>
+                    <label><span>원본 파일</span><input name="file" type="file"></label>
+                    <label class="wide"><span>내용</span><input name="memo" type="text" placeholder="예: 서버/호스팅 비용" required></label>
+                  </div>
+                  <div class="admin-modal-actions">
+                    <button class="admin-line-button" type="button" data-purchase-modal-close>취소</button>
+                    <button class="admin-line-button primary" type="submit">등록</button>
+                  </div>
+                </form>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260712-sales-purchase-1"></script>
+  </body>
+</html>
+

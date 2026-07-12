@@ -1,0 +1,574 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>홈페이지 관리 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260711-admin-websites-simple-flow-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html">
+        <img class="brand-logo" src="assets/doil-logo-symbol.png" alt="">
+        <span>DOIL Admin</span>
+      </a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>홈페이지</span></nav>
+      <div class="header-actions">
+        <a class="login-link" href="index.html">홈페이지</a>
+        <a class="header-cta" href="login.html">로그아웃</a>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <div class="client-side-group is-open" data-admin-website-group>
+              <button class="client-menu-item client-manage-toggle active" type="button" aria-expanded="true">
+                <span class="client-menu-label"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></span>
+                <span class="client-menu-arrow"></span>
+              </button>
+              <div class="client-side-submenu">
+                <a class="client-menu-item active" href="admin-websites.html#website-management"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지 관리</span></a>
+                <a class="client-menu-item" href="admin-websites.html#domain-dns-management"><img class="client-menu-icon" src="assets/client-files.svg" alt=""><span>도메인/DNS 관리</span></a>
+                <a class="client-menu-item" href="admin-logs.html?filter=area:website"><img class="client-menu-icon" src="assets/client-files.svg" alt=""><span>수정 로그</span></a>
+              </div>
+            </div>
+            <a class="client-menu-item" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group" data-admin-billing-group><button class="client-menu-item client-manage-toggle" type="button" aria-expanded="false"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span><span class="client-menu-arrow"></span></button><div class="client-side-submenu"><a class="client-menu-item" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a><a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a></div></div>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel admin-website-summary">
+              <div class="panel-title">
+                <h3>홈페이지 운영 요약</h3>
+                <div class="admin-panel-actions">
+                  <button type="button" class="admin-line-button" data-admin-website-summary-toggle aria-expanded="true">요약 접기</button>
+                  <button type="button" class="admin-line-button" data-admin-soft-action="website-undo">최근 변경 되돌리기</button>
+                  <button type="button" class="admin-line-button primary" data-admin-website-modal-open="create">고객 홈페이지 생성</button>
+                </div>
+              </div>
+              <div class="admin-website-summary-details" data-admin-website-summary-details>
+                <div class="admin-status-row">
+                  <span><small>운영중</small><strong>3건</strong><small>정상 운영 사이트</small></span>
+                  <span><small>만료예정</small><strong>1건</strong><small>7일 이내 확인 필요</small></span>
+                  <span><small>월 연결제</small><strong>14,970원</strong><small>4,990원 × 3건</small></span>
+                  <span><small>만료/정지</small><strong>2건</strong><small>만료 1건 · 정지 1건</small></span>
+                  <span><small>도메인 점검</small><strong>2건</strong><small>만료/DNS 확인 필요</small></span>
+                  <span><small>통계 점검</small><strong>1건</strong><small>GA 미연동 확인</small></span>
+                </div>
+                <div class="admin-website-risk-grid">
+                  <article class="is-alert">
+                    <strong>결제실패</strong>
+                    <p>test.doilsrv.com 월요금 연결제 실패. 재시도 또는 사이트 일시정지 여부 확인 필요.</p>
+                    <span>다음 처리: 2026.07.11 10:00</span>
+                  </article>
+                  <article>
+                    <strong>결제예정</strong>
+                    <p>hongstudio.kr 월요금 결제 예정. 연결제 결제수단 유효 여부 확인 권장.</p>
+                    <span>예정일: 2026.07.15</span>
+                  </article>
+                  <article>
+                    <strong>관리자 접근</strong>
+                    <p>모든 고객 사이트는 도일서비스 관리자 계정 접근을 유지하고, 접속/수정 로그를 남겨야 합니다.</p>
+                    <span>최근 접속: 2026.07.10 14:22</span>
+                  </article>
+                  <article class="is-alert">
+                    <strong>운영점검</strong>
+                    <p>SSL 만료, 도메인 만료, 트래픽 90% 이상 사용, 백업 누락은 고객 사이트 장애로 이어질 수 있습니다.</p>
+                    <span>점검 필요: 2건</span>
+                  </article>
+                  <article>
+                    <strong>도메인/DNS</strong>
+                    <p>도메인 등록기관은 가비아 등으로 관리하고, DNS는 Cloudflare API 연동을 기본 구조로 둡니다.</p>
+                    <span>API 연동 준비: 3건</span>
+                  </article>
+                  <article class="is-alert">
+                    <strong>접속 통계</strong>
+                    <p>구글 애널리틱스 미설치, 방문자 급감, 트래픽 급증은 오늘 할 일로 자동 노출되도록 관리합니다.</p>
+                    <span>GA 미연동: 1건</span>
+                  </article>
+                </div>
+              </div>
+              <div class="admin-website-state-board" aria-label="홈페이지 운영 상태별 바로가기">
+                <a href="admin-websites.html?filter=status:active">
+                  <span class="status-pill green">운영중</span>
+                  <strong>3건</strong>
+                  <small>결제 정상 · 관리자 접근 가능</small>
+                </a>
+                <a href="admin-websites.html?filter=status:paused">
+                  <span class="status-pill gray">일시정지</span>
+                  <strong>1건</strong>
+                  <small>고객 요청 정지 · 재개 확인 필요</small>
+                </a>
+                <a href="admin-websites.html?filter=status:expiring">
+                  <span class="status-pill orange">만료예정</span>
+                  <strong>1건</strong>
+                  <small>7일 이내 연장 여부 확인</small>
+                </a>
+                <a href="admin-websites.html?filter=status:expired">
+                  <span class="status-pill red">만료</span>
+                  <strong>1건</strong>
+                  <small>결제실패 · 서비스 재개 확인</small>
+                </a>
+              </div>
+            </section>
+
+            <section class="panel" id="website-management" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>홈페이지 목록</h3>
+                <span class="status-pill blue" data-admin-count>6건</span>
+              </div>
+              <div class="admin-search-panel">
+                <label class="admin-search-field">
+                  <span>사이트 검색</span>
+                  <input type="search" data-admin-search placeholder="고객명, 도메인, 관리자 아이디, 사업자번호 검색">
+                </label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
+                  <button type="button" data-admin-filter="status:active" aria-pressed="false">운영중</button>
+                  <button type="button" data-admin-filter="status:paused" aria-pressed="false">일시정지</button>
+                  <button type="button" data-admin-filter="status:expiring" aria-pressed="false">만료예정</button>
+                  <button type="button" data-admin-filter="status:expired" aria-pressed="false">만료</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">결제 전체</button>
+                  <button type="button" data-admin-filter="billing:paid" aria-pressed="false">정상</button>
+                  <button type="button" data-admin-filter="billing:due" aria-pressed="false">결제예정</button>
+                  <button type="button" data-admin-filter="billing:failed" aria-pressed="false">결제실패</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">기능 전체</button>
+                  <button type="button" data-admin-filter="shop:ready" aria-pressed="false">쇼핑몰 예정</button>
+                  <button type="button" data-admin-filter="shop:enabled" aria-pressed="false">쇼핑몰 사용중</button>
+                  <button type="button" data-admin-filter="shop:none" aria-pressed="false">일반 홈페이지</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">점검 전체</button>
+                  <button type="button" data-admin-filter="health:good" aria-pressed="false">정상</button>
+                  <button type="button" data-admin-filter="health:warn" aria-pressed="false">주의</button>
+                  <button type="button" data-admin-filter="health:bad" aria-pressed="false">위험</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">통계 전체</button>
+                  <button type="button" data-admin-filter="analytics:ok" aria-pressed="false">GA 정상</button>
+                  <button type="button" data-admin-filter="analytics:missing" aria-pressed="false">GA 미설치</button>
+                  <button type="button" data-admin-filter="analytics:spike" aria-pressed="false">이상징후</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">제작 전체</button>
+                  <button type="button" data-admin-filter="buildStatus:building" aria-pressed="false">제작중</button>
+                  <button type="button" data-admin-filter="buildStatus:review" aria-pressed="false">검수중</button>
+                  <button type="button" data-admin-filter="buildStatus:published" aria-pressed="false">운영중</button>
+                </div>
+              </div>
+
+              <div class="admin-table-scroll">
+                <table class="admin-data-table admin-clickable-table admin-websites-table" data-admin-websites-table>
+                  <thead>
+                    <tr>
+                      <th>사이트</th>
+                      <th>고객</th>
+                      <th>제작비</th>
+                      <th>월요금</th>
+                      <th>월납부</th>
+                      <th>제작상태</th>
+                      <th>요금제/트래픽 잔량</th>
+                      <th>접속통계</th>
+                      <th>관리자 접근</th>
+                      <th>상태</th>
+                      <th>쇼핑몰</th>
+                      <th>운영점검</th>
+                      <th>처리</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-admin-row data-status="active" data-build-status="published" data-billing="paid" data-shop="none" data-health="good" data-analytics="ok" data-traffic="42" data-traffic-remain="잔여 5.8GB" data-visits="1248" data-search="ganada doilservice 가나다식품 ganada.doilsrv.com admin_ganada 8502101340 GA 정상 방문자 1248 운영중">
+                      <td><strong>ganada.doilsrv.com</strong><small>일반 홈페이지</small></td>
+                      <td><strong>가나다식품</strong><small>850-21-01340</small></td>
+                      <td>550,000원</td>
+                      <td>4,990원</td>
+                      <td><span class="status-pill green">정상</span><small>다음 2026.08.10</small></td>
+                      <td><span class="status-pill green">운영중</span></td>
+                      <td><strong>Basic · 10GB</strong><div class="admin-traffic-meter"><span style="--traffic:42%"></span></div><small>잔여 5.8GB</small></td>
+                      <td><strong>1,248명</strong><small>GA 정상</small></td>
+                      <td><span class="status-pill green">접근 가능</span><small>admin_ganada</small></td>
+                      <td><span class="status-pill green">운영중</span></td>
+                      <td><span class="status-pill gray">미사용</span></td>
+                      <td><span class="status-pill green">정상</span><small>SSL 2027.07.10</small></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-website-action="check">점검</button><button class="admin-line-button" type="button" data-website-action="edit">관리</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-status="expiring" data-build-status="review" data-billing="due" data-shop="ready" data-health="warn" data-analytics="missing" data-traffic="78" data-traffic-remain="잔여 6.6GB" data-visits="0" data-search="abcmall ABC몰 abc-preview.doilsrv.com admin_abc 1234567890 GA 미설치 검수중">
+                      <td><strong>abc-preview.doilsrv.com</strong><small>랜딩 + 게시판</small></td>
+                      <td><strong>ABC몰</strong><small>123-45-67890</small></td>
+                      <td>770,000원</td>
+                      <td>4,990원</td>
+                      <td><span class="status-pill orange">결제예정</span><small>예정 2026.07.20</small></td>
+                      <td><span class="status-pill orange">검수중</span></td>
+                      <td><strong>Standard · 30GB</strong><div class="admin-traffic-meter is-warning"><span style="--traffic:78%"></span></div><small>잔여 6.6GB</small></td>
+                      <td><strong>-</strong><small>GA 미설치</small></td>
+                      <td><span class="status-pill green">접근 가능</span><small>admin_abc</small></td>
+                      <td><span class="status-pill orange">만료예정</span><small>2026.07.20</small></td>
+                      <td><span class="status-pill orange">확장예정</span></td>
+                      <td><span class="status-pill orange">주의</span><small>도메인 연결 전</small></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-website-action="check">점검</button><button class="admin-line-button primary" type="button" data-website-action="edit">관리</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-status="active" data-build-status="building" data-billing="due" data-shop="ready" data-health="warn" data-analytics="spike" data-traffic="82" data-traffic-remain="잔여 1.8GB" data-visits="3860" data-search="hong Hong portfolio hongstudio.kr admin_hong 01022223333 GA 이상징후 방문자 급증 3860 제작중">
+                      <td><strong>hongstudio.kr</strong><small>포트폴리오형</small></td>
+                      <td><strong>홍길동</strong><small>개인 · 010-2222-3333</small></td>
+                      <td>550,000원</td>
+                      <td>4,990원</td>
+                      <td><span class="status-pill orange">결제예정</span><small>예정 2026.07.15</small></td>
+                      <td><span class="status-pill blue">제작중</span></td>
+                      <td><strong>Basic · 10GB</strong><div class="admin-traffic-meter is-warning"><span style="--traffic:82%"></span></div><small>잔여 1.8GB</small></td>
+                      <td><strong>3,860명</strong><small>방문 급증</small></td>
+                      <td><span class="status-pill green">접근 가능</span><small>admin_hong</small></td>
+                      <td><span class="status-pill green">운영중</span></td>
+                      <td><span class="status-pill orange">상담필요</span></td>
+                      <td><span class="status-pill orange">주의</span><small>트래픽 82%</small></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-website-action="check">점검</button><button class="admin-line-button" type="button" data-website-action="edit">관리</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-status="expired" data-build-status="published" data-billing="failed" data-shop="none" data-health="bad" data-analytics="missing" data-traffic="100" data-traffic-remain="만료됨" data-visits="0" data-search="testshop 테스트상점 test.doilsrv.com admin_test GA 미설치 운영중">
+                      <td><strong>test.doilsrv.com</strong><small>일반 홈페이지</small></td>
+                      <td><strong>테스트상점</strong><small>사업자 정보 미확인</small></td>
+                      <td>550,000원</td>
+                      <td>4,990원</td>
+                      <td><span class="status-pill red">결제실패</span><small>재시도 필요</small></td>
+                      <td><span class="status-pill green">운영중</span></td>
+                      <td><strong>Basic · 10GB</strong><div class="admin-traffic-meter is-danger"><span style="--traffic:100%"></span></div><small>만료됨</small></td>
+                      <td><strong>-</strong><small>GA 미설치</small></td>
+                      <td><span class="status-pill gray">제한</span><small>admin_test</small></td>
+                      <td><span class="status-pill red">만료</span></td>
+                      <td><span class="status-pill gray">미사용</span></td>
+                      <td><span class="status-pill red">위험</span><small>결제실패</small></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button primary" type="button" data-website-action="retry">재시도</button><button class="admin-line-button" type="button" data-website-action="edit">관리</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-status="paused" data-build-status="published" data-billing="paid" data-shop="none" data-health="warn" data-analytics="ok" data-traffic="12" data-traffic-remain="잔여 8.8GB" data-visits="210" data-search="oldbrand old brand oldbrand.co.kr admin_old 고객요청 일시정지 GA 정상 방문자 210 운영중">
+                      <td><strong>oldbrand.co.kr</strong><small>일반 홈페이지</small></td>
+                      <td><strong>올드브랜드</strong><small>고객 요청 정지</small></td>
+                      <td>550,000원</td>
+                      <td>4,990원</td>
+                      <td><span class="status-pill green">정상</span><small>정지 중 과금 유지</small></td>
+                      <td><span class="status-pill green">운영중</span></td>
+                      <td><strong>Basic · 10GB</strong><div class="admin-traffic-meter"><span style="--traffic:12%"></span></div><small>잔여 8.8GB</small></td>
+                      <td><strong>210명</strong><small>GA 정상</small></td>
+                      <td><span class="status-pill green">접근 가능</span><small>admin_old</small></td>
+                      <td><span class="status-pill gray">일시정지</span></td>
+                      <td><span class="status-pill gray">미사용</span></td>
+                      <td><span class="status-pill orange">주의</span><small>재개일 미정</small></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-website-action="check">점검</button><button class="admin-line-button primary" type="button" data-website-action="edit">관리</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-status="active" data-build-status="building" data-billing="paid" data-shop="enabled" data-health="good" data-analytics="ok" data-traffic="34" data-traffic-remain="잔여 66GB" data-visits="8420" data-search="samplecommerce sample commerce samplecommerce.co.kr admin_shop GA 정상 방문자 8420 제작중">
+                      <td><strong>samplecommerce.co.kr</strong><small>쇼핑몰 베타</small></td>
+                      <td><strong>샘플커머스</strong><small>플러스 요금제</small></td>
+                      <td>1,100,000원</td>
+                      <td>4,990원</td>
+                      <td><span class="status-pill green">정상</span><small>다음 2026.08.08</small></td>
+                      <td><span class="status-pill blue">제작중</span></td>
+                      <td><strong>Pro · 100GB</strong><div class="admin-traffic-meter"><span style="--traffic:34%"></span></div><small>잔여 66GB</small></td>
+                      <td><strong>8,420명</strong><small>GA 정상</small></td>
+                      <td><span class="status-pill green">접근 가능</span><small>admin_shop</small></td>
+                      <td><span class="status-pill green">운영중</span></td>
+                      <td><span class="status-pill green">사용중</span></td>
+                      <td><span class="status-pill green">정상</span><small>백업 완료</small></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-website-action="check">점검</button><button class="admin-line-button" type="button" data-website-action="edit">관리</button></div></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 홈페이지가 없습니다.</p>
+            </section>
+
+            <section class="panel" id="domain-dns-management" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>도메인/DNS 관리</h3>
+                <span class="status-pill blue" data-admin-count>5건</span>
+              </div>
+              <div class="admin-note-box">
+                <strong>운영 기준</strong>
+                <p>초기에는 도메인 등록/연장은 가비아 등 등록기관에서 관리하고, DNS 레코드 변경은 Cloudflare API 연동을 기준으로 설계합니다. 가비아 API 제공이 확인되면 도메인 검색·등록·연장 기능을 추가로 붙입니다.</p>
+              </div>
+              <div class="admin-domain-summary">
+                <article><strong>기본주소</strong><span>2건</span><p>고객아이디.doilsrv.com</p></article>
+                <article><strong>독립 도메인</strong><span>2건</span><p>고객 보유 또는 도일서비스 연결</p></article>
+                <article><strong>SSL 확인</strong><span>1건</span><p>만료/발급대기 점검 필요</p></article>
+                <article><strong>DNS 수동관리</strong><span>1건</span><p>외부 DNS 또는 API 미연동</p></article>
+              </div>
+              <div class="admin-search-panel">
+                <label class="admin-search-field">
+                  <span>도메인 검색</span>
+                  <input type="search" data-admin-search placeholder="도메인, 고객명, 등록기관, 네임서버, DNS 제공자 검색">
+                </label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
+                  <button type="button" data-admin-filter="domain:active" aria-pressed="false">정상</button>
+                  <button type="button" data-admin-filter="domain:expiring" aria-pressed="false">만료예정</button>
+                  <button type="button" data-admin-filter="domain:pending" aria-pressed="false">연결대기</button>
+                  <button type="button" data-admin-filter="domain:expired" aria-pressed="false">만료</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">DNS 전체</button>
+                  <button type="button" data-admin-filter="dns:cloudflare" aria-pressed="false">Cloudflare</button>
+                  <button type="button" data-admin-filter="dns:gabia" aria-pressed="false">가비아 DNS</button>
+                  <button type="button" data-admin-filter="dns:external" aria-pressed="false">외부 DNS</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">연결 전체</button>
+                  <button type="button" data-admin-filter="linkType:default" aria-pressed="false">기본주소</button>
+                  <button type="button" data-admin-filter="linkType:custom" aria-pressed="false">독립 도메인</button>
+                  <button type="button" data-admin-filter="linkType:external" aria-pressed="false">외부 연결</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">API 전체</button>
+                  <button type="button" data-admin-filter="api:ready" aria-pressed="false">API 가능</button>
+                  <button type="button" data-admin-filter="api:manual" aria-pressed="false">수동관리</button>
+                  <button type="button" data-admin-filter="api:needed" aria-pressed="false">신청필요</button>
+                </div>
+              </div>
+              <div class="admin-table-scroll">
+                <table class="admin-data-table admin-clickable-table admin-domain-table" data-admin-domain-table>
+                  <thead>
+                    <tr>
+                      <th>도메인</th>
+                      <th>연결구분</th>
+                      <th>고객</th>
+                      <th>등록기관</th>
+                      <th>DNS</th>
+                      <th>만료일</th>
+                      <th>SSL</th>
+                      <th>네임서버</th>
+                      <th>API 상태</th>
+                      <th>처리</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-admin-row data-domain="active" data-dns="cloudflare" data-api="ready" data-link-type="default" data-search="ganada.doilsrv.com 가나다식품 도일서비스 cloudflare ns.cloudflare.com 기본주소">
+                      <td><strong>ganada.doilsrv.com</strong><small>기본 제공 주소</small></td>
+                      <td><span class="status-pill green">기본주소</span></td>
+                      <td><strong>가나다식품</strong><small>850-21-01340</small></td>
+                      <td>도일서비스</td>
+                      <td><span class="status-pill green">Cloudflare</span></td>
+                      <td><strong>2027.07.10</strong><small>365일 남음</small></td>
+                      <td><span class="status-pill green">정상</span><small>자동갱신</small></td>
+                      <td><small>ns.cloudflare.com</small></td>
+                      <td><span class="status-pill green">API 가능</span></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-domain-action="dns">DNS</button><button class="admin-line-button" type="button" data-domain-action="check">점검</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-domain="expiring" data-dns="gabia" data-api="needed" data-link-type="custom" data-search="hongstudio.kr 홍길동 가비아 gabia ns.gabia.co.kr api 신청필요 독립 도메인">
+                      <td><strong>hongstudio.kr</strong><small>고객 소유 도메인</small></td>
+                      <td><span class="status-pill blue">독립 도메인</span></td>
+                      <td><strong>홍길동</strong><small>개인 · 010-2222-3333</small></td>
+                      <td>가비아</td>
+                      <td><span class="status-pill orange">가비아 DNS</span></td>
+                      <td><strong>2026.07.25</strong><small>14일 남음</small></td>
+                      <td><span class="status-pill green">정상</span><small>2026.10.25</small></td>
+                      <td><small>ns.gabia.co.kr</small></td>
+                      <td><span class="status-pill orange">신청필요</span></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button primary" type="button" data-domain-action="renew">연장확인</button><button class="admin-line-button" type="button" data-domain-action="check">점검</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-domain="pending" data-dns="external" data-api="manual" data-link-type="external" data-search="abc-preview.doilsrv.com ABC몰 외부 DNS 연결대기 외부 연결">
+                      <td><strong>abc-preview.doilsrv.com</strong><small>독립 도메인 연결대기</small></td>
+                      <td><span class="status-pill gray">외부 연결</span></td>
+                      <td><strong>ABC몰</strong><small>123-45-67890</small></td>
+                      <td>외부 등록기관</td>
+                      <td><span class="status-pill gray">외부 DNS</span></td>
+                      <td><strong>-</strong><small>고객 확인 필요</small></td>
+                      <td><span class="status-pill orange">대기</span><small>도메인 연결 후 발급</small></td>
+                      <td><small>고객 설정 필요</small></td>
+                      <td><span class="status-pill gray">수동관리</span></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-domain-action="guide">안내</button><button class="admin-line-button" type="button" data-domain-action="check">점검</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-domain="expired" data-dns="cloudflare" data-api="ready" data-link-type="default" data-search="test.doilsrv.com 테스트상점 cloudflare 만료 기본주소">
+                      <td><strong>test.doilsrv.com</strong><small>기본 제공 주소</small></td>
+                      <td><span class="status-pill green">기본주소</span></td>
+                      <td><strong>테스트상점</strong><small>사업자 정보 미확인</small></td>
+                      <td>도일서비스</td>
+                      <td><span class="status-pill green">Cloudflare</span></td>
+                      <td><strong>2026.07.01</strong><small>만료</small></td>
+                      <td><span class="status-pill red">위험</span><small>접근 제한</small></td>
+                      <td><small>ns.cloudflare.com</small></td>
+                      <td><span class="status-pill green">API 가능</span></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button primary" type="button" data-domain-action="restore">복구</button><button class="admin-line-button" type="button" data-domain-action="check">점검</button></div></td>
+                    </tr>
+                    <tr data-admin-row data-domain="active" data-dns="cloudflare" data-api="ready" data-link-type="custom" data-search="samplecommerce.co.kr 샘플커머스 cloudflare 독립 도메인">
+                      <td><strong>samplecommerce.co.kr</strong><small>쇼핑몰 베타</small></td>
+                      <td><span class="status-pill blue">독립 도메인</span></td>
+                      <td><strong>샘플커머스</strong><small>플러스 요금제</small></td>
+                      <td>도일서비스</td>
+                      <td><span class="status-pill green">Cloudflare</span></td>
+                      <td><strong>2027.07.10</strong><small>365일 남음</small></td>
+                      <td><span class="status-pill green">정상</span><small>자동갱신</small></td>
+                      <td><small>ns.cloudflare.com</small></td>
+                      <td><span class="status-pill green">API 가능</span></td>
+                      <td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-domain-action="dns">DNS</button><button class="admin-line-button" type="button" data-domain-action="check">점검</button></div></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 도메인이 없습니다.</p>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title"><h3>운영 중 오류 방지 체크리스트</h3></div>
+              <div class="admin-website-guard-grid">
+                <article><strong>결제실패 방치 방지</strong><p>결제실패 행은 위험 상태로 표시하고, 재시도 버튼을 통해 정상 전환 여부를 기록합니다.</p></article>
+                <article><strong>트래픽 초과 방지</strong><p>요금제 트래픽 80% 이상은 주의, 90% 이상은 위험으로 보고 업그레이드 상담 대상으로 둡니다.</p></article>
+                <article><strong>접근권한 누락 방지</strong><p>관리자 아이디가 없거나 제한 상태인 사이트는 운영점검에서 바로 확인합니다.</p></article>
+                <article><strong>도메인/SSL 만료 방지</strong><p>만료일이 가까운 사이트는 점검 로그에 기록하고 고객 안내 또는 갱신 작업으로 연결합니다.</p></article>
+                <article><strong>DNS 변경 로그</strong><p>A, CNAME, TXT, MX 레코드 변경은 변경 전/후 값과 처리자를 반드시 기록합니다.</p></article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title"><h3>요금제/트래픽 정책</h3></div>
+              <div class="admin-website-plan-grid">
+                <article><strong>Basic</strong><span>10GB 트래픽</span><p>일반 회사소개, 포트폴리오, 안내형 홈페이지 기본값입니다.</p></article>
+                <article><strong>Standard</strong><span>30GB 트래픽</span><p>게시판, 이벤트 랜딩, 이미지가 많은 홈페이지에 적용합니다.</p></article>
+                <article><strong>Pro</strong><span>100GB 트래픽</span><p>쇼핑몰 베타, 방문량이 많은 캠페인 사이트에 적용합니다.</p></article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title">
+                <div><h3>홈페이지 템플릿 보관함</h3><p>관리자가 고객 홈페이지 생성 시 선택하는 원본 템플릿입니다.</p></div>
+                <button class="admin-line-button" type="button" data-admin-soft-action="template-add">템플릿 추가</button>
+              </div>
+              <div class="admin-template-vault">
+                <article><span class="status-pill green">활성</span><strong>스튜디오 베이직</strong><p>회사소개·서비스·포트폴리오·고객지원 기본형</p><small>/templates/studio-basic</small></article>
+                <article><span class="status-pill green">활성</span><strong>브랜드 모던</strong><p>브랜드 이미지와 소개 중심 홈페이지</p><small>/templates/brand-modern</small></article>
+                <article><span class="status-pill orange">확장</span><strong>커머스 라이트</strong><p>쇼핑몰 기능 도입을 고려한 상품 소개형</p><small>/templates/commerce-light</small></article>
+                <article><span class="status-pill green">활성</span><strong>랜딩 집중형</strong><p>이벤트·광고 유입용 단일 전환 페이지</p><small>/templates/landing-focus</small></article>
+                <article><span class="status-pill green">활성</span><strong>포트폴리오 그리드</strong><p>작업 사례를 많이 보여주는 갤러리형</p><small>/templates/portfolio-grid</small></article>
+                <article><span class="status-pill green">활성</span><strong>로컬 서비스형</strong><p>방문 안내와 상담 동선 중심 구성</p><small>/templates/local-service</small></article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title"><h3>관리자 접근 로그</h3></div>
+              <table class="admin-data-table admin-website-log-table">
+                <thead><tr><th>일시</th><th>관리자</th><th>사이트</th><th>작업</th><th>결과</th></tr></thead>
+                <tbody data-admin-website-log>
+                  <tr><td>2026.07.10 14:22</td><td>도일 관리자</td><td>ganada.doilsrv.com</td><td>공지 영역 수정</td><td><span class="status-pill green">완료</span></td></tr>
+                  <tr><td>2026.07.10 11:08</td><td>도일 관리자</td><td>abc-preview.doilsrv.com</td><td>관리자 계정 점검</td><td><span class="status-pill blue">확인</span></td></tr>
+                  <tr><td>2026.07.09 18:42</td><td>도일 관리자</td><td>test.doilsrv.com</td><td>미납으로 접근 제한</td><td><span class="status-pill gray">제한</span></td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="panel">
+              <div class="panel-title"><h3>관리 기준</h3></div>
+              <div class="admin-website-policy-grid">
+                <article><strong>제작비</strong><p>기본 550,000원. 예약, 회원, 자동화, 외부 API 같은 특수 기능은 별도 추가금으로 기록합니다.</p></article>
+                <article><strong>월간 운영요금</strong><p>4,990원 연결제 전용. 결제실패 시 재시도, 미납, 일시정지 흐름을 관리합니다.</p></article>
+                <article><strong>관리자 접근</strong><p>도일서비스 관리자 계정은 모든 고객 홈페이지에 접근 가능해야 하며, 접속/수정 로그를 남깁니다.</p></article>
+                <article><strong>쇼핑몰 확장</strong><p>현재는 일반 홈페이지 중심으로 운영하고, 쇼핑몰 기능은 확장예정/상담필요/사용중 상태로 분리합니다.</p></article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="admin-modal" data-admin-website-modal hidden>
+      <div class="admin-modal-backdrop" data-admin-website-modal-close></div>
+      <section class="admin-modal-panel" role="dialog" aria-modal="true" aria-labelledby="adminWebsiteModalTitle">
+        <div class="admin-modal-head">
+          <div><span>Website Management</span><h3 id="adminWebsiteModalTitle">고객 홈페이지 생성</h3></div>
+          <button type="button" class="admin-modal-close" data-admin-website-modal-close aria-label="닫기">×</button>
+        </div>
+        <form class="admin-customer-form" data-admin-website-form>
+          <div class="admin-website-detail-summary" data-admin-website-detail-summary hidden>
+            <div class="admin-website-detail-main">
+              <span class="status-pill green" data-website-detail-status>운영중</span>
+              <strong data-website-detail-domain>-</strong>
+              <p data-website-detail-customer>-</p>
+            </div>
+            <div class="admin-website-detail-grid">
+              <article><span>템플릿</span><strong data-website-detail-template>-</strong></article>
+              <article><span>고객계정</span><strong data-website-detail-account>-</strong></article>
+              <article><span>결제</span><strong data-website-detail-billing>-</strong></article>
+              <article><span>제작상태</span><strong data-website-detail-build>-</strong></article>
+              <article><span>GA/방문</span><strong data-website-detail-analytics>-</strong></article>
+              <article><span>트래픽</span><strong data-website-detail-traffic>-</strong></article>
+              <article><span>관리자 접속</span><strong data-website-detail-admin>-</strong></article>
+            </div>
+            <div class="admin-website-detail-log">
+              <strong>최근 운영 로그</strong>
+              <p data-website-detail-log>최근 점검 내역이 이곳에 표시됩니다.</p>
+            </div>
+            <div class="admin-website-detail-actions">
+              <button type="button" class="admin-line-button" data-admin-soft-action="website-open">사이트 열기</button>
+              <button type="button" class="admin-line-button" data-admin-soft-action="website-customer">고객정보 확인</button>
+              <button type="button" class="admin-line-button" data-admin-soft-action="website-log">수정로그 보기</button>
+              <button type="button" class="admin-line-button" data-admin-soft-action="website-undo">최근 변경 되돌리기</button>
+            </div>
+          </div>
+          <div class="admin-website-create-flow">
+            <div class="admin-create-steps">
+              <span>1. 고객 계정 연결</span>
+              <span>2. 관리자 템플릿 선택</span>
+              <span>3. 고객 사이트 생성</span>
+            </div>
+            <p>고객이 직접 제작하거나 템플릿을 고르는 기능이 아니라, 도일서비스 관리자가 템플릿을 복제해 고객 계정에 연결하고 이후 수정까지 직접 관리하는 내부 생성 흐름입니다.</p>
+          </div>
+          <div class="admin-form-grid two">
+            <label><span>고객명</span><input name="customerName" type="text" placeholder="예: 가나다식품" required></label>
+            <label><span>고객 식별정보</span><input name="customerMeta" type="text" placeholder="사업자번호 또는 연락처"></label>
+            <label><span>고객 계정 아이디</span><input name="customerAccountId" type="text" placeholder="예: ganada_client" required></label>
+            <label><span>초기 비밀번호</span><input name="customerTempPassword" type="text" placeholder="자동 생성 또는 직접 입력"></label>
+            <label><span>홈페이지 템플릿</span><select name="templateId" data-website-template-select><option value="studio-basic">스튜디오 베이직</option><option value="brand-modern">브랜드 모던</option><option value="commerce-light">커머스 라이트</option><option value="landing-focus">랜딩 집중형</option><option value="portfolio-grid">포트폴리오 그리드</option><option value="local-service">로컬 서비스형</option></select></label>
+            <label><span>생성 경로</span><input name="cloneTarget" type="text" placeholder="/sites/customer-site" readonly></label>
+            <div class="wide admin-template-preview" data-website-template-preview>
+              <strong>스튜디오 베이직</strong>
+              <p>회사소개, 서비스, 포트폴리오, 고객지원으로 구성된 기본형 홈페이지 템플릿입니다.</p>
+            </div>
+            <label><span>고객 사이트 주소</span><input name="domain" type="text" placeholder="customer-id.doilsrv.com" required></label>
+            <div class="wide admin-website-url-note"><strong>기본 주소 정책</strong><p>기본 제공 주소는 고객 계정 아이디 기반의 서브도메인으로 생성합니다. 예: <code>ganada-client.doilsrv.com</code>. 별도 도메인은 도메인/DNS 관리에서 추가 연결합니다.</p></div>
+            <label><span>도메인 등록기관</span><select name="registrar"><option>도일서비스</option><option>가비아</option><option>Cloudflare Registrar</option><option>카페24</option><option>외부 등록기관</option></select></label>
+            <label><span>DNS 제공자</span><select name="dnsProvider"><option>Cloudflare</option><option>가비아 DNS</option><option>외부 DNS</option><option>미연결</option></select></label>
+            <label><span>도메인 만료일</span><input name="domainExpiresAt" type="date" value="2027-07-10"></label>
+            <label><span>SSL 만료일</span><input name="sslExpiresAt" type="date" value="2026-10-10"></label>
+            <label><span>API 관리상태</span><select name="domainApiStatus"><option value="ready">API 가능</option><option value="manual">수동관리</option><option value="needed">신청필요</option></select></label>
+            <label><span>네임서버</span><input name="nameservers" type="text" placeholder="예: ns.cloudflare.com"></label>
+            <label><span>사이트 유형</span><select name="siteType"><option>일반 홈페이지</option><option>랜딩 + 게시판</option><option>포트폴리오형</option><option>쇼핑몰 베타</option></select></label>
+            <label><span>제작비</span><input name="buildPrice" type="text" value="550,000"></label>
+            <label><span>월간 요금</span><input name="monthlyFee" type="text" value="4,990" readonly></label>
+            <label><span>월납부 상태</span><select name="paymentStatus"><option value="paid">정상</option><option value="due">결제예정</option><option value="failed">결제실패</option></select></label>
+            <label><span>다음 결제일</span><input name="nextBillingDate" type="date" value="2026-08-10"></label>
+            <label><span>제작상태</span><select name="buildStatus"><option value="building">제작중</option><option value="review">검수중</option><option value="published">운영중</option></select></label>
+            <label><span>요금제</span><select name="plan"><option value="Basic · 10GB">Basic · 10GB</option><option value="Standard · 30GB">Standard · 30GB</option><option value="Pro · 100GB">Pro · 100GB</option></select></label>
+            <label><span>운영상태</span><select name="siteStatus"><option value="active">운영중</option><option value="paused">일시정지</option><option value="expiring">만료예정</option><option value="expired">만료</option></select></label>
+            <label><span>쇼핑몰 기능</span><select name="shopStatus"><option value="none">미사용</option><option value="ready">확장예정</option><option value="enabled">사용중</option></select></label>
+            <label><span>관리자 아이디</span><input name="adminId" type="text" placeholder="admin_customer"></label>
+            <label><span>운영점검</span><select name="healthStatus"><option value="good">정상</option><option value="warn">주의</option><option value="bad">위험</option></select></label>
+            <label><span>점검 메모</span><input name="healthMemo" type="text" placeholder="예: SSL 2027.07.10 / 트래픽 82%"></label>
+            <label><span>트래픽 사용률</span><input name="trafficUsage" type="number" min="0" max="100" value="42" placeholder="0~100"></label>
+            <label><span>트래픽 잔량</span><input name="trafficRemain" type="text" value="잔여 5.8GB" placeholder="예: 잔여 5.8GB"></label>
+            <label><span>GA 측정 ID</span><input name="analyticsId" type="text" placeholder="G-XXXXXXXXXX"></label>
+            <label><span>통계 상태</span><select name="analyticsStatus"><option value="ok">GA 정상</option><option value="missing">GA 미설치</option><option value="spike">이상징후</option></select></label>
+            <label><span>일 방문자</span><input name="dailyVisits" type="number" min="0" value="0" placeholder="예: 1248"></label>
+            <label class="wide"><span>특수 기능/추가비 메모</span><textarea name="memo" rows="4" placeholder="예약 기능, 회원 기능, 외부 연동 등 추가 제작비가 필요한 내용을 기록하세요."></textarea></label>
+          </div>
+          <div class="admin-modal-actions">
+            <button type="button" class="admin-line-button" data-admin-website-modal-close>취소</button>
+            <button type="submit" class="admin-line-button primary">고객 홈페이지 생성</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script src="app.js?v=20260711-admin-websites-simple-flow-1"></script>
+  </body>
+</html>
+
+
+
+

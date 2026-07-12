@@ -1,0 +1,95 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>포트폴리오 관리 | DOIL SERVICE</title>
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
+    <link rel="stylesheet" href="styles.css?v=20260712-admin-portfolio-1">
+  </head>
+  <body class="app-body client-page admin-page">
+    <header class="site-header">
+      <a class="brand" href="admin.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL Admin</span></a>
+      <button class="mobile-menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="top-nav client-page-title"><span>포트폴리오</span></nav>
+      <div class="header-actions"><a class="login-link" href="index.html">홈페이지</a><a class="header-cta" href="login.html">로그아웃</a></div>
+    </header>
+    <main class="page-main">
+      <section class="section app-section client-app admin-app page-app">
+        <div class="client-layout">
+          <aside class="client-side-menu admin-side-nav" aria-label="관리자 메뉴">
+            <div class="client-side-head"><strong>DOIL Admin</strong></div>
+            <a class="client-menu-item" href="admin.html"><img class="client-menu-icon" src="assets/client-dashboard.svg" alt=""><span>대시보드</span></a>
+            <a class="client-menu-item" href="admin-customers.html"><img class="client-menu-icon" src="assets/client-profile.svg" alt=""><span>회원</span></a>
+            <a class="client-menu-item" href="admin-projects.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-projects.svg" alt=""><span>업무</span></span><span class="client-menu-badge">2</span></a>
+            <a class="client-menu-item" href="admin-websites.html"><img class="client-menu-icon" src="assets/client-websites.svg" alt=""><span>홈페이지</span></a>
+            <a class="client-menu-item active" href="admin-portfolio.html"><img class="client-menu-icon" src="assets/client-market.svg" alt=""><span>포트폴리오</span></a>
+            <div class="client-side-group" data-admin-billing-group><button class="client-menu-item client-manage-toggle" type="button" aria-expanded="false"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>매출/매입</span></span><span class="client-menu-arrow"></span></button><div class="client-side-submenu"><a class="client-menu-item" href="admin-settlement.html"><img class="client-menu-icon" src="assets/client-transactions.svg" alt=""><span>정산</span></a><a class="client-menu-item" href="admin-billing.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>매출/매입</span></a></div></div>
+            <a class="client-menu-item" href="admin-contents.html"><span class="client-menu-label"><img class="client-menu-icon" src="assets/client-news.svg" alt=""><span>소식/블로그</span></span><span class="client-menu-badge">3</span></a>
+            <a class="client-menu-item" href="admin-documents.html"><img class="client-menu-icon" src="assets/client-documents.svg" alt=""><span>서류/파일</span></a>
+            <a class="client-menu-item" href="admin-settings.html"><img class="client-menu-icon" src="assets/client-manage.svg" alt=""><span>설정</span></a>
+          </aside>
+          <div class="client-page-shell admin-page-shell">
+            <section class="panel" data-admin-filter-scope>
+              <div class="panel-title">
+                <h3>포트폴리오 관리</h3>
+                <div class="admin-title-actions">
+                  <a class="admin-line-button" href="portfolio.html">공개 페이지 보기</a>
+                  <button class="admin-line-button primary" type="button">포트폴리오 등록</button>
+                </div>
+              </div>
+              <div class="admin-search-panel">
+                <label class="admin-search-field">
+                  <span>포트폴리오 검색</span>
+                  <input type="search" data-admin-search placeholder="제목, 구분, 고객명, 노출상태 검색">
+                </label>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
+                  <button type="button" data-admin-filter="category:logo" aria-pressed="false">로고</button>
+                  <button type="button" data-admin-filter="category:detail" aria-pressed="false">상세페이지</button>
+                  <button type="button" data-admin-filter="category:website" aria-pressed="false">홈페이지</button>
+                  <button type="button" data-admin-filter="category:sns" aria-pressed="false">SNS</button>
+                </div>
+                <div class="admin-filter-group">
+                  <button class="active" type="button" data-admin-filter="all" aria-pressed="true">노출 전체</button>
+                  <button type="button" data-admin-filter="status:public" aria-pressed="false">공개</button>
+                  <button type="button" data-admin-filter="status:hidden" aria-pressed="false">숨김</button>
+                  <button type="button" data-admin-filter="featured:yes" aria-pressed="false">대표노출</button>
+                </div>
+              </div>
+              <table class="admin-data-table admin-clickable-table">
+                <thead>
+                  <tr><th>구분</th><th>제목</th><th>고객명</th><th>홈페이지 노출</th><th>대표</th><th>수정일</th><th>처리</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-admin-row data-category="detail" data-status="public" data-featured="yes" data-search="상세페이지 프리미엄 상세페이지 가나다식품 공개 대표">
+                    <td>상세페이지</td><td><strong>프리미엄 상세페이지 제작</strong><small>포트폴리오 공개 페이지와 연동</small></td><td>가나다식품</td><td><span class="status-pill green">공개</span></td><td>대표</td><td>2026.07.12</td><td><button class="admin-line-button" type="button">수정</button></td>
+                  </tr>
+                  <tr data-admin-row data-category="website" data-status="public" data-featured="no" data-search="홈페이지 브랜드형 홈페이지 도일디자인 공개">
+                    <td>홈페이지</td><td><strong>브랜드형 홈페이지</strong><small>홈페이지 제작 사례</small></td><td>도일디자인</td><td><span class="status-pill green">공개</span></td><td>-</td><td>2026.07.09</td><td><button class="admin-line-button" type="button">수정</button></td>
+                  </tr>
+                  <tr data-admin-row data-category="logo" data-status="hidden" data-featured="no" data-search="로고 브랜드 로고 기본형 가나다식품 숨김">
+                    <td>로고</td><td><strong>브랜드 로고 기본형</strong><small>고객 승인 후 공개 예정</small></td><td>가나다식품</td><td><span class="status-pill gray">숨김</span></td><td>-</td><td>2026.07.01</td><td><button class="admin-line-button" type="button">수정</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="admin-empty" data-admin-empty hidden>조건에 맞는 포트폴리오가 없습니다.</p>
+            </section>
+            <section class="panel">
+              <div class="panel-title"><h3>홈페이지 연동 기준</h3></div>
+              <div class="admin-note-box">
+                <strong>공개 포트폴리오와 연결</strong>
+                <p>관리자에서 공개 상태로 변경한 포트폴리오만 홈페이지 포트폴리오 페이지에 노출됩니다. 숨김 상태는 내부 보관용으로만 사용합니다.</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="app.js?v=20260712-admin-portfolio-1"></script>
+  </body>
+</html>
+
+
+
