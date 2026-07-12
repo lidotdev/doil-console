@@ -4940,8 +4940,9 @@ h3 {
 .admin-sales-card {
   display: grid;
   gap: 8px;
-  min-height: 112px;
-  padding: 18px;
+  align-content: center;
+  min-height: 92px;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #f8fafc;
@@ -4955,7 +4956,7 @@ h3 {
 
 .admin-sales-grid strong {
   color: var(--ink);
-  font-size: 22px;
+  font-size: 23px;
   line-height: 1.15;
 }
 
@@ -4968,9 +4969,9 @@ h3 {
 
 .admin-sales-chart {
   display: grid;
-  gap: 14px;
+  gap: 10px;
   margin: 4px 0 20px;
-  padding: 18px;
+  padding: 16px 18px 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
@@ -4988,7 +4989,8 @@ h3 {
 .admin-expense-summary article {
   display: grid;
   gap: 8px;
-  min-height: 98px;
+  align-content: center;
+  min-height: 88px;
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -5079,11 +5081,11 @@ h3 {
 
 .admin-chart-bars {
   display: grid;
-  grid-template-columns: repeat(30, minmax(10px, 1fr));
+  grid-template-columns: repeat(30, minmax(6px, 1fr));
   align-items: end;
-  gap: 7px;
-  min-height: 178px;
-  padding-top: 32px;
+  gap: 9px;
+  min-height: 148px;
+  padding-top: 24px;
   border-bottom: 1px solid var(--line);
   overflow: visible;
 }
@@ -5091,8 +5093,9 @@ h3 {
 .admin-chart-bar {
   position: relative;
   display: flex;
+  justify-content: center;
   align-items: end;
-  height: 146px;
+  height: 122px;
   cursor: default;
 }
 
@@ -5125,12 +5128,12 @@ h3 {
 
 .admin-chart-bar i {
   display: block;
-  width: 100%;
+  width: 6px;
   height: var(--value);
-  min-height: 8px;
-  border-radius: 0;
-  background: linear-gradient(180deg, #2563eb, #111827);
-  opacity: 0.78;
+  min-height: 6px;
+  border-radius: 999px 999px 0 0;
+  background: #111827;
+  opacity: 0.86;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -5149,7 +5152,7 @@ h3 {
 .admin-chart-bar:hover i,
 .admin-chart-bar.is-today i {
   opacity: 1;
-  transform: scaleY(1.03);
+  transform: scaleY(1.02);
 }
 
 .admin-project-entry {
