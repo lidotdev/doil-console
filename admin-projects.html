@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-picker-3">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-picker-4">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -102,23 +102,13 @@
                       </div>
                     </label>
                     <label><span>마감일</span><input type="date" name="dueDate"></label>
-                    <datalist id="projectNameOptions">
-                      <option value="상세페이지"></option>
-                      <option value="랜딩페이지"></option>
-                      <option value="쇼핑몰 배너"></option>
-                      <option value="블로그 스킨"></option>
-                      <option value="홈페이지 제작"></option>
-                      <option value="SNS 콘텐츠"></option>
-                      <option value="유지보수"></option>
-                    </datalist>
                     <label><span>업무 유형</span><select name="projectKind"><option>디자인</option><option>홈페이지</option><option>마케팅</option></select></label>
                     <label>
                       <span>업무명</span>
                       <div class="admin-field-with-action">
-                        <input type="text" name="projectName" list="projectNameOptions" autocomplete="off" placeholder="예: 상세페이지">
-                        <button class="admin-line-button" type="button" data-project-name-add hidden>추가</button>
+                        <input type="text" name="projectName" autocomplete="off" placeholder="업무명을 불러와 주세요" readonly>
+                        <button class="admin-line-button" type="button" data-project-name-load>불러오기</button>
                       </div>
-                      <small data-project-name-hint>정해둔 업무명에서 선택해 주세요.</small>
                     </label>
                     <input type="hidden" name="workStatus" value="received">
                     <input type="hidden" name="managerName" value="lidotdev">
@@ -160,6 +150,33 @@
               </section>
             </div>
 
+            <div class="admin-modal admin-sub-modal" data-project-name-modal hidden>
+              <div class="admin-modal-backdrop" data-project-name-close></div>
+              <section class="admin-modal-panel admin-work-name-load-panel" role="dialog" aria-modal="true" aria-labelledby="projectNameModalTitle">
+                <div class="admin-modal-head">
+                  <div><span>WORK LOAD</span><h3 id="projectNameModalTitle">업무명 불러오기</h3></div>
+                  <button class="admin-modal-close" type="button" aria-label="닫기" data-project-name-close>×</button>
+                </div>
+                <div class="admin-customer-load-body">
+                  <label class="admin-search-field"><span>업무명 검색</span><input type="search" data-project-name-search placeholder="업무명, 유형 검색"></label>
+                  <div class="admin-customer-load-list" data-project-name-list>
+                    <button type="button" data-project-name-option data-project-name="상세페이지" data-project-kind="디자인"><strong>상세페이지</strong><small>디자인</small></button>
+                    <button type="button" data-project-name-option data-project-name="랜딩페이지" data-project-kind="홈페이지"><strong>랜딩페이지</strong><small>홈페이지</small></button>
+                    <button type="button" data-project-name-option data-project-name="쇼핑몰 배너" data-project-kind="디자인"><strong>쇼핑몰 배너</strong><small>디자인</small></button>
+                    <button type="button" data-project-name-option data-project-name="블로그 스킨" data-project-kind="디자인"><strong>블로그 스킨</strong><small>디자인</small></button>
+                    <button type="button" data-project-name-option data-project-name="홈페이지 제작" data-project-kind="홈페이지"><strong>홈페이지 제작</strong><small>홈페이지</small></button>
+                    <button type="button" data-project-name-option data-project-name="SNS 콘텐츠" data-project-kind="마케팅"><strong>SNS 콘텐츠</strong><small>마케팅</small></button>
+                    <button type="button" data-project-name-option data-project-name="유지보수" data-project-kind="홈페이지"><strong>유지보수</strong><small>홈페이지</small></button>
+                  </div>
+                  <p class="admin-empty" data-project-name-empty hidden>검색 결과가 없습니다.</p>
+                </div>
+                <div class="admin-modal-actions">
+                  <button class="admin-line-button" type="button" data-project-name-close>취소</button>
+                  <button class="admin-line-button primary" type="button" data-project-name-confirm>확인</button>
+                </div>
+              </section>
+            </div>
+
             <div class="admin-modal" data-project-complete-modal hidden>
               <div class="admin-modal-backdrop" data-project-complete-close></div>
               <section class="admin-modal-panel admin-project-work-panel" role="dialog" aria-modal="true" aria-labelledby="workCompleteModalTitle">
@@ -184,7 +201,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-picker-3"></script>
+    <script src="app.js?v=20260712-work-picker-4"></script>
   </body>
 </html>
 

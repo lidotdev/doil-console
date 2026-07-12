@@ -4660,9 +4660,6 @@ function initAdminProjectOrderModal() {
   const submitButton = modal.querySelector("[data-project-order-submit]");
   const taxPreview = modal.querySelector("[data-project-tax-preview]");
   const customerLoadButton = modal.querySelector("[data-project-customer-load]");
-  const projectNameAddButton = modal.querySelector("[data-project-name-add]");
-  const customerHint = modal.querySelector("[data-project-customer-hint]");
-  const projectNameHint = modal.querySelector("[data-project-name-hint]");
   const tableBody = document.querySelector(".admin-project-table tbody");
   const customerModal = document.querySelector("[data-project-customer-modal]");
   const customerSearch = customerModal?.querySelector("[data-project-customer-search]");
@@ -4670,6 +4667,13 @@ function initAdminProjectOrderModal() {
   const customerConfirmButton = customerModal?.querySelector("[data-project-customer-confirm]");
   const customerCloseButtons = Array.from(document.querySelectorAll("[data-project-customer-close]"));
   const customerEmpty = customerModal?.querySelector("[data-project-customer-empty]");
+  const projectNameLoadButton = modal.querySelector("[data-project-name-load]");
+  const projectNameModal = document.querySelector("[data-project-name-modal]");
+  const projectNameSearch = projectNameModal?.querySelector("[data-project-name-search]");
+  const projectNameOptions = Array.from(projectNameModal?.querySelectorAll("[data-project-name-option]") || []);
+  const projectNameConfirmButton = projectNameModal?.querySelector("[data-project-name-confirm]");
+  const projectNameCloseButtons = Array.from(document.querySelectorAll("[data-project-name-close]"));
+  const projectNameEmpty = projectNameModal?.querySelector("[data-project-name-empty]");
   const completeModal = document.querySelector("[data-project-complete-modal]");
   const completeForm = completeModal?.querySelector("form");
   const completeSummary = completeModal?.querySelector("[data-project-complete-summary]");
@@ -4677,6 +4681,7 @@ function initAdminProjectOrderModal() {
   let activeEditRow = null;
   let activeCompleteRow = null;
   let pendingCustomerOption = null;
+  let pendingProjectNameOption = null;
 
   const kmongFeeTiers = [
     { min: 1, max: 700000, rate: 0.164 },
@@ -4705,25 +4710,6 @@ function initAdminProjectOrderModal() {
     taxPreview.textContent = `공급가액 ${formatMoney(parts.supply)} · 부가세 ${formatMoney(parts.vat)}`;
   }
 
-  function datalistValues(id) {
-    return Array.from(document.getElementById(id)?.options || [])
-      .map((option) => option.value.trim())
-      .filter(Boolean);
-  }
-
-  function valueExists(value, values) {
-    return values.some((item) => item === String(value || "").trim());
-  }
-
-  function addDatalistValue(id, value) {
-    const datalist = document.getElementById(id);
-    const cleanValue = String(value || "").trim();
-    if (!datalist || !cleanValue || valueExists(cleanValue, datalistValues(id))) return;
-    const option = document.createElement("option");
-    option.value = cleanValue;
-    datalist.appendChild(option);
-  }
-
   function normalizeProjectName(value) {
     return {
       "상세페이지 제작": "상세페이지",
@@ -4740,27 +4726,15 @@ function initAdminProjectOrderModal() {
     const customerValue = customerInput?.value.trim() || "";
     const projectValue = projectInput?.value.trim() || "";
     const customerOk = Boolean(customerValue && customerInput?.dataset.customerSelected === "true");
-    const projectOk = !projectValue || valueExists(projectValue, datalistValues("projectNameOptions"));
+    const projectOk = Boolean(projectValue && projectInput?.dataset.projectSelected === "true");
 
     if (customerInput) {
       customerInput.setCustomValidity(customerOk ? "" : "회원 목록에서 검색해 선택해 주세요.");
       customerInput.classList.toggle("is-loaded-field", Boolean(customerValue && customerOk));
     }
-    if (customerHint) {
-      customerHint.textContent = customerValue
-        ? customerOk ? "불러온 회원입니다." : "불러오기를 눌러 회원을 선택해 주세요."
-        : "불러오기를 눌러 회원을 선택해 주세요.";
-    }
     if (projectInput) {
-      projectInput.setCustomValidity(projectOk ? "" : "업무명을 목록에서 선택하거나 추가해 주세요.");
-    }
-    if (projectNameAddButton) {
-      projectNameAddButton.hidden = !projectValue || projectOk;
-    }
-    if (projectNameHint) {
-      projectNameHint.textContent = projectValue
-        ? projectOk ? "사용 가능한 업무명입니다." : "목록에 없는 업무명입니다. 추가 후 등록할 수 있습니다."
-        : "정해둔 업무명에서 선택해 주세요.";
+      projectInput.setCustomValidity(projectOk ? "" : "업무명 불러오기에서 선택해 주세요.");
+      projectInput.classList.toggle("is-loaded-field", Boolean(projectValue && projectOk));
     }
   }
 
@@ -4789,6 +4763,18 @@ function initAdminProjectOrderModal() {
     customerInput.value = String(name || "").trim();
     customerInput.dataset.customerSelected = customerInput.value ? "true" : "false";
     customerInput.dataset.customerMeta = String(meta || "").trim();
+    syncProjectPickers();
+  }
+
+  function setSelectedProjectName(name, kind = "") {
+    const projectInput = form?.elements?.projectName;
+    if (!projectInput) return;
+    const cleanName = normalizeProjectName(name);
+    projectInput.value = cleanName;
+    projectInput.dataset.projectSelected = cleanName ? "true" : "false";
+    if (kind && form?.elements?.projectKind) {
+      form.elements.projectKind.value = kind;
+    }
     syncProjectPickers();
   }
 
@@ -4823,6 +4809,39 @@ function initAdminProjectOrderModal() {
     customerModal.hidden = true;
     pendingCustomerOption = null;
     customerOptions.forEach((button) => button.classList.remove("is-selected"));
+  }
+
+  function filterProjectNameOptions() {
+    if (!projectNameModal) return;
+    const keyword = (projectNameSearch?.value || "").replace(/\s+/g, "").toLowerCase();
+    let visibleCount = 0;
+    projectNameOptions.forEach((button) => {
+      const haystack = `${button.dataset.projectName || ""} ${button.dataset.projectKind || ""} ${button.textContent || ""}`
+        .replace(/\s+/g, "")
+        .toLowerCase();
+      const visible = !keyword || haystack.includes(keyword);
+      button.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    if (projectNameEmpty) projectNameEmpty.hidden = visibleCount > 0;
+  }
+
+  function openProjectNameModal() {
+    if (!projectNameModal) return;
+    pendingProjectNameOption = null;
+    projectNameOptions.forEach((button) => button.classList.remove("is-selected"));
+    if (projectNameSearch) projectNameSearch.value = "";
+    filterProjectNameOptions();
+    projectNameModal.hidden = false;
+    document.body.classList.add("modal-open");
+    projectNameSearch?.focus();
+  }
+
+  function closeProjectNameModal() {
+    if (!projectNameModal) return;
+    projectNameModal.hidden = true;
+    pendingProjectNameOption = null;
+    projectNameOptions.forEach((button) => button.classList.remove("is-selected"));
   }
 
   function todayValue() {
@@ -5101,9 +5120,8 @@ function initAdminProjectOrderModal() {
       const cells = Array.from(row.children);
       setSelectedCustomer(cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]));
       const savedProjectName = normalizeProjectName(cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]));
-      addDatalistValue("projectNameOptions", savedProjectName);
-      form.elements.projectName.value = savedProjectName;
       form.elements.projectKind.value = cleanText(cells[3]?.querySelector("small")) || "디자인";
+      setSelectedProjectName(savedProjectName, form.elements.projectKind.value);
       form.elements.workStatus.value = normalizeProjectStatus(row.dataset.status);
       form.elements.dueDate.value = row.dataset.date || today;
       form.elements.managerName.value = cleanText(cells[6]);
@@ -5117,6 +5135,7 @@ function initAdminProjectOrderModal() {
       if (form.elements.workStatus) form.elements.workStatus.value = "received";
       if (form.elements.invoiceStatus) form.elements.invoiceStatus.value = "unissued";
       setSelectedCustomer("");
+      setSelectedProjectName("");
     }
     updateTaxPreview();
     syncProjectPickers();
@@ -5158,6 +5177,7 @@ function initAdminProjectOrderModal() {
   openButton?.addEventListener("click", () => openModal());
   closeButtons.forEach((button) => button.addEventListener("click", closeModal));
   customerCloseButtons.forEach((button) => button.addEventListener("click", closeCustomerModal));
+  projectNameCloseButtons.forEach((button) => button.addEventListener("click", closeProjectNameModal));
   completeCloseButtons.forEach((button) => button.addEventListener("click", closeCompleteModal));
   Array.from(tableBody?.querySelectorAll("[data-admin-row]") || []).forEach(bindProjectRow);
   sortProjectRowsByDueDate();
@@ -5223,7 +5243,6 @@ function initAdminProjectOrderModal() {
   });
 
   form?.elements?.grossAmount?.addEventListener("input", updateTaxPreview);
-  form?.elements?.projectName?.addEventListener("input", syncProjectPickers);
   customerLoadButton?.addEventListener("click", openCustomerModal);
   customerSearch?.addEventListener("input", filterCustomerOptions);
   customerOptions.forEach((button) => {
@@ -5241,20 +5260,32 @@ function initAdminProjectOrderModal() {
     showAdminToast(`${pendingCustomerOption.dataset.customerName} 회원을 불러왔습니다.`);
     closeCustomerModal();
   });
-  projectNameAddButton?.addEventListener("click", () => {
-    const projectInput = form?.elements?.projectName;
-    const projectName = normalizeProjectName(projectInput?.value);
-    if (!projectName) return;
-    addDatalistValue("projectNameOptions", projectName);
-    if (projectInput) projectInput.value = projectName;
-    syncProjectPickers();
-    showAdminToast(`${projectName} 업무명을 추가했습니다.`);
+  projectNameLoadButton?.addEventListener("click", openProjectNameModal);
+  projectNameSearch?.addEventListener("input", filterProjectNameOptions);
+  projectNameOptions.forEach((button) => {
+    button.addEventListener("click", () => {
+      pendingProjectNameOption = button;
+      projectNameOptions.forEach((item) => item.classList.toggle("is-selected", item === button));
+    });
+  });
+  projectNameConfirmButton?.addEventListener("click", () => {
+    if (!pendingProjectNameOption) {
+      showAdminToast("불러올 업무명을 선택해 주세요.");
+      return;
+    }
+    setSelectedProjectName(pendingProjectNameOption.dataset.projectName, pendingProjectNameOption.dataset.projectKind);
+    showAdminToast(`${pendingProjectNameOption.dataset.projectName} 업무명을 불러왔습니다.`);
+    closeProjectNameModal();
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     if (customerModal && !customerModal.hidden) {
       closeCustomerModal();
+      return;
+    }
+    if (projectNameModal && !projectNameModal.hidden) {
+      closeProjectNameModal();
       return;
     }
     if (!modal.hidden) closeModal();
