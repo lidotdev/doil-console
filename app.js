@@ -4781,6 +4781,42 @@ function initAdminProjectOrderModal() {
       .join("")}</select>`;
   }
 
+  function normalizeInvoiceStatus(status) {
+    return {
+      "미발행": "unissued",
+      "발행대기": "unissued",
+      requested: "unissued",
+      unissued: "unissued",
+      "발행": "issued",
+      "발행완료": "issued",
+      done: "issued",
+      issued: "issued",
+      "해당없음": "none",
+      none: "none"
+    }[String(status || "").trim()] || "unissued";
+  }
+
+  function invoiceStatusMeta(status) {
+    return {
+      unissued: ["미발행", "red"],
+      issued: ["발행", "green"],
+      none: ["해당없음", "gray"]
+    }[normalizeInvoiceStatus(status)] || ["미발행", "red"];
+  }
+
+  function invoiceMarkup(status) {
+    const normalized = normalizeInvoiceStatus(status);
+    const options = [
+      ["unissued", "미발행"],
+      ["issued", "발행"],
+      ["none", "해당없음"]
+    ];
+    const meta = invoiceStatusMeta(normalized);
+    return `<select class="admin-invoice-select ${meta[1]}" data-project-invoice-select aria-label="계산서 상태">${options
+      .map(([value, label]) => `<option value="${value}"${value === normalized ? " selected" : ""}>${label}</option>`)
+      .join("")}</select>`;
+  }
+
   function transactionNo(date, channel, kind) {
     const channelText = channelLabel(channel).replace(/[^\w가-힣]/g, "");
     const kindCode = workKindCode(kind);
@@ -4799,6 +4835,8 @@ function initAdminProjectOrderModal() {
       .map((cell) => {
         const statusSelect = cell.querySelector("[data-project-status-select]");
         if (statusSelect) return statusSelect.selectedOptions[0]?.textContent || "";
+        const invoiceSelect = cell.querySelector("[data-project-invoice-select]");
+        if (invoiceSelect) return invoiceSelect.selectedOptions[0]?.textContent || "";
         return (cell.textContent || "").replace(/\s+/g, " ").trim();
       })
       .join(" ")
@@ -4825,11 +4863,17 @@ function initAdminProjectOrderModal() {
     if (row.dataset.projectStatusBound === "true") return;
     row.dataset.projectStatusBound = "true";
     applyProjectStatus(row, row.dataset.status, true);
+    applyInvoiceStatus(row, row.dataset.invoice || cleanText(row.children[5]), true);
 
     row.addEventListener("change", (event) => {
       const select = event.target.closest("[data-project-status-select]");
-      if (!select) return;
+      const invoiceSelect = event.target.closest("[data-project-invoice-select]");
+      if (!select && !invoiceSelect) return;
       event.stopPropagation();
+      if (invoiceSelect) {
+        applyInvoiceStatus(row, invoiceSelect.value);
+        return;
+      }
       const current = normalizeProjectStatus(row.dataset.status);
       const next = normalizeProjectStatus(select.value);
       const currentLabel = projectStatusMeta(current)[0];
@@ -4848,40 +4892,41 @@ function initAdminProjectOrderModal() {
     });
 
     row.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-project-action='edit'], [data-project-action='done'], [data-project-action='next']");
+      const button = event.target.closest("[data-project-action='edit']");
       if (!button) return;
       event.preventDefault();
       event.stopPropagation();
       if (button.dataset.projectAction === "edit") {
         openModal(row);
-        return;
       }
-      const current = normalizeProjectStatus(row.dataset.status);
-      if (current === "working") {
-        openCompleteModal(row);
-        return;
-      }
-      const currentIndex = projectStatusFlow.indexOf(current);
-      const nextStatus = projectStatusFlow[currentIndex + 1];
-      if (!nextStatus) return;
-      applyProjectStatus(row, nextStatus);
     });
   }
 
   function updateProjectAction(row) {
-    const button = row.querySelector("[data-project-action='done'], [data-project-action='next']");
-    if (!button) return;
-    const status = normalizeProjectStatus(row.dataset.status);
-    const labels = {
-      received: "시작",
-      working: "종료",
-      ended: "종료됨",
-      cancel: "취소됨"
-    };
-    button.dataset.projectAction = "next";
-    button.textContent = labels[status] || "다음";
-    button.disabled = status === "ended" || status === "cancel";
-    button.classList.toggle("primary", status === "working");
+    row.querySelectorAll("[data-project-action='done'], [data-project-action='next']").forEach((button) => button.remove());
+  }
+
+  function updateProjectCompletion(row) {
+    const isFinishedStatus = normalizeProjectStatus(row.dataset.status) === "ended";
+    const invoiceStatus = normalizeInvoiceStatus(row.dataset.invoice);
+    const isComplete = isFinishedStatus && invoiceStatus === "issued";
+    row.classList.toggle("is-work-complete", isComplete);
+    row.dataset.complete = isComplete ? "true" : "false";
+    updateActualSalesSummary();
+  }
+
+  function rowGrossAmount(row) {
+    return parseMoney(row.dataset.grossAmount || row.children[4]?.querySelector("strong")?.textContent || row.children[4]?.textContent || "");
+  }
+
+  function updateActualSalesSummary() {
+    const target = document.querySelector("[data-work-actual-sales] strong");
+    if (!target || !tableBody) return;
+    const total = Array.from(tableBody.querySelectorAll("[data-admin-row]")).reduce((sum, row) => {
+      const isActualSale = normalizeProjectStatus(row.dataset.status) === "ended" && normalizeInvoiceStatus(row.dataset.invoice) === "issued";
+      return isActualSale ? sum + rowGrossAmount(row) : sum;
+    }, 0);
+    target.textContent = formatMoney(total);
   }
 
   function applyProjectStatus(row, status, silent = false) {
@@ -4891,11 +4936,25 @@ function initAdminProjectOrderModal() {
     row.dataset.state = rowStateForStatus(normalized);
     if (row.children[0]) row.children[0].innerHTML = statusMarkup(normalized);
     updateProjectAction(row);
+    updateProjectCompletion(row);
     updateSearch(row);
     if (!silent) {
       refreshScope(row);
     }
     if (!silent) showAdminToast(`업무 상태를 ${meta[0]}로 변경했습니다.`);
+  }
+
+  function applyInvoiceStatus(row, status, silent = false) {
+    const normalized = normalizeInvoiceStatus(status);
+    const meta = invoiceStatusMeta(normalized);
+    row.dataset.invoice = normalized;
+    if (row.children[5]) row.children[5].innerHTML = invoiceMarkup(normalized);
+    updateProjectCompletion(row);
+    updateSearch(row);
+    if (!silent) {
+      refreshScope(row);
+      showAdminToast(`계산서를 ${meta[0]}로 변경했습니다.`);
+    }
   }
 
   function openModal(row = null) {
@@ -4914,7 +4973,7 @@ function initAdminProjectOrderModal() {
       form.elements.managerName.value = cleanText(cells[6]);
       form.elements.grossAmount.value = cleanText(cells[4]?.querySelector("strong")).replace(/[^\d]/g, "");
       form.elements.paymentStatus.value = (cleanText(cells[4]?.querySelector("small")).split("·")[0] || "").trim() || "입금확인중";
-      form.elements.invoiceStatus.value = cleanText(cells[5]) || "미발행";
+      form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[5]));
       form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[7]);
     } else if (form?.elements?.dueDate) {
       form.elements.dueDate.value = today;
@@ -4972,11 +5031,10 @@ function initAdminProjectOrderModal() {
     const dueDate = form.elements.dueDate?.value || todayValue();
     const managerName = form.elements.managerName?.value.trim() || "담당자";
     const paymentStatus = form.elements.paymentStatus?.value || "입금확인중";
-    const invoiceStatus = form.elements.invoiceStatus?.value || "미발행";
+    const invoiceStatus = normalizeInvoiceStatus(form.elements.invoiceStatus?.value || "unissued");
     const memo = form.elements.orderMemo?.value.trim() || "-";
     const amount = parseMoney(form.elements.grossAmount?.value);
     const amountParts = taxParts(amount);
-    const invoiceClass = invoiceStatus === "발행" ? "done" : invoiceStatus === "해당없음" ? "none" : "requested";
     const wasEdit = Boolean(activeEditRow);
     const row = activeEditRow || document.createElement("tr");
 
@@ -4987,15 +5045,18 @@ function initAdminProjectOrderModal() {
     row.dataset.channel = "site";
     row.dataset.date = dueDate;
     row.dataset.memo = memo;
+    row.dataset.grossAmount = String(amount);
     row.dataset.supplyAmount = String(amountParts.supply);
     row.dataset.vatAmount = String(amountParts.vat);
-    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>${escapeHtml(paymentStatus)} · VAT ${formatMoney(amountParts.vat)}</small></td><td><span class="invoice-status ${invoiceClass}">${escapeHtml(invoiceStatus)}</span></td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="next">다음</button></div></td>`;
+    row.dataset.invoice = invoiceStatus;
+    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>${escapeHtml(paymentStatus)} · VAT ${formatMoney(amountParts.vat)}</small></td><td>${invoiceMarkup(invoiceStatus)}</td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button></div></td>`;
     updateSearch(row);
     if (!wasEdit) {
       tableBody.appendChild(row);
       bindProjectRow(row);
     }
     applyProjectStatus(row, workStatus, true);
+    applyInvoiceStatus(row, invoiceStatus, true);
     sortProjectRowsByDueDate();
     refreshScope(row);
     showAdminToast(`${projectName} 업무를 ${wasEdit ? "수정" : "등록"}했습니다.`);

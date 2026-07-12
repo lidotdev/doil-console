@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-channel-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-invoice-2">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -32,6 +32,7 @@
             <section class="panel" data-admin-filter-scope>
               <div class="panel-title">
                 <h3>업무</h3>
+                <div class="admin-work-revenue" data-work-actual-sales><span>실매출</span><strong>0원</strong></div>
                 <button class="admin-line-button primary" type="button" data-project-order-open>업무 등록</button>
               </div>
 
@@ -58,7 +59,7 @@
                       <th>마감일</th>
                       <th>고객명</th>
                       <th>업무명</th>
-                      <th>연결매출</th>
+                      <th>매출액</th>
                       <th>계산서</th>
                       <th>담당자</th>
                       <th>메모</th>
@@ -101,7 +102,7 @@
                     <label><span>담당자</span><input type="text" name="managerName" placeholder="담당자명"></label>
                     <label><span>총액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"><small class="admin-tax-preview" data-project-tax-preview>공급가액 0원 · 부가세 0원</small></label>
                     <label><span>결제상태</span><select name="paymentStatus"><option>입금확인중</option><option>결제완료</option><option>외부채널정산</option><option>취소</option></select></label>
-                    <label><span>계산서</span><select name="invoiceStatus"><option>미발행</option><option>발행대기</option><option>발행</option><option>해당없음</option></select></label>
+                    <label><span>계산서</span><select name="invoiceStatus"><option value="unissued">미발행</option><option value="issued">발행</option><option value="none">해당없음</option></select></label>
                     <label><span>첨부파일</span><input type="file" name="workFile"></label>
                     <label class="wide"><span>내부 메모</span><textarea name="orderMemo" rows="4" placeholder="작업 범위, 확인사항, 처리 메모"></textarea></label>
                   </div>
@@ -137,7 +138,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-channel-1"></script>
+    <script src="app.js?v=20260712-work-invoice-2"></script>
   </body>
 </html>
 
