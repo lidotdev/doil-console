@@ -2238,6 +2238,10 @@ function writeAdminJsonStorage(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function normalizeBusinessNumber(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
 function initMemberLiteManagement() {
   const memberRows = Array.from(document.querySelectorAll("[data-member-row]"));
   const inviteLink = document.querySelector("[data-member-invite-link]");
@@ -2248,6 +2252,16 @@ function initMemberLiteManagement() {
   const closeButtons = Array.from(document.querySelectorAll("[data-simple-customer-close]"));
   const tableBody = document.querySelector(".admin-member-table tbody");
   const countLabels = Array.from(document.querySelectorAll("[data-member-count]"));
+  const simpleBusinessFields = Array.from(document.querySelectorAll("[data-simple-business-only]"));
+  const simplePhoneInput = form?.elements.phone;
+  const simpleBusinessNumberInput = form?.elements.businessNumber;
+  const simpleEmailDomain = form?.elements.emailDomain;
+  const simpleEmailDomainDirect = form?.elements.emailDomainDirect;
+  const simpleCertificateInput = form?.elements.businessCertificate;
+  const simpleFilePreview = document.querySelector("[data-simple-file-preview]");
+  const simpleFileNameTarget = document.querySelector("[data-simple-file-name]");
+  const simpleFileViewButton = document.querySelector("[data-simple-file-view]");
+  let simpleCertificatePreviewUrl = "";
 
   function money(value) {
     const amount = Number(String(value || "").replace(/[^\d]/g, "")) || 0;
@@ -2256,6 +2270,60 @@ function initMemberLiteManagement() {
 
   function normalize(value) {
     return String(value || "").replace(/-/g, "").trim();
+  }
+
+  function formatPhone(value) {
+    const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    if (digits.length === 10) return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+  }
+
+  function currentSimpleEmail() {
+    const local = form?.elements.emailLocal?.value.trim() || "";
+    const selectedDomain = simpleEmailDomain?.value || "";
+    const domain = selectedDomain === "direct" ? simpleEmailDomainDirect?.value.trim() || "" : selectedDomain;
+    return local && domain ? `${local}@${domain}` : "";
+  }
+
+  function syncSimpleEmailDomain() {
+    const useDirect = simpleEmailDomain?.value === "direct";
+    if (simpleEmailDomainDirect) {
+      simpleEmailDomainDirect.hidden = !useDirect;
+      simpleEmailDomainDirect.disabled = !useDirect;
+      if (useDirect) simpleEmailDomainDirect.focus();
+      if (!useDirect) simpleEmailDomainDirect.value = "";
+    }
+  }
+
+  function syncSimpleMemberType() {
+    const isBusiness = (form?.elements.memberType?.value || "사업자") === "사업자";
+    simpleBusinessFields.forEach((field) => {
+      field.hidden = !isBusiness;
+      field.querySelectorAll("input, select, textarea, button").forEach((input) => {
+        input.disabled = !isBusiness;
+      });
+    });
+  }
+
+  function registeredBusinessNumbers() {
+    const numbers = Array.from(document.querySelectorAll("[data-member-row]"))
+      .map((row) => normalizeBusinessNumber(row.children[2]?.textContent || ""))
+      .filter(Boolean);
+    readAdminJsonStorage("doilMemberSignupRequests", []).forEach((member) => {
+      const number = normalizeBusinessNumber(member?.businessNumber);
+      if (number) numbers.push(number);
+    });
+    return new Set(numbers);
+  }
+
+  function explainBusinessDuplicate(input) {
+    const number = normalizeBusinessNumber(input?.value || "");
+    const isDuplicate = Boolean(number && registeredBusinessNumbers().has(number));
+    const message = isDuplicate ? "이미 등록된 사업자등록번호입니다. 기존 회원 정보에서 확인하거나 수정해 주세요." : "";
+    if (input) input.setCustomValidity(message);
+    return message;
   }
 
   function memberDetailUrl(row) {
@@ -2330,11 +2398,14 @@ function initMemberLiteManagement() {
   renderSignupRequests();
 
   copyInviteButton?.addEventListener("click", async () => {
-    const value = inviteLink?.value || "";
+    const baseValue = inviteLink?.dataset.baseInviteUrl || inviteLink?.value || "";
+    const expiresAt = Date.now() + (3 * 60 * 60 * 1000);
+    const value = baseValue ? `${baseValue}${baseValue.includes("?") ? "&" : "?"}expires=${expiresAt}` : "";
     if (!value) return;
+    if (inviteLink) inviteLink.value = value;
     try {
       await navigator.clipboard.writeText(value);
-      showAdminToast("고객 등록 링크를 복사했습니다.");
+      showAdminToast("3시간 동안 유효한 고객 등록 링크를 복사했습니다.");
     } catch {
       inviteLink?.select();
       showAdminToast("링크가 선택되었습니다. 직접 복사해 주세요.");
@@ -2345,11 +2416,40 @@ function initMemberLiteManagement() {
     if (!modal) return;
     modal.hidden = !isOpen;
     document.body.classList.toggle("modal-open", isOpen);
-    if (isOpen) modal.querySelector("input, select, button")?.focus();
+    if (isOpen) {
+      syncSimpleMemberType();
+      syncSimpleEmailDomain();
+      modal.querySelector("input, select, button")?.focus();
+    }
   }
 
   openButtons.forEach((button) => button.addEventListener("click", () => setModalOpen(true)));
   closeButtons.forEach((button) => button.addEventListener("click", () => setModalOpen(false)));
+  form?.elements.memberType?.addEventListener("change", syncSimpleMemberType);
+  simplePhoneInput?.addEventListener("input", () => {
+    simplePhoneInput.value = formatPhone(simplePhoneInput.value);
+  });
+  simplePhoneInput?.addEventListener("blur", () => {
+    simplePhoneInput.value = formatPhone(simplePhoneInput.value);
+  });
+  simpleBusinessNumberInput?.addEventListener("input", () => {
+    simpleBusinessNumberInput.setCustomValidity("");
+  });
+  simpleBusinessNumberInput?.addEventListener("blur", () => {
+    explainBusinessDuplicate(simpleBusinessNumberInput);
+  });
+  simpleEmailDomain?.addEventListener("change", syncSimpleEmailDomain);
+  simpleCertificateInput?.addEventListener("change", () => {
+    const file = simpleCertificateInput.files?.[0];
+    if (simpleCertificatePreviewUrl) URL.revokeObjectURL(simpleCertificatePreviewUrl);
+    simpleCertificatePreviewUrl = file ? URL.createObjectURL(file) : "";
+    if (simpleFilePreview) simpleFilePreview.hidden = !file;
+    if (simpleFileNameTarget) simpleFileNameTarget.textContent = file?.name || "";
+  });
+  simpleFileViewButton?.addEventListener("click", () => {
+    if (!simpleCertificatePreviewUrl) return;
+    window.open(simpleCertificatePreviewUrl, "_blank", "noopener");
+  });
 
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -2357,17 +2457,26 @@ function initMemberLiteManagement() {
     const isPersonal = memberType === "개인";
     const name = form.elements.memberName?.value.trim() || "신규 회원";
     const businessNumber = isPersonal ? "" : form.elements.businessNumber?.value.trim() || "";
+    const duplicateReason = isPersonal ? "" : explainBusinessDuplicate(simpleBusinessNumberInput);
+    if (duplicateReason) {
+      showAdminToast(duplicateReason);
+      simpleBusinessNumberInput?.reportValidity();
+      return;
+    }
     const industry = isPersonal ? "" : form.elements.industry?.value.trim() || "";
     const businessType = isPersonal ? "" : form.elements.businessType?.value.trim() || "";
     const totalAmount = money(form.elements.totalAmount?.value);
     const manager = form.elements.manager?.value.trim() || name;
     const phone = form.elements.phone?.value.trim() || "-";
-    const email = form.elements.email?.value.trim() || "-";
+    const email = currentSimpleEmail() || "-";
     const row = createMemberRow({ memberType, companyName: name, businessNumber, industry, businessType, totalAmount, manager, phone, email });
 
     tableBody?.prepend(row);
     refreshMemberTypeCounts();
     form.reset();
+    syncSimpleMemberType();
+    syncSimpleEmailDomain();
+    if (simpleFilePreview) simpleFilePreview.hidden = true;
     setModalOpen(false);
     showAdminToast(`${name} 회원을 등록했습니다.`);
   });
@@ -2496,11 +2605,78 @@ function initMemberSignupPage() {
   if (!form) return;
 
   const success = document.querySelector("[data-member-signup-success]");
+  const expireMessage = document.querySelector("[data-signup-expire-message]");
   const typeCards = Array.from(document.querySelectorAll("[data-signup-type-card]"));
   const businessOnlyFields = Array.from(document.querySelectorAll("[data-business-only]"));
+  const phoneInput = form.elements.phone;
+  const businessNumberInput = form.elements.businessNumber;
+  const emailLocal = form.elements.emailLocal;
+  const emailDomain = form.elements.emailDomain;
+  const emailDomainDirect = form.elements.emailDomainDirect;
+  const certificateInput = form.elements.businessCertificate;
+  const filePreview = document.querySelector("[data-signup-file-preview]");
+  const fileNameTarget = document.querySelector("[data-signup-file-name]");
+  const fileViewButton = document.querySelector("[data-signup-file-view]");
+  let certificatePreviewUrl = "";
+  const expiredOnLoad = isExpiredInvite();
 
   function selectedType() {
     return form.elements.memberType?.value || "사업자";
+  }
+
+  function isExpiredInvite() {
+    const params = new URLSearchParams(window.location.search);
+    const expires = Number(params.get("expires") || 0);
+    return Boolean(expires && Date.now() > expires);
+  }
+
+  function setSignupDisabled(isDisabled) {
+    Array.from(form.elements).forEach((field) => {
+      field.disabled = isDisabled;
+    });
+    if (expireMessage) expireMessage.hidden = !isDisabled;
+  }
+
+  function registeredSignupBusinessNumbers() {
+    const numbers = ["8502101340", "1234567890"];
+    readAdminJsonStorage("doilMemberSignupRequests", []).forEach((member) => {
+      const number = normalizeBusinessNumber(member?.businessNumber);
+      if (number) numbers.push(number);
+    });
+    return new Set(numbers);
+  }
+
+  function explainSignupBusinessDuplicate(input) {
+    const number = normalizeBusinessNumber(input?.value || "");
+    const isDuplicate = Boolean(number && registeredSignupBusinessNumbers().has(number));
+    const message = isDuplicate ? "이미 등록된 사업자등록번호입니다. 기존 회원으로 등록되어 있어 새 회원등록 요청을 접수할 수 없습니다." : "";
+    if (input) input.setCustomValidity(message);
+    return message;
+  }
+
+  function formatPhone(value) {
+    const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    if (digits.length === 10) return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+  }
+
+  function currentEmail() {
+    const local = emailLocal?.value.trim() || "";
+    const selectedDomain = emailDomain?.value || "";
+    const domain = selectedDomain === "direct" ? emailDomainDirect?.value.trim() || "" : selectedDomain;
+    return local && domain ? `${local}@${domain}` : "";
+  }
+
+  function syncEmailDomain() {
+    const useDirect = emailDomain?.value === "direct";
+    if (emailDomainDirect) {
+      emailDomainDirect.hidden = !useDirect;
+      emailDomainDirect.disabled = !useDirect;
+      if (useDirect) emailDomainDirect.focus();
+      if (!useDirect) emailDomainDirect.value = "";
+    }
   }
 
   function syncType() {
@@ -2521,13 +2697,55 @@ function initMemberSignupPage() {
     if (event.target.name === "memberType") syncType();
   });
 
+  phoneInput?.addEventListener("input", () => {
+    phoneInput.value = formatPhone(phoneInput.value);
+  });
+
+  phoneInput?.addEventListener("blur", () => {
+    phoneInput.value = formatPhone(phoneInput.value);
+  });
+
+  businessNumberInput?.addEventListener("input", () => {
+    businessNumberInput.setCustomValidity("");
+  });
+
+  businessNumberInput?.addEventListener("blur", () => {
+    explainSignupBusinessDuplicate(businessNumberInput);
+  });
+
+  emailDomain?.addEventListener("change", syncEmailDomain);
+
+  certificateInput?.addEventListener("change", () => {
+    const file = certificateInput.files?.[0];
+    if (certificatePreviewUrl) URL.revokeObjectURL(certificatePreviewUrl);
+    certificatePreviewUrl = file ? URL.createObjectURL(file) : "";
+    if (filePreview) filePreview.hidden = !file;
+    if (fileNameTarget) fileNameTarget.textContent = file?.name || "";
+  });
+
+  fileViewButton?.addEventListener("click", () => {
+    if (!certificatePreviewUrl) return;
+    window.open(certificatePreviewUrl, "_blank", "noopener");
+  });
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (isExpiredInvite()) {
+      setSignupDisabled(true);
+      showAdminToast("만료된 회원등록 링크입니다.");
+      return;
+    }
     const memberType = selectedType();
     const isPersonal = memberType === "개인";
     const manager = form.elements.manager?.value.trim() || "";
     const phone = form.elements.phone?.value.trim() || "";
-    const email = form.elements.email?.value.trim() || "";
+    const email = currentEmail();
+    const duplicateReason = isPersonal ? "" : explainSignupBusinessDuplicate(businessNumberInput);
+    if (duplicateReason) {
+      showAdminToast(duplicateReason);
+      businessNumberInput?.reportValidity();
+      return;
+    }
     if (!manager || !phone || !email || !form.elements.agree?.checked) {
       showAdminToast("필수 정보를 확인해 주세요.");
       return;
@@ -2545,16 +2763,21 @@ function initMemberSignupPage() {
       phone,
       email,
       totalAmount: "0원",
-      requestMemo: form.elements.requestMemo?.value.trim() || "",
+      certificateName: certificateInput?.files?.[0]?.name || "",
       createdAt: new Date().toISOString()
     });
     writeAdminJsonStorage("doilMemberSignupRequests", requests);
     form.reset();
     syncType();
     if (success) success.hidden = false;
-    showAdminToast("회원등록 요청이 접수되었습니다.");
+    window.location.href = "signup-complete.html";
   });
 
+  if (expiredOnLoad) {
+    setSignupDisabled(true);
+    return;
+  }
+  syncEmailDomain();
   syncType();
 }
 

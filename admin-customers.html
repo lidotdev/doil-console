@@ -6,7 +6,7 @@
     <title>회원 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-member-memo-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-member-signup-3">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -34,7 +34,7 @@
               <div class="panel-title">
                 <h3>회원 목록</h3>
                 <div class="admin-title-actions">
-                  <input class="admin-hidden-copy-source" type="text" value="https://lidotdev.github.io/doil-console/signup.html?source=admin-invite" readonly data-member-invite-link aria-label="고객 직접 등록 링크">
+                  <input class="admin-hidden-copy-source" type="text" value="https://lidotdev.github.io/doil-console/signup.html?source=admin-invite" data-base-invite-url="https://lidotdev.github.io/doil-console/signup.html?source=admin-invite" readonly data-member-invite-link aria-label="고객 직접 등록 링크">
                   <button class="admin-line-button" type="button" data-copy-member-link>회원등록</button>
                   <button class="admin-line-button primary" type="button" data-simple-customer-open>추가</button>
                 </div>
@@ -118,15 +118,37 @@
                 <form class="admin-customer-form" data-simple-customer-form>
                   <div class="admin-form-grid two">
                     <label><span>구분</span><select name="memberType"><option>사업자</option><option>개인</option></select></label>
-                    <label><span>상호명/이름</span><input name="memberName" type="text" placeholder="예: 가나다식품"></label>
-                    <label><span>사업자등록번호</span><input name="businessNumber" type="text" placeholder="000-00-00000"></label>
-                    <label><span>업종</span><input name="industry" type="text" placeholder="예: 광고디자인"></label>
-                    <label><span>업태</span><input name="businessType" type="text" placeholder="예: 서비스업"></label>
+                    <label data-simple-business-only><span>상호명</span><input name="memberName" type="text" placeholder="사업자명을 입력해주세요."></label>
+                    <label data-simple-business-only><span>사업자등록번호</span><input name="businessNumber" type="text" placeholder="000-00-00000"></label>
+                    <label data-simple-business-only><span>업종</span><input name="industry" type="text" placeholder="정보통신업"></label>
+                    <label data-simple-business-only><span>업태</span><input name="businessType" type="text" placeholder="호스팅 및 관련서비스업"></label>
                     <label><span>누적거래액</span><input name="totalAmount" type="text" placeholder="0"></label>
-                    <label><span>담당자</span><input name="manager" type="text" placeholder="담당자명"></label>
-                    <label><span>연락처</span><input name="phone" type="tel" placeholder="010-0000-0000"></label>
-                    <label class="wide"><span>이메일</span><input name="email" type="email" placeholder="client@example.com"></label>
-                    <label class="wide"><span>사업자등록증 업로드</span><input name="businessCertificate" type="file" accept="image/*,.pdf"></label>
+                    <label><span>성함(대표자명)</span><input name="manager" type="text" placeholder="홍길동"></label>
+                    <label><span>연락처</span><input name="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000"></label>
+                    <label class="wide"><span>이메일</span>
+                      <div class="signup-email-row">
+                        <input name="emailLocal" type="text" placeholder="client">
+                        <span>@</span>
+                        <select name="emailDomain" aria-label="이메일 도메인">
+                          <option value="">선택</option>
+                          <option value="naver.com">naver.com</option>
+                          <option value="gmail.com">gmail.com</option>
+                          <option value="daum.net">daum.net</option>
+                          <option value="hanmail.net">hanmail.net</option>
+                          <option value="kakao.com">kakao.com</option>
+                          <option value="nate.com">nate.com</option>
+                          <option value="direct">직접입력</option>
+                        </select>
+                        <input name="emailDomainDirect" type="text" placeholder="example.com" hidden disabled>
+                      </div>
+                    </label>
+                    <label class="wide" data-simple-business-only><span>사업자등록증</span>
+                      <input name="businessCertificate" type="file" accept="image/*,.pdf">
+                      <span class="signup-file-preview" data-simple-file-preview hidden>
+                        <span data-simple-file-name></span>
+                        <button class="admin-line-button" type="button" data-simple-file-view>보기</button>
+                      </span>
+                    </label>
                   </div>
                   <div class="admin-modal-actions">
                     <button type="button" class="admin-line-button" data-simple-customer-close>취소</button>
@@ -139,7 +161,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-member-memo-1"></script>
+    <script src="app.js?v=20260712-member-signup-3"></script>
   </body>
 </html>
 

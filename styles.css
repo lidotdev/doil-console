@@ -10921,11 +10921,93 @@ th {
   font-weight: 600;
 }
 
+.signup-email-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(150px, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.signup-email-row span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.signup-email-row input,
+.signup-email-row select {
+  min-width: 0;
+}
+
+.signup-file-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.signup-expire-message {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(217, 45, 32, 0.24);
+  border-radius: 8px;
+  color: #b42318 !important;
+  background: #fff7f6;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
 .signup-success {
   margin: 0;
   color: #039855;
   font-size: 13px;
   font-weight: 700;
+}
+
+.signup-complete-panel {
+  justify-items: center;
+  text-align: center;
+}
+
+.signup-complete-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.signup-complete-panel > strong {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: lowercase;
+}
+
+.signup-complete-panel h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.35;
+}
+
+.signup-complete-panel p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .signup-email-row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .signup-email-row input[name="emailDomainDirect"] {
+    grid-column: 1 / -1;
+  }
 }
 
 .member-detail-hero {

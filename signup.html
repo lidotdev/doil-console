@@ -6,7 +6,7 @@
     <title>회원등록 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-member-signup-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-member-signup-2">
   </head>
   <body class="auth-body member-signup-body">
     <main class="auth-layout">
@@ -15,6 +15,7 @@
           <a class="brand member-signup-brand" href="index.html"><img class="brand-logo" src="assets/doil-logo-symbol.png" alt=""><span>DOIL SERVICE</span></a>
           <h1>회원등록</h1>
           <p>거래에 필요한 기본 정보를 입력하면 담당자가 확인 후 회원 목록에 반영합니다.</p>
+          <p class="signup-expire-message" data-signup-expire-message hidden>이 회원등록 링크는 만료되었습니다. 담당자에게 새 링크를 요청해 주세요.</p>
         </div>
 
         <form class="auth-form member-signup-form" data-member-signup-form>
@@ -32,15 +33,36 @@
           </div>
 
           <div class="admin-form-grid two member-signup-grid">
-            <label data-business-only><span>상호명</span><input name="companyName" type="text" placeholder="예: 가나다식품"></label>
+            <label data-business-only><span>상호명</span><input name="companyName" type="text" placeholder="사업자명을 입력해주세요."></label>
             <label data-business-only><span>사업자등록번호</span><input name="businessNumber" type="text" placeholder="000-00-00000"></label>
-            <label data-business-only><span>업종</span><input name="industry" type="text" placeholder="예: 광고디자인"></label>
-            <label data-business-only><span>업태</span><input name="businessType" type="text" placeholder="예: 서비스업"></label>
-            <label><span>성함(대표자명)</span><input name="manager" type="text" placeholder="예: 홍길동" required></label>
-            <label><span>연락처</span><input name="phone" type="tel" placeholder="010-0000-0000" required></label>
-            <label class="wide"><span>이메일</span><input name="email" type="email" placeholder="client@example.com" required></label>
-            <label class="wide" data-business-only><span>사업자등록증</span><input name="businessCertificate" type="file" accept="image/*,.pdf"></label>
-            <label class="wide"><span>요청 메모</span><textarea name="requestMemo" rows="4" placeholder="필요한 업무나 전달사항을 남겨주세요."></textarea></label>
+            <label data-business-only><span>업종</span><input name="industry" type="text" placeholder="정보통신업"></label>
+            <label data-business-only><span>업태</span><input name="businessType" type="text" placeholder="호스팅 및 관련서비스업"></label>
+            <label><span>성함(대표자명)</span><input name="manager" type="text" placeholder="홍길동" required></label>
+            <label><span>연락처</span><input name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="010-0000-0000" required></label>
+            <label class="wide"><span>이메일</span>
+              <div class="signup-email-row">
+                <input name="emailLocal" type="text" autocomplete="email" placeholder="client" required>
+                <span>@</span>
+                <select name="emailDomain" aria-label="이메일 도메인" required>
+                  <option value="">선택</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="hanmail.net">hanmail.net</option>
+                  <option value="kakao.com">kakao.com</option>
+                  <option value="nate.com">nate.com</option>
+                  <option value="direct">직접입력</option>
+                </select>
+                <input name="emailDomainDirect" type="text" placeholder="example.com" hidden disabled>
+              </div>
+            </label>
+            <label class="wide" data-business-only><span>사업자등록증</span>
+              <input name="businessCertificate" type="file" accept="image/*,.pdf">
+              <span class="signup-file-preview" data-signup-file-preview hidden>
+                <span data-signup-file-name></span>
+                <button class="admin-line-button" type="button" data-signup-file-view>보기</button>
+              </span>
+            </label>
           </div>
 
           <label class="agreement-check member-signup-agree">
@@ -53,6 +75,6 @@
         </form>
       </section>
     </main>
-    <script src="app.js?v=20260712-member-signup-1"></script>
+    <script src="app.js?v=20260712-member-signup-2"></script>
   </body>
 </html>
