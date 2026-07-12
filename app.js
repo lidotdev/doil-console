@@ -2217,6 +2217,27 @@ function initAdminContentEditorModal() {
 
 initAdminContentEditorModal();
 
+function escapeAdminHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function readAdminJsonStorage(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "") || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeAdminJsonStorage(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
 function initMemberLiteManagement() {
   const memberRows = Array.from(document.querySelectorAll("[data-member-row]"));
   const inviteLink = document.querySelector("[data-member-invite-link]");
@@ -2237,6 +2258,23 @@ function initMemberLiteManagement() {
     return String(value || "").replace(/-/g, "").trim();
   }
 
+  function memberDetailUrl(row) {
+    return row.dataset.detailUrl || "admin-customer-detail.html";
+  }
+
+  function bindMemberRow(row) {
+    row.addEventListener("click", (event) => {
+      if (event.target.closest("button, a, input, select, textarea")) return;
+      window.location.href = memberDetailUrl(row);
+    });
+
+    row.querySelector("[data-member-memo-open]")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      window.location.href = `${memberDetailUrl(row)}#member-memo`;
+    });
+  }
+
   function refreshMemberTypeCounts() {
     if (!countLabels.length) return;
 
@@ -2254,13 +2292,42 @@ function initMemberLiteManagement() {
     });
   }
 
-  memberRows.forEach((row) => {
-    row.addEventListener("click", (event) => {
-      if (event.target.closest("button, a, input, select, textarea")) return;
-      const target = row.dataset.detailUrl || "admin-customer-detail.html";
-      window.location.href = target;
+  function createMemberRow(member, prependFromSignup = false) {
+    const memberType = member.memberType || "사업자";
+    const isPersonal = memberType === "개인";
+    const name = member.companyName || member.memberName || member.manager || "신규 회원";
+    const manager = member.manager || name;
+    const businessNumber = isPersonal ? "" : member.businessNumber || "";
+    const industry = isPersonal ? "" : member.industry || "";
+    const businessType = isPersonal ? "" : member.businessType || "";
+    const totalAmount = member.totalAmount || "0원";
+    const phone = member.phone || "-";
+    const email = member.email || "-";
+    const row = document.createElement("tr");
+    const key = encodeURIComponent(member.id || normalize(businessNumber) || normalize(phone) || name);
+
+    row.dataset.adminRow = "";
+    row.dataset.memberRow = "";
+    row.dataset.type = isPersonal ? "personal" : "business";
+    row.dataset.detailUrl = `admin-customer-detail.html?customer=${key}`;
+    row.dataset.search = `${memberType} ${name} ${businessNumber} ${industry} ${businessType} ${totalAmount} ${manager} ${phone} ${email}`;
+    if (prependFromSignup) row.dataset.signupRequest = member.id || key;
+    row.innerHTML = `<td>${escapeAdminHtml(memberType)}</td><td>${isPersonal ? "" : `<strong>${escapeAdminHtml(name)}</strong>`}</td><td>${escapeAdminHtml(businessNumber)}</td><td>${escapeAdminHtml(industry)}</td><td>${escapeAdminHtml(businessType)}</td><td>${escapeAdminHtml(manager)}</td><td>${escapeAdminHtml(phone)}</td><td>${escapeAdminHtml(email)}</td><td><strong>${escapeAdminHtml(totalAmount)}</strong></td><td><button class="admin-line-button member-memo-button" type="button" data-member-memo-open>메모</button></td>`;
+    bindMemberRow(row);
+    return row;
+  }
+
+  function renderSignupRequests() {
+    if (!tableBody) return;
+    const requests = readAdminJsonStorage("doilMemberSignupRequests", []);
+    requests.slice().reverse().forEach((member) => {
+      if (!member?.id || tableBody.querySelector(`[data-signup-request="${member.id}"]`)) return;
+      tableBody.prepend(createMemberRow(member, true));
     });
-  });
+  }
+
+  memberRows.forEach(bindMemberRow);
+  renderSignupRequests();
 
   copyInviteButton?.addEventListener("click", async () => {
     const value = inviteLink?.value || "";
@@ -2296,18 +2363,7 @@ function initMemberLiteManagement() {
     const manager = form.elements.manager?.value.trim() || name;
     const phone = form.elements.phone?.value.trim() || "-";
     const email = form.elements.email?.value.trim() || "-";
-    const row = document.createElement("tr");
-    const key = encodeURIComponent(normalize(businessNumber) || normalize(phone) || name);
-
-    row.dataset.adminRow = "";
-    row.dataset.memberRow = "";
-    row.dataset.type = isPersonal ? "personal" : "business";
-    row.dataset.detailUrl = `admin-customer-detail.html?customer=${key}`;
-    row.dataset.search = `${memberType} ${name} ${businessNumber} ${industry} ${businessType} ${totalAmount} ${manager} ${phone} ${email}`;
-    row.innerHTML = `<td>${memberType}</td><td>${isPersonal ? "" : `<strong>${name}</strong>`}</td><td>${businessNumber}</td><td>${industry}</td><td>${businessType}</td><td>${manager}</td><td>${phone}</td><td>${email}</td><td><strong>${totalAmount}</strong></td>`;
-    row.addEventListener("click", () => {
-      window.location.href = row.dataset.detailUrl;
-    });
+    const row = createMemberRow({ memberType, companyName: name, businessNumber, industry, businessType, totalAmount, manager, phone, email });
 
     tableBody?.prepend(row);
     refreshMemberTypeCounts();
@@ -2326,12 +2382,19 @@ function initMemberDetailPage() {
   const editToggle = document.querySelector("[data-member-edit-toggle]");
   const editActions = document.querySelector(".member-edit-actions");
   const cancelButton = document.querySelector("[data-member-edit-cancel]");
+  const memoForm = document.querySelector("[data-member-memo-form]");
+  const memoEditButton = document.querySelector("[data-member-memo-edit]");
+  const memoCancelButton = document.querySelector("[data-member-memo-cancel]");
+  const memoActions = document.querySelector(".member-memo-actions");
   const documentList = document.querySelector("[data-member-document-list]");
   const uploadInput = document.querySelector("[data-member-document-upload]");
   if (!form && !documentList) return;
 
   const fields = form ? Array.from(form.querySelectorAll("input, select, textarea")) : [];
   const initialValues = new Map();
+  const memoField = memoForm?.elements.memberMemo;
+  const memoStorageKey = `doilMemberMemo:${new URLSearchParams(window.location.search).get("customer") || "default"}`;
+  let initialMemo = memoField?.value || "";
 
   function rememberValues() {
     fields.forEach((field) => initialValues.set(field.name, field.value));
@@ -2345,8 +2408,21 @@ function initMemberDetailPage() {
     if (editToggle) editToggle.hidden = isEditing;
   }
 
+  function setMemoEditing(isEditing) {
+    if (memoField) memoField.disabled = !isEditing;
+    if (memoActions) memoActions.hidden = !isEditing;
+    if (memoEditButton) memoEditButton.hidden = isEditing;
+    if (isEditing) memoField?.focus();
+  }
+
   rememberValues();
   setEditing(false);
+  if (memoField) {
+    const savedMemo = localStorage.getItem(memoStorageKey);
+    if (savedMemo !== null) memoField.value = savedMemo;
+    initialMemo = memoField.value;
+    setMemoEditing(false);
+  }
 
   editToggle?.addEventListener("click", () => {
     rememberValues();
@@ -2367,6 +2443,25 @@ function initMemberDetailPage() {
     if (title) title.textContent = name;
     setEditing(false);
     showAdminToast(`${name} 정보를 저장했습니다.`);
+  });
+
+  memoEditButton?.addEventListener("click", () => {
+    initialMemo = memoField?.value || "";
+    setMemoEditing(true);
+  });
+
+  memoCancelButton?.addEventListener("click", () => {
+    if (memoField) memoField.value = initialMemo;
+    setMemoEditing(false);
+  });
+
+  memoForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const value = memoField?.value.trim() || "";
+    localStorage.setItem(memoStorageKey, value);
+    initialMemo = value;
+    setMemoEditing(false);
+    showAdminToast("회원 메모를 저장했습니다.");
   });
 
   function createDocumentItem(fileName) {
@@ -2395,6 +2490,75 @@ function initMemberDetailPage() {
 }
 
 initMemberDetailPage();
+
+function initMemberSignupPage() {
+  const form = document.querySelector("[data-member-signup-form]");
+  if (!form) return;
+
+  const success = document.querySelector("[data-member-signup-success]");
+  const typeCards = Array.from(document.querySelectorAll("[data-signup-type-card]"));
+  const businessOnlyFields = Array.from(document.querySelectorAll("[data-business-only]"));
+
+  function selectedType() {
+    return form.elements.memberType?.value || "사업자";
+  }
+
+  function syncType() {
+    const isBusiness = selectedType() === "사업자";
+    typeCards.forEach((card) => {
+      const input = card.querySelector("input");
+      card.classList.toggle("active", input?.checked);
+    });
+    businessOnlyFields.forEach((field) => {
+      field.hidden = !isBusiness;
+      field.querySelectorAll("input, textarea, select").forEach((input) => {
+        input.disabled = !isBusiness;
+      });
+    });
+  }
+
+  form.addEventListener("change", (event) => {
+    if (event.target.name === "memberType") syncType();
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const memberType = selectedType();
+    const isPersonal = memberType === "개인";
+    const manager = form.elements.manager?.value.trim() || "";
+    const phone = form.elements.phone?.value.trim() || "";
+    const email = form.elements.email?.value.trim() || "";
+    if (!manager || !phone || !email || !form.elements.agree?.checked) {
+      showAdminToast("필수 정보를 확인해 주세요.");
+      return;
+    }
+
+    const requests = readAdminJsonStorage("doilMemberSignupRequests", []);
+    requests.push({
+      id: `signup-${Date.now()}`,
+      memberType,
+      companyName: isPersonal ? "" : form.elements.companyName?.value.trim() || "",
+      businessNumber: isPersonal ? "" : form.elements.businessNumber?.value.trim() || "",
+      industry: isPersonal ? "" : form.elements.industry?.value.trim() || "",
+      businessType: isPersonal ? "" : form.elements.businessType?.value.trim() || "",
+      manager,
+      phone,
+      email,
+      totalAmount: "0원",
+      requestMemo: form.elements.requestMemo?.value.trim() || "",
+      createdAt: new Date().toISOString()
+    });
+    writeAdminJsonStorage("doilMemberSignupRequests", requests);
+    form.reset();
+    syncType();
+    if (success) success.hidden = false;
+    showAdminToast("회원등록 요청이 접수되었습니다.");
+  });
+
+  syncType();
+}
+
+initMemberSignupPage();
 
 function initAdminCustomerModal() {
   const modal = document.querySelector("[data-customer-modal]");

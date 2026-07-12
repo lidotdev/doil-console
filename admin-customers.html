@@ -6,7 +6,7 @@
     <title>회원 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-member-lite-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-member-memo-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -34,7 +34,7 @@
               <div class="panel-title">
                 <h3>회원 목록</h3>
                 <div class="admin-title-actions">
-                  <input class="admin-hidden-copy-source" type="text" value="https://doilservice.co.kr/signup.html?source=admin-invite" readonly data-member-invite-link aria-label="고객 직접 등록 링크">
+                  <input class="admin-hidden-copy-source" type="text" value="https://lidotdev.github.io/doil-console/signup.html?source=admin-invite" readonly data-member-invite-link aria-label="고객 직접 등록 링크">
                   <button class="admin-line-button" type="button" data-copy-member-link>회원등록</button>
                   <button class="admin-line-button primary" type="button" data-simple-customer-open>추가</button>
                 </div>
@@ -63,6 +63,7 @@
                     <th>연락처</th>
                     <th>이메일</th>
                     <th>누적거래금액</th>
+                    <th>메모</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -76,6 +77,7 @@
                     <td>010-1234-5678</td>
                     <td>client@example.com</td>
                     <td><strong>7,150,000원</strong></td>
+                    <td><button class="admin-line-button member-memo-button" type="button" data-member-memo-open>메모</button></td>
                   </tr>
                   <tr data-admin-row data-type="business" data-member-row data-detail-url="admin-customer-detail.html?customer=abcmall" data-search="사업자 ABC몰 1234567890 쇼핑몰 도소매 1430000 김담당 01055556666 abc@example.com">
                     <td>사업자</td>
@@ -87,6 +89,7 @@
                     <td>010-5555-6666</td>
                     <td>abc@example.com</td>
                     <td><strong>1,430,000원</strong></td>
+                    <td><button class="admin-line-button member-memo-button" type="button" data-member-memo-open>메모</button></td>
                   </tr>
                   <tr data-admin-row data-type="personal" data-member-row data-detail-url="admin-customer-detail.html?customer=hong" data-search="개인 홍길동 개인 01022223333 hong@example.com 220000">
                     <td>개인</td>
@@ -98,6 +101,7 @@
                     <td>010-2222-3333</td>
                     <td>hong@example.com</td>
                     <td><strong>220,000원</strong></td>
+                    <td><button class="admin-line-button member-memo-button" type="button" data-member-memo-open>메모</button></td>
                   </tr>
                 </tbody>
               </table>
@@ -135,7 +139,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-member-lite-1"></script>
+    <script src="app.js?v=20260712-member-memo-1"></script>
   </body>
 </html>
 

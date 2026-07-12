@@ -1510,6 +1510,12 @@ h3 {
   transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
 }
 
+.signup-type-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .signup-type-card:hover,
 .signup-type-card.active {
   border-color: var(--blue);
@@ -10793,8 +10799,18 @@ th {
 }
 
 .admin-member-table {
-  min-width: 1320px;
+  min-width: 1410px;
   table-layout: fixed;
+}
+
+.admin-member-table th,
+.admin-member-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.admin-member-table td strong {
+  display: inline-block;
 }
 
 .admin-member-table th:nth-child(1),
@@ -10839,6 +10855,19 @@ th {
   width: 150px;
 }
 
+.admin-member-table th:nth-child(10),
+.admin-member-table td:nth-child(10) {
+  width: 90px;
+}
+
+.member-memo-button {
+  min-width: 58px;
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .admin-member-table tbody tr {
   transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   cursor: pointer;
@@ -10847,6 +10876,56 @@ th {
 .admin-member-table tbody tr:hover {
   background: #f8fafc;
   box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.member-memo-form {
+  display: grid;
+  gap: 16px;
+}
+
+.member-memo-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.member-memo-form textarea,
+.member-signup-form textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--white);
+  font: inherit;
+  line-height: 1.6;
+}
+
+.member-memo-form textarea:disabled {
+  color: var(--ink);
+  background: #f8fafc;
+}
+
+.member-signup-brand {
+  margin-bottom: 22px;
+}
+
+.member-signup-grid {
+  gap: 14px;
+}
+
+.member-signup-agree {
+  font-weight: 600;
+}
+
+.signup-success {
+  margin: 0;
+  color: #039855;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .member-detail-hero {
