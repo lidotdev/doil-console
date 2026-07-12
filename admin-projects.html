@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-status-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-complete-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -107,7 +107,28 @@
                   </div>
                   <div class="admin-modal-actions">
                     <button class="admin-line-button" type="button" data-project-order-close>취소</button>
-                    <button class="admin-line-button primary" type="submit">등록</button>
+                    <button class="admin-line-button primary" type="submit" data-project-order-submit>등록</button>
+                  </div>
+                </form>
+              </section>
+            </div>
+
+            <div class="admin-modal" data-project-complete-modal hidden>
+              <div class="admin-modal-backdrop" data-project-complete-close></div>
+              <section class="admin-modal-panel admin-project-work-panel" role="dialog" aria-modal="true" aria-labelledby="workCompleteModalTitle">
+                <div class="admin-modal-head">
+                  <div><span>WORK COMPLETE</span><h3 id="workCompleteModalTitle">작업완료 처리</h3></div>
+                  <button class="admin-modal-close" type="button" aria-label="닫기" data-project-complete-close>×</button>
+                </div>
+                <form class="admin-customer-form admin-project-complete-form">
+                  <div class="admin-complete-summary" data-project-complete-summary>선택한 업무</div>
+                  <div class="admin-form-grid">
+                    <label><span>작업물 업로드</span><input type="file" name="deliverableFile"></label>
+                    <label><span>코멘트</span><textarea name="completeComment" rows="5" placeholder="전달할 작업 내용, 확인 요청사항, 수정 기준 등을 입력"></textarea></label>
+                  </div>
+                  <div class="admin-modal-actions">
+                    <button class="admin-line-button" type="button" data-project-complete-close>취소</button>
+                    <button class="admin-line-button primary" type="submit">작업완료</button>
                   </div>
                 </form>
               </section>
@@ -116,7 +137,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-status-1"></script>
+    <script src="app.js?v=20260712-work-complete-1"></script>
   </body>
 </html>
 

@@ -6938,6 +6938,18 @@ h3 {
   width: min(780px, 100%);
 }
 
+.admin-complete-summary {
+  margin-bottom: 14px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #f8fafc;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .admin-project-work-form {
   display: grid;
   gap: 18px;

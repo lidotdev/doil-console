@@ -4656,7 +4656,15 @@ function initAdminProjectOrderModal() {
   const openButton = document.querySelector("[data-project-order-open]");
   const closeButtons = Array.from(document.querySelectorAll("[data-project-order-close]"));
   const form = modal.querySelector("form");
+  const modalTitle = modal.querySelector("#workOrderModalTitle");
+  const submitButton = modal.querySelector("[data-project-order-submit]");
   const tableBody = document.querySelector(".admin-project-table tbody");
+  const completeModal = document.querySelector("[data-project-complete-modal]");
+  const completeForm = completeModal?.querySelector("form");
+  const completeSummary = completeModal?.querySelector("[data-project-complete-summary]");
+  const completeCloseButtons = Array.from(document.querySelectorAll("[data-project-complete-close]"));
+  let activeEditRow = null;
+  let activeCompleteRow = null;
 
   const kmongFeeTiers = [
     { min: 1, max: 700000, rate: 0.164 },
@@ -4685,6 +4693,19 @@ function initAdminProjectOrderModal() {
 
   function displayDate(value) {
     return value ? value.replace(/-/g, ".") : "-";
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function cleanText(element) {
+    return (element?.textContent || "").replace(/\s+/g, " ").trim();
   }
 
   function channelLabel(value) {
@@ -4772,6 +4793,10 @@ function initAdminProjectOrderModal() {
       .replace(/-/g, "");
   }
 
+  function refreshScope(row) {
+    row.closest("[data-admin-filter-scope]")?.querySelector("[data-admin-search]")?.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
   function sortProjectRowsByDueDate() {
     if (!tableBody) return;
     Array.from(tableBody.querySelectorAll("[data-admin-row]"))
@@ -4793,15 +4818,37 @@ function initAdminProjectOrderModal() {
       const select = event.target.closest("[data-project-status-select]");
       if (!select) return;
       event.stopPropagation();
-      applyProjectStatus(row, select.value);
+      const current = normalizeProjectStatus(row.dataset.status);
+      const next = normalizeProjectStatus(select.value);
+      const currentLabel = projectStatusMeta(current)[0];
+      const nextLabel = projectStatusMeta(next)[0];
+      if (current === next) return;
+      if (!window.confirm(`상태를 ${currentLabel}에서 ${nextLabel}로 변경할까요?`)) {
+        select.value = current;
+        return;
+      }
+      if (next === "completed" && current !== "completed") {
+        select.value = current;
+        openCompleteModal(row);
+        return;
+      }
+      applyProjectStatus(row, next);
     });
 
     row.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-project-action='done'], [data-project-action='next']");
+      const button = event.target.closest("[data-project-action='edit'], [data-project-action='done'], [data-project-action='next']");
       if (!button) return;
       event.preventDefault();
       event.stopPropagation();
+      if (button.dataset.projectAction === "edit") {
+        openModal(row);
+        return;
+      }
       const current = normalizeProjectStatus(row.dataset.status);
+      if (current === "working") {
+        openCompleteModal(row);
+        return;
+      }
       const currentIndex = projectStatusFlow.indexOf(current);
       const nextStatus = projectStatusFlow[currentIndex + 1];
       if (!nextStatus) return;
@@ -4836,15 +4883,32 @@ function initAdminProjectOrderModal() {
     updateProjectAction(row);
     updateSearch(row);
     if (!silent) {
-      row.closest("[data-admin-filter-scope]")?.querySelector("[data-admin-search]")?.dispatchEvent(new Event("input", { bubbles: true }));
+      refreshScope(row);
     }
     if (!silent) showAdminToast(`업무 상태를 ${meta[0]}로 변경했습니다.`);
   }
 
-  function openModal() {
+  function openModal(row = null) {
+    activeEditRow = row;
     form?.reset();
     const today = todayValue();
-    if (form?.elements?.dueDate) form.elements.dueDate.value = today;
+    if (modalTitle) modalTitle.textContent = row ? "업무 수정" : "업무 등록";
+    if (submitButton) submitButton.textContent = row ? "수정" : "등록";
+    if (row && form) {
+      const cells = Array.from(row.children);
+      form.elements.customerName.value = cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]);
+      form.elements.projectName.value = cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]);
+      form.elements.projectKind.value = cleanText(cells[3]?.querySelector("small")) || "디자인";
+      form.elements.workStatus.value = normalizeProjectStatus(row.dataset.status);
+      form.elements.dueDate.value = row.dataset.date || today;
+      form.elements.managerName.value = cleanText(cells[6]);
+      form.elements.grossAmount.value = cleanText(cells[4]?.querySelector("strong")).replace(/[^\d]/g, "");
+      form.elements.paymentStatus.value = cleanText(cells[4]?.querySelector("small")) || "입금확인중";
+      form.elements.invoiceStatus.value = cleanText(cells[5]) || "미발행";
+      form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[7]);
+    } else if (form?.elements?.dueDate) {
+      form.elements.dueDate.value = today;
+    }
     modal.hidden = false;
     document.body.classList.add("modal-open");
     modal.querySelector("input, select, textarea, button")?.focus();
@@ -4853,10 +4917,36 @@ function initAdminProjectOrderModal() {
   function closeModal() {
     modal.hidden = true;
     document.body.classList.remove("modal-open");
+    activeEditRow = null;
   }
 
-  openButton?.addEventListener("click", openModal);
+  function openCompleteModal(row) {
+    if (!completeModal || !completeForm) {
+      applyProjectStatus(row, "completed");
+      return;
+    }
+    activeCompleteRow = row;
+    completeForm.reset();
+    const cells = Array.from(row.children);
+    const customer = cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]);
+    const project = cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]);
+    const dueDate = row.dataset.date ? displayDate(row.dataset.date) : cleanText(cells[1]);
+    if (completeSummary) completeSummary.textContent = `${customer} · ${project} · 마감 ${dueDate}`;
+    completeModal.hidden = false;
+    document.body.classList.add("modal-open");
+    completeModal.querySelector("input, textarea, button")?.focus();
+  }
+
+  function closeCompleteModal() {
+    if (!completeModal) return;
+    completeModal.hidden = true;
+    document.body.classList.remove("modal-open");
+    activeCompleteRow = null;
+  }
+
+  openButton?.addEventListener("click", () => openModal());
   closeButtons.forEach((button) => button.addEventListener("click", closeModal));
+  completeCloseButtons.forEach((button) => button.addEventListener("click", closeCompleteModal));
   Array.from(tableBody?.querySelectorAll("[data-admin-row]") || []).forEach(bindProjectRow);
   sortProjectRowsByDueDate();
 
@@ -4875,7 +4965,8 @@ function initAdminProjectOrderModal() {
     const memo = form.elements.orderMemo?.value.trim() || "-";
     const amount = parseMoney(form.elements.grossAmount?.value);
     const invoiceClass = invoiceStatus === "발행" ? "done" : invoiceStatus === "해당없음" ? "none" : "requested";
-    const row = document.createElement("tr");
+    const wasEdit = Boolean(activeEditRow);
+    const row = activeEditRow || document.createElement("tr");
 
     row.dataset.adminRow = "";
     row.dataset.status = normalizeProjectStatus(workStatus);
@@ -4883,17 +4974,40 @@ function initAdminProjectOrderModal() {
     row.dataset.kind = projectKind === "홈페이지" ? "website" : projectKind === "마케팅" ? "marketing" : "design";
     row.dataset.channel = "site";
     row.dataset.date = dueDate;
-    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${customerName}</button></td><td><strong>${projectName}</strong><small>${projectKind}</small></td><td><strong>${formatMoney(amount)}</strong><small>${paymentStatus}</small></td><td><span class="invoice-status ${invoiceClass}">${invoiceStatus}</span></td><td>${managerName}</td><td>${memo}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="next">다음</button></div></td>`;
+    row.dataset.memo = memo;
+    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>${escapeHtml(paymentStatus)}</small></td><td><span class="invoice-status ${invoiceClass}">${escapeHtml(invoiceStatus)}</span></td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="next">다음</button></div></td>`;
     updateSearch(row);
-    tableBody.appendChild(row);
-    bindProjectRow(row);
+    if (!wasEdit) {
+      tableBody.appendChild(row);
+      bindProjectRow(row);
+    }
+    applyProjectStatus(row, workStatus, true);
     sortProjectRowsByDueDate();
-    showAdminToast(`${projectName} 업무를 등록했습니다.`);
+    refreshScope(row);
+    showAdminToast(`${projectName} 업무를 ${wasEdit ? "수정" : "등록"}했습니다.`);
     closeModal();
   });
 
+  completeForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!activeCompleteRow) return;
+    const file = completeForm.elements.deliverableFile?.files?.[0];
+    const fileName = file?.name || "작업물 미첨부";
+    const comment = completeForm.elements.completeComment?.value.trim() || "완료 코멘트 없음";
+    activeCompleteRow.dataset.deliverableFile = fileName;
+    activeCompleteRow.dataset.completeComment = comment;
+    activeCompleteRow.dataset.memo = comment;
+    if (activeCompleteRow.children[7]) {
+      activeCompleteRow.children[7].innerHTML = `${escapeHtml(comment)}<small>${escapeHtml(fileName)}</small>`;
+    }
+    applyProjectStatus(activeCompleteRow, "completed");
+    closeCompleteModal();
+  });
+
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !modal.hidden) closeModal();
+    if (event.key !== "Escape") return;
+    if (!modal.hidden) closeModal();
+    if (completeModal && !completeModal.hidden) closeCompleteModal();
   });
 }
 
