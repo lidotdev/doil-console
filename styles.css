@@ -10730,12 +10730,145 @@ th {
 }
 
 .admin-work-table {
-  min-width: 1680px;
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
 }
 
 .admin-work-table th,
 .admin-work-table td {
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.admin-work-table th:nth-child(1),
+.admin-work-table td:nth-child(1) {
+  width: 8%;
+}
+
+.admin-work-table th:nth-child(2),
+.admin-work-table td:nth-child(2) {
+  width: 10%;
+}
+
+.admin-work-table th:nth-child(3),
+.admin-work-table td:nth-child(3) {
+  width: 11%;
+}
+
+.admin-work-table th:nth-child(4),
+.admin-work-table td:nth-child(4) {
+  width: 18%;
+}
+
+.admin-work-table th:nth-child(5),
+.admin-work-table td:nth-child(5) {
+  width: 13%;
+}
+
+.admin-work-table th:nth-child(6),
+.admin-work-table td:nth-child(6) {
+  width: 9%;
+}
+
+.admin-work-table th:nth-child(7),
+.admin-work-table td:nth-child(7) {
+  width: 8%;
+}
+
+.admin-work-table th:nth-child(8),
+.admin-work-table td:nth-child(8) {
+  width: 14%;
+}
+
+.admin-work-table th:nth-child(9),
+.admin-work-table td:nth-child(9) {
+  width: 9%;
+}
+
+.admin-work-table .admin-row-actions {
+  opacity: 1;
+  gap: 4px;
+}
+
+.admin-work-table .admin-line-button {
+  min-height: 28px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .admin-project-shell .admin-table-scroll {
+    overflow-x: visible;
+  }
+
+  .admin-work-table,
+  .admin-work-table thead,
+  .admin-work-table tbody,
+  .admin-work-table tr,
+  .admin-work-table th,
+  .admin-work-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-work-table thead {
+    display: none;
+  }
+
+  .admin-work-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .admin-work-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .admin-work-table tbody tr {
+    display: grid;
+    gap: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: none;
+  }
+
+  .admin-work-table td {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 8px 0;
+    border: 0;
+    white-space: normal;
+  }
+
+  .admin-work-table td + td {
+    border-top: 1px solid #f0f2f5;
+  }
+
+  .admin-work-table td::before {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .admin-work-table td:nth-child(1)::before { content: "상태"; }
+  .admin-work-table td:nth-child(2)::before { content: "마감일"; }
+  .admin-work-table td:nth-child(3)::before { content: "고객명"; }
+  .admin-work-table td:nth-child(4)::before { content: "업무명"; }
+  .admin-work-table td:nth-child(5)::before { content: "연결매출"; }
+  .admin-work-table td:nth-child(6)::before { content: "계산서"; }
+  .admin-work-table td:nth-child(7)::before { content: "담당자"; }
+  .admin-work-table td:nth-child(8)::before { content: "메모"; }
+  .admin-work-table td:nth-child(9)::before { content: "관리"; }
+
+  .admin-work-table .admin-row-actions {
+    justify-content: flex-start;
+  }
 }
 
 .admin-text-button {
