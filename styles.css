@@ -6804,6 +6804,46 @@ h3 {
   resize: vertical;
 }
 
+.admin-tier-editor {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-tier-editor-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.admin-tier-editor-head span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.admin-tier-list {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-tier-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 100px 38px;
+  gap: 8px;
+  align-items: end;
+}
+
+.admin-tier-row label {
+  gap: 6px;
+}
+
+.admin-tier-remove {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+}
+
 .admin-field-with-action {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

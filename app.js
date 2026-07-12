@@ -3194,15 +3194,88 @@ function initAdminDocumentCheckModal() {
 
 initAdminDocumentCheckModal();
 
+const DOIL_WORK_TYPES_KEY = "doilAdminWorkTypes";
+const DOIL_WORK_NAMES_KEY = "doilAdminWorkNames";
+const DOIL_CHANNEL_SETTINGS_KEY = "doilAdminChannelSettings";
+
+const defaultWorkTypes = [
+  { name: "디자인", code: "D", status: "active" },
+  { name: "홈페이지", code: "H", status: "active" },
+  { name: "마케팅", code: "M", status: "active" }
+];
+
+const defaultWorkNames = [
+  { name: "상세페이지", kind: "디자인", status: "active" },
+  { name: "랜딩페이지", kind: "홈페이지", status: "active" },
+  { name: "쇼핑몰 배너", kind: "디자인", status: "active" },
+  { name: "블로그 스킨", kind: "디자인", status: "active" },
+  { name: "홈페이지 제작", kind: "홈페이지", status: "active" },
+  { name: "SNS 콘텐츠", kind: "마케팅", status: "active" },
+  { name: "유지보수", kind: "홈페이지", status: "active" }
+];
+
+const defaultChannelSettings = [
+  { name: "직접주문", type: "자사", feeMode: "none", feeRules: "0%", settlement: "입금 확인일", status: "active", memo: "유선, 채팅, 직접 결제" },
+  { name: "크몽", type: "외부채널", feeMode: "tier", feeRules: "1~700,000원 16.4% / 700,001~2,000,000원 9.4% / 2,000,001원 이상 4.4%", settlement: "플랫폼 정산완료일", status: "active", memo: "외부 주문번호 기준 관리" },
+  { name: "숨고", type: "외부채널", feeMode: "fixed", feeRules: "12%", settlement: "입금 확인일", status: "paused", memo: "견적형 외부채널" }
+];
+
+function readAdminSetting(key, fallback) {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key) || "null");
+    return Array.isArray(parsed) && parsed.length ? parsed : fallback.map((item) => ({ ...item }));
+  } catch (error) {
+    return fallback.map((item) => ({ ...item }));
+  }
+}
+
+function saveAdminSetting(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getAdminWorkTypes(includePaused = false) {
+  return readAdminSetting(DOIL_WORK_TYPES_KEY, defaultWorkTypes).filter((item) => includePaused || item.status !== "paused");
+}
+
+function getAdminWorkNames(includePaused = false) {
+  return readAdminSetting(DOIL_WORK_NAMES_KEY, defaultWorkNames).filter((item) => includePaused || item.status !== "paused");
+}
+
+function getAdminChannelSettings(includePaused = false) {
+  return readAdminSetting(DOIL_CHANNEL_SETTINGS_KEY, defaultChannelSettings).filter((item) => includePaused || item.status !== "paused");
+}
+
+function normalizeAdminKey(value) {
+  return String(value || "").replace(/\s+/g, "").toLowerCase();
+}
+
+function adminEscapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function parseFeeTierRules(text) {
+  return String(text || "")
+    .split("/")
+    .map((part) => {
+      const rateMatch = part.match(/([\d.]+)\s*%/);
+      if (!rateMatch) return null;
+      const priceText = part.replace(rateMatch[0], "");
+      const numbers = (priceText.match(/[\d,]+/g) || []).map((value) => Number(value.replace(/,/g, ""))).filter(Number.isFinite);
+      const min = numbers[0] || 1;
+      const max = numbers.length > 1 ? numbers[1] : Infinity;
+      return { min, max, rate: Number(rateMatch[1]) / 100, label: part.trim() };
+    })
+    .filter(Boolean);
+}
+
 function initAdminChannelFeeCalculator() {
   const calculators = Array.from(document.querySelectorAll("[data-channel-fee-calculator]"));
   if (!calculators.length) return;
-
-  const kmongFeeTiers = [
-    { min: 1, max: 700000, rate: 0.164, label: "1원 ~ 700,000원 · 16.4%" },
-    { min: 700001, max: 2000000, rate: 0.094, label: "700,001원 ~ 2,000,000원 · 9.4%" },
-    { min: 2000001, max: Infinity, rate: 0.044, label: "2,000,001원 이상 · 4.4%" }
-  ];
 
   function parseMoney(value) {
     return Number(String(value || "").replace(/[^\d]/g, "")) || 0;
@@ -3210,10 +3283,6 @@ function initAdminChannelFeeCalculator() {
 
   function formatMoney(value) {
     return `${Math.max(0, Math.round(value)).toLocaleString("ko-KR")}원`;
-  }
-
-  function getKmongTier(amount) {
-    return kmongFeeTiers.find((tier) => amount >= tier.min && amount <= tier.max) || kmongFeeTiers[0];
   }
 
   calculators.forEach((calculator) => {
@@ -3227,14 +3296,16 @@ function initAdminChannelFeeCalculator() {
     function updateFee() {
       const amount = parseMoney(amountInput?.value);
       const channel = channelInput?.value || "site";
-      const isKmong = channel === "kmong";
-      const tier = isKmong ? getKmongTier(amount) : null;
-      const rate = tier?.rate || 0;
+      const channels = getAdminChannelSettings();
+      const config = channels.find((item) => normalizeAdminKey(item.name) === normalizeAdminKey(channel) || normalizeAdminKey(item.name) === normalizeAdminKey(channelInput?.selectedOptions?.[0]?.textContent));
+      const tiers = config?.feeMode === "tier" ? parseFeeTierRules(config.feeRules) : [];
+      const tier = tiers.find((item) => amount >= item.min && amount <= item.max) || tiers[0] || null;
+      const rate = config?.feeMode === "fixed" ? (Number(String(config.feeRules || "").replace(/[^\d.]/g, "")) || 0) / 100 : tier?.rate || 0;
       const fee = amount * rate;
       const net = amount - fee;
 
-      if (rateTarget) rateTarget.textContent = isKmong ? `${(rate * 100).toFixed(1)}%` : "0%";
-      if (tierTarget) tierTarget.textContent = isKmong ? tier.label : "직접주문/유선은 플랫폼 수수료 없음";
+      if (rateTarget) rateTarget.textContent = rate ? `${(rate * 100).toFixed(1)}%` : "0%";
+      if (tierTarget) tierTarget.textContent = tier?.label || (config?.feeMode === "fixed" ? `${config.name} 고정 수수료` : "직접주문/유선은 플랫폼 수수료 없음");
       if (feeTarget) feeTarget.textContent = fee > 0 ? `-${formatMoney(fee)}` : "0원";
       if (netTarget) netTarget.textContent = formatMoney(net);
       if (amountInput && document.activeElement !== amountInput) amountInput.value = amount ? amount.toLocaleString("ko-KR") : "";
@@ -3249,6 +3320,190 @@ function initAdminChannelFeeCalculator() {
 
 initAdminChannelFeeCalculator();
 
+function initAdminWorkSettings() {
+  const typeScope = document.querySelector("[data-admin-work-type-settings]");
+  const nameScope = document.querySelector("[data-admin-work-name-settings]");
+  if (!typeScope && !nameScope) return;
+
+  const typeBody = document.querySelector("[data-work-type-table-body]");
+  const nameBody = document.querySelector("[data-work-name-table-body]");
+  const typeModal = document.querySelector("[data-work-type-modal]");
+  const typeForm = document.querySelector("[data-work-type-form]");
+  const typeAddButton = document.querySelector("[data-work-type-add]");
+  const typeDeleteButton = document.querySelector("[data-work-type-delete]");
+  const nameModal = document.querySelector("[data-work-name-modal]");
+  const nameForm = document.querySelector("[data-work-name-form]");
+  const nameAddButton = document.querySelector("[data-work-name-add]");
+  const nameDeleteButton = document.querySelector("[data-work-name-delete]");
+  const nameKindSelect = document.querySelector("[data-work-name-kind-select]");
+  let activeTypeIndex = null;
+  let activeNameIndex = null;
+
+  function statusMarkup(status) {
+    return status === "active"
+      ? '<span class="status-pill green">사용중</span>'
+      : '<span class="status-pill gray">사용중지</span>';
+  }
+
+  function renderKindOptions(selected = "") {
+    if (!nameKindSelect) return;
+    nameKindSelect.innerHTML = getAdminWorkTypes()
+      .map((item) => `<option value="${adminEscapeHtml(item.name)}"${item.name === selected ? " selected" : ""}>${adminEscapeHtml(item.name)}</option>`)
+      .join("");
+  }
+
+  function renderTypes() {
+    if (!typeBody) return;
+    const items = getAdminWorkTypes(true);
+    typeBody.innerHTML = items.map((item, index) => `
+      <tr data-work-type-row data-index="${index}">
+        <td><strong>${adminEscapeHtml(item.name)}</strong></td>
+        <td>${adminEscapeHtml(item.code || "-")}</td>
+        <td>${statusMarkup(item.status)}</td>
+        <td><button class="admin-line-button" type="button" data-work-type-edit>수정</button></td>
+      </tr>
+    `).join("");
+  }
+
+  function renderNames() {
+    if (!nameBody) return;
+    const items = getAdminWorkNames(true);
+    nameBody.innerHTML = items.map((item, index) => `
+      <tr data-work-name-row data-index="${index}">
+        <td><strong>${adminEscapeHtml(item.name)}</strong></td>
+        <td>${adminEscapeHtml(item.kind)}</td>
+        <td>${statusMarkup(item.status)}</td>
+        <td><button class="admin-line-button" type="button" data-work-name-edit>수정</button></td>
+      </tr>
+    `).join("");
+  }
+
+  function setModalOpen(modal, isOpen) {
+    if (!modal) return;
+    modal.hidden = !isOpen;
+    document.body.classList.toggle("modal-open", isOpen);
+  }
+
+  function openTypeModal(index = null) {
+    if (!typeModal || !typeForm) return;
+    activeTypeIndex = index;
+    typeForm.reset();
+    const item = index === null ? null : getAdminWorkTypes(true)[index];
+    typeForm.elements.typeName.value = item?.name || "";
+    typeForm.elements.typeCode.value = item?.code || "";
+    typeForm.elements.status.value = item?.status || "active";
+    if (typeDeleteButton) typeDeleteButton.hidden = index === null;
+    typeModal.querySelector("#workTypeModalTitle").textContent = index === null ? "업무유형 추가" : "업무유형 수정";
+    setModalOpen(typeModal, true);
+    typeForm.elements.typeName?.focus();
+  }
+
+  function openNameModal(index = null) {
+    if (!nameModal || !nameForm) return;
+    activeNameIndex = index;
+    nameForm.reset();
+    const item = index === null ? null : getAdminWorkNames(true)[index];
+    renderKindOptions(item?.kind || "");
+    nameForm.elements.workName.value = item?.name || "";
+    nameForm.elements.status.value = item?.status || "active";
+    if (nameDeleteButton) nameDeleteButton.hidden = index === null;
+    nameModal.querySelector("#workNameModalTitle").textContent = index === null ? "업무명 추가" : "업무명 수정";
+    setModalOpen(nameModal, true);
+    nameForm.elements.workName?.focus();
+  }
+
+  function closeTypeModal() {
+    setModalOpen(typeModal, false);
+    activeTypeIndex = null;
+  }
+
+  function closeNameModal() {
+    setModalOpen(nameModal, false);
+    activeNameIndex = null;
+  }
+
+  typeForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const items = getAdminWorkTypes(true);
+    const name = typeForm.elements.typeName.value.trim();
+    if (!name) return;
+    const next = {
+      name,
+      code: (typeForm.elements.typeCode.value.trim() || name.slice(0, 1)).slice(0, 1).toUpperCase(),
+      status: typeForm.elements.status.value
+    };
+    if (activeTypeIndex === null) items.push(next);
+    else items[activeTypeIndex] = next;
+    saveAdminSetting(DOIL_WORK_TYPES_KEY, items);
+    renderTypes();
+    renderKindOptions();
+    showAdminToast(`${name} 업무유형을 저장했습니다.`);
+    closeTypeModal();
+  });
+
+  nameForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const items = getAdminWorkNames(true);
+    const name = nameForm.elements.workName.value.trim();
+    if (!name) return;
+    const next = {
+      name,
+      kind: nameForm.elements.workKind.value,
+      status: nameForm.elements.status.value
+    };
+    if (activeNameIndex === null) items.push(next);
+    else items[activeNameIndex] = next;
+    saveAdminSetting(DOIL_WORK_NAMES_KEY, items);
+    renderNames();
+    showAdminToast(`${name} 업무명을 저장했습니다.`);
+    closeNameModal();
+  });
+
+  typeAddButton?.addEventListener("click", () => openTypeModal());
+  nameAddButton?.addEventListener("click", () => openNameModal());
+  typeBody?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-work-type-edit]");
+    if (!button) return;
+    openTypeModal(Number(button.closest("[data-work-type-row]")?.dataset.index || 0));
+  });
+  nameBody?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-work-name-edit]");
+    if (!button) return;
+    openNameModal(Number(button.closest("[data-work-name-row]")?.dataset.index || 0));
+  });
+  typeDeleteButton?.addEventListener("click", () => {
+    if (activeTypeIndex === null) return;
+    const items = getAdminWorkTypes(true);
+    const removed = items.splice(activeTypeIndex, 1)[0];
+    saveAdminSetting(DOIL_WORK_TYPES_KEY, items);
+    renderTypes();
+    renderKindOptions();
+    showAdminToast(`${removed?.name || "업무유형"}을 삭제했습니다.`);
+    closeTypeModal();
+  });
+  nameDeleteButton?.addEventListener("click", () => {
+    if (activeNameIndex === null) return;
+    const items = getAdminWorkNames(true);
+    const removed = items.splice(activeNameIndex, 1)[0];
+    saveAdminSetting(DOIL_WORK_NAMES_KEY, items);
+    renderNames();
+    showAdminToast(`${removed?.name || "업무명"}을 삭제했습니다.`);
+    closeNameModal();
+  });
+  document.querySelectorAll("[data-work-type-modal-close]").forEach((button) => button.addEventListener("click", closeTypeModal));
+  document.querySelectorAll("[data-work-name-modal-close]").forEach((button) => button.addEventListener("click", closeNameModal));
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (typeModal && !typeModal.hidden) closeTypeModal();
+    if (nameModal && !nameModal.hidden) closeNameModal();
+  });
+  renderTypes();
+  renderNames();
+  renderKindOptions();
+}
+
+initAdminWorkSettings();
+
 function initAdminChannelSettings() {
   const scope = document.querySelector("[data-admin-channel-settings]");
   const modal = document.querySelector("[data-channel-modal]");
@@ -3256,6 +3511,8 @@ function initAdminChannelSettings() {
   const tableBody = document.querySelector("[data-channel-table-body]");
   const addButton = document.querySelector("[data-channel-add]");
   const deleteButton = document.querySelector("[data-channel-delete]");
+  const tierList = document.querySelector("[data-tier-list]");
+  const tierAddButton = document.querySelector("[data-tier-add]");
   if (!scope || !modal || !form || !tableBody || !addButton) return;
 
   let activeRow = null;
@@ -3278,12 +3535,79 @@ function initAdminChannelSettings() {
     return `${Number(fixedRate || 0).toLocaleString("ko-KR")}%`;
   }
 
+  function tierRowMarkup(rule = {}) {
+    return `
+      <div class="admin-tier-row" data-tier-row>
+        <label><span>시작금액</span><input type="text" data-tier-min value="${adminEscapeHtml(rule.minText || "")}" placeholder="예: 1"></label>
+        <label><span>종료금액</span><input type="text" data-tier-max value="${adminEscapeHtml(rule.maxText || "")}" placeholder="예: 700,000 / 비우면 이상"></label>
+        <label><span>수수료율</span><input type="number" min="0" max="100" step="0.1" data-tier-rate value="${adminEscapeHtml(rule.rateText || "")}" placeholder="16.4"></label>
+        <button class="admin-line-button admin-tier-remove" type="button" data-tier-remove aria-label="구간 삭제">×</button>
+      </div>
+    `;
+  }
+
+  function rulesToEditorItems(text) {
+    const parsed = parseFeeTierRules(text);
+    return parsed.length ? parsed.map((item) => ({
+      minText: item.min.toLocaleString("ko-KR"),
+      maxText: item.max === Infinity ? "" : item.max.toLocaleString("ko-KR"),
+      rateText: (item.rate * 100).toFixed(1).replace(/\.0$/, "")
+    })) : [
+      { minText: "1", maxText: "700,000", rateText: "16.4" },
+      { minText: "700,001", maxText: "2,000,000", rateText: "9.4" },
+      { minText: "2,000,001", maxText: "", rateText: "4.4" }
+    ];
+  }
+
+  function renderTierRows(items = []) {
+    if (!tierList) return;
+    const rows = items.length ? items : [{ minText: "1", maxText: "", rateText: "0" }];
+    tierList.innerHTML = rows.map(tierRowMarkup).join("");
+  }
+
+  function collectTierRules() {
+    if (!tierList) return "";
+    return Array.from(tierList.querySelectorAll("[data-tier-row]"))
+      .map((row) => {
+        const min = row.querySelector("[data-tier-min]")?.value.trim();
+        const max = row.querySelector("[data-tier-max]")?.value.trim();
+        const rate = row.querySelector("[data-tier-rate]")?.value.trim();
+        if (!min || !rate) return "";
+        return max ? `${min}~${max}원 ${rate}%` : `${min}원 이상 ${rate}%`;
+      })
+      .filter(Boolean)
+      .join(" / ");
+  }
+
+  function syncFeeModeFields() {
+    const isTier = form.elements.feeMode.value === "tier";
+    if (tierList?.closest("[data-channel-tier-editor]")) {
+      tierList.closest("[data-channel-tier-editor]").hidden = !isTier;
+    }
+    if (form.elements.fixedRate?.closest("label")) {
+      form.elements.fixedRate.closest("label").hidden = isTier || form.elements.feeMode.value === "none";
+    }
+  }
+
   function feeRulesMarkup(text) {
     return `<span class="admin-fee-rules">${text
       .split("/")
       .map((item) => item.trim())
       .filter(Boolean)
       .join("<br>")}</span>`;
+  }
+
+  function saveChannelRows() {
+    const channels = Array.from(tableBody.querySelectorAll("[data-channel-row]")).map((row) => ({
+      name: row.dataset.channelName || "",
+      type: row.dataset.channelType || "외부채널",
+      feeMode: row.dataset.feeMode || "fixed",
+      feeRules: row.dataset.feeRules || "0%",
+      settlement: row.dataset.settlement || "입금 확인일",
+      status: row.dataset.status || "active",
+      memo: row.querySelector("td small")?.textContent || ""
+    })).filter((item) => item.name);
+    saveAdminSetting(DOIL_CHANNEL_SETTINGS_KEY, channels);
   }
 
   function setModalOpen(isOpen) {
@@ -3297,6 +3621,8 @@ function initAdminChannelSettings() {
     form.elements.channelType.value = "외부채널";
     form.elements.feeMode.value = "fixed";
     form.elements.status.value = "active";
+    renderTierRows();
+    syncFeeModeFields();
     if (deleteButton) deleteButton.hidden = true;
     modal.querySelector("#channelModalTitle").textContent = "외부채널 추가";
     setModalOpen(true);
@@ -3309,10 +3635,11 @@ function initAdminChannelSettings() {
     form.elements.channelType.value = row.dataset.channelType || "외부채널";
     form.elements.feeMode.value = row.dataset.feeMode || "fixed";
     form.elements.fixedRate.value = row.dataset.feeMode === "fixed" ? (row.dataset.feeRules || "0%").replace(/[^\d.]/g, "") : "";
-    form.elements.tierRules.value = row.dataset.feeMode === "tier" ? row.dataset.feeRules || "" : "";
+    renderTierRows(rulesToEditorItems(row.dataset.feeRules || ""));
     form.elements.settlement.value = row.dataset.settlement || "입금 확인일";
     form.elements.status.value = row.dataset.status || "active";
     form.elements.memo.value = row.querySelector("td small")?.textContent || "";
+    syncFeeModeFields();
     if (deleteButton) deleteButton.hidden = row.dataset.channelName === "직접주문";
     modal.querySelector("#channelModalTitle").textContent = "외부채널 수정";
     setModalOpen(true);
@@ -3331,7 +3658,7 @@ function initAdminChannelSettings() {
 
     const channelType = form.elements.channelType.value;
     const feeMode = form.elements.feeMode.value;
-    const rulesText = feeRulesText(feeMode, form.elements.fixedRate.value, form.elements.tierRules.value);
+    const rulesText = feeRulesText(feeMode, form.elements.fixedRate.value, collectTierRules());
     const settlement = form.elements.settlement.value;
     const status = form.elements.status.value;
     const memo = form.elements.memo.value.trim() || (channelType === "외부채널" ? "외부 거래채널" : "직접 거래");
@@ -3355,11 +3682,27 @@ function initAdminChannelSettings() {
     `;
 
     if (!activeRow) tableBody.prepend(row);
+    saveChannelRows();
     showAdminToast(`${channelName} 채널 설정이 저장되었습니다.`);
     closeModal();
   }
 
   addButton.addEventListener("click", openCreateModal);
+  form.elements.feeMode?.addEventListener("change", syncFeeModeFields);
+  tierAddButton?.addEventListener("click", () => {
+    if (!tierList) return;
+    tierList.insertAdjacentHTML("beforeend", tierRowMarkup({ minText: "", maxText: "", rateText: "" }));
+  });
+  tierList?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-tier-remove]");
+    if (!button) return;
+    const rows = Array.from(tierList.querySelectorAll("[data-tier-row]"));
+    if (rows.length <= 1) {
+      rows[0]?.querySelectorAll("input").forEach((input) => { input.value = ""; });
+      return;
+    }
+    button.closest("[data-tier-row]")?.remove();
+  });
   form.addEventListener("submit", saveChannel);
   tableBody.addEventListener("click", (event) => {
     const button = event.target.closest("[data-channel-edit]");
@@ -3371,6 +3714,7 @@ function initAdminChannelSettings() {
     if (!activeRow) return;
     const channelName = activeRow.dataset.channelName || "채널";
     activeRow.remove();
+    saveChannelRows();
     showAdminToast(`${channelName} 채널을 삭제했습니다.`);
     closeModal();
   });
@@ -4670,7 +5014,8 @@ function initAdminProjectOrderModal() {
   const projectNameLoadButton = modal.querySelector("[data-project-name-load]");
   const projectNameModal = document.querySelector("[data-project-name-modal]");
   const projectNameSearch = projectNameModal?.querySelector("[data-project-name-search]");
-  const projectNameOptions = Array.from(projectNameModal?.querySelectorAll("[data-project-name-option]") || []);
+  const projectNameList = projectNameModal?.querySelector("[data-project-name-list]");
+  let projectNameOptions = Array.from(projectNameModal?.querySelectorAll("[data-project-name-option]") || []);
   const projectNameConfirmButton = projectNameModal?.querySelector("[data-project-name-confirm]");
   const projectNameCloseButtons = Array.from(document.querySelectorAll("[data-project-name-close]"));
   const projectNameEmpty = projectNameModal?.querySelector("[data-project-name-empty]");
@@ -4683,11 +5028,6 @@ function initAdminProjectOrderModal() {
   let pendingCustomerOption = null;
   let pendingProjectNameOption = null;
 
-  const kmongFeeTiers = [
-    { min: 1, max: 700000, rate: 0.164 },
-    { min: 700001, max: 2000000, rate: 0.094 },
-    { min: 2000001, max: Infinity, rate: 0.044 }
-  ];
   const projectStatusFlow = ["received", "working", "ended"];
 
   function parseMoney(value) {
@@ -4778,6 +5118,27 @@ function initAdminProjectOrderModal() {
     syncProjectPickers();
   }
 
+  function syncWorkTypeOptions(selected = "") {
+    const select = form?.elements?.projectKind;
+    if (!select) return;
+    const types = getAdminWorkTypes();
+    const current = selected || select.value || types[0]?.name || "디자인";
+    select.innerHTML = types
+      .map((item) => `<option value="${escapeHtml(item.name)}"${item.name === current ? " selected" : ""}>${escapeHtml(item.name)}</option>`)
+      .join("");
+    if (current && !types.some((item) => item.name === current)) {
+      select.insertAdjacentHTML("beforeend", `<option value="${escapeHtml(current)}" selected>${escapeHtml(current)}</option>`);
+    }
+  }
+
+  function renderProjectNameOptions() {
+    if (!projectNameList) return;
+    projectNameList.innerHTML = getAdminWorkNames()
+      .map((item) => `<button type="button" data-project-name-option data-project-name="${escapeHtml(item.name)}" data-project-kind="${escapeHtml(item.kind)}"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.kind)}</small></button>`)
+      .join("");
+    projectNameOptions = Array.from(projectNameList.querySelectorAll("[data-project-name-option]"));
+  }
+
   function filterCustomerOptions() {
     if (!customerModal) return;
     const keyword = (customerSearch?.value || "").replace(/\s+/g, "").toLowerCase();
@@ -4829,6 +5190,7 @@ function initAdminProjectOrderModal() {
   function openProjectNameModal() {
     if (!projectNameModal) return;
     pendingProjectNameOption = null;
+    renderProjectNameOptions();
     projectNameOptions.forEach((button) => button.classList.remove("is-selected"));
     if (projectNameSearch) projectNameSearch.value = "";
     filterProjectNameOptions();
@@ -4881,11 +5243,7 @@ function initAdminProjectOrderModal() {
   }
 
   function workKindCode(value) {
-    return {
-      디자인: "D",
-      홈페이지: "H",
-      마케팅: "M"
-    }[value] || "W";
+    return getAdminWorkTypes(true).find((item) => item.name === value)?.code || "W";
   }
 
   function normalizeProjectStatus(status) {
@@ -4975,9 +5333,16 @@ function initAdminProjectOrderModal() {
   }
 
   function calculateFee(channel, amount) {
-    if (channel !== "kmong") return { fee: 0, rate: 0 };
-    const tier = kmongFeeTiers.find((item) => amount >= item.min && amount <= item.max) || kmongFeeTiers[0];
-    return { fee: amount * tier.rate, rate: tier.rate };
+    const config = getAdminChannelSettings().find((item) => normalizeAdminKey(item.name) === normalizeAdminKey(channel) || normalizeAdminKey(item.name) === normalizeAdminKey(channelLabel(channel)));
+    if (!config || config.feeMode === "none") return { fee: 0, rate: 0 };
+    if (config.feeMode === "fixed") {
+      const rate = (Number(String(config.feeRules || "").replace(/[^\d.]/g, "")) || 0) / 100;
+      return { fee: amount * rate, rate };
+    }
+    const tiers = parseFeeTierRules(config.feeRules);
+    const tier = tiers.find((item) => amount >= item.min && amount <= item.max) || tiers[0];
+    const rate = tier?.rate || 0;
+    return { fee: amount * rate, rate };
   }
 
   function paymentChannel(paymentStatus) {
@@ -5113,7 +5478,7 @@ function initAdminProjectOrderModal() {
       const cells = Array.from(row.children);
       setSelectedCustomer(cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]));
       const savedProjectName = normalizeProjectName(cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]));
-      form.elements.projectKind.value = cleanText(cells[3]?.querySelector("small")) || "디자인";
+      syncWorkTypeOptions(cleanText(cells[3]?.querySelector("small")) || "디자인");
       setSelectedProjectName(savedProjectName, form.elements.projectKind.value);
       form.elements.workStatus.value = normalizeProjectStatus(row.dataset.status);
       form.elements.dueDate.value = row.dataset.date || today;
@@ -5123,6 +5488,7 @@ function initAdminProjectOrderModal() {
       form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[9]));
       form.elements.orderMemo.value = row.dataset.memo || "";
     } else if (form) {
+      syncWorkTypeOptions();
       if (form.elements.dueDate) form.elements.dueDate.value = today;
       if (form.elements.managerName) form.elements.managerName.value = currentAdminId();
       if (form.elements.workStatus) form.elements.workStatus.value = "received";
@@ -5265,11 +5631,11 @@ function initAdminProjectOrderModal() {
   });
   projectNameLoadButton?.addEventListener("click", openProjectNameModal);
   projectNameSearch?.addEventListener("input", filterProjectNameOptions);
-  projectNameOptions.forEach((button) => {
-    button.addEventListener("click", () => {
-      pendingProjectNameOption = button;
-      projectNameOptions.forEach((item) => item.classList.toggle("is-selected", item === button));
-    });
+  projectNameModal?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-project-name-option]");
+    if (!button) return;
+    pendingProjectNameOption = button;
+    projectNameOptions.forEach((item) => item.classList.toggle("is-selected", item === button));
   });
   projectNameConfirmButton?.addEventListener("click", () => {
     if (!pendingProjectNameOption) {
