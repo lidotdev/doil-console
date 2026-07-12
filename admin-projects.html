@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-filter-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-status-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -33,14 +33,6 @@
               <div class="panel-title">
                 <h3>업무</h3>
                 <button class="admin-line-button primary" type="button" data-project-order-open>업무 등록</button>
-              </div>
-
-              <div class="admin-work-summary-grid">
-                <article><span>오늘 마감</span><strong>2</strong></article>
-                <article><span>지연 업무</span><strong>1</strong></article>
-                <article><span>자료대기</span><strong>3</strong></article>
-                <article><span>완료대기</span><strong>2</strong></article>
-                <article><span>계산서 미처리</span><strong>2</strong></article>
               </div>
 
               <div class="admin-search-panel admin-work-filter-panel">
@@ -104,7 +96,7 @@
                     <label><span>회원 선택</span><input type="text" name="customerName" placeholder="고객명 검색 또는 수기 입력"></label>
                     <label><span>업무명</span><input type="text" name="projectName" placeholder="예: 상세페이지 제작"></label>
                     <label><span>업무 유형</span><select name="projectKind"><option>디자인</option><option>홈페이지</option><option>마케팅</option></select></label>
-                    <label><span>상태</span><select name="workStatus"><option value="today">작업중</option><option value="waiting">자료대기</option><option value="review">검수중</option><option value="delayed">지연</option><option value="done">완료</option></select></label>
+                    <label><span>상태</span><select name="workStatus"><option value="received">주문접수</option><option value="registered">업무등록</option><option value="working">작업중</option><option value="completed">작업완료</option><option value="delivered">전달완료</option><option value="cancel">취소</option></select></label>
                     <label><span>마감일</span><input type="date" name="dueDate"></label>
                     <label><span>담당자</span><input type="text" name="managerName" placeholder="담당자명"></label>
                     <label><span>금액</span><input type="text" inputmode="numeric" name="grossAmount" placeholder="330000"></label>
@@ -124,7 +116,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-filter-1"></script>
+    <script src="app.js?v=20260712-work-status-1"></script>
   </body>
 </html>
 
