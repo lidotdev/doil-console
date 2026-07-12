@@ -4629,7 +4629,6 @@ function initAdminProjectOrderModal() {
   const openButton = document.querySelector("[data-project-order-open]");
   const closeButtons = Array.from(document.querySelectorAll("[data-project-order-close]"));
   const form = modal.querySelector("form");
-  const hint = modal.querySelector("[data-project-order-hint]");
   const tableBody = document.querySelector(".admin-project-table tbody");
 
   const kmongFeeTiers = [
@@ -4677,6 +4676,17 @@ function initAdminProjectOrderModal() {
     }[value] || "W";
   }
 
+  function statusMarkup(status) {
+    const meta = {
+      today: ["작업중", "blue"],
+      delayed: ["지연", "orange"],
+      waiting: ["자료대기", "gray"],
+      review: ["검수중", "green"],
+      done: ["완료", "green"]
+    }[status] || ["작업중", "blue"];
+    return `<span class="status-pill ${meta[1]}">${meta[0]}</span>`;
+  }
+
   function transactionNo(date, channel, kind) {
     const channelText = channelLabel(channel).replace(/[^\w가-힣]/g, "");
     const kindCode = workKindCode(kind);
@@ -4697,15 +4707,21 @@ function initAdminProjectOrderModal() {
       .replace(/-/g, "");
   }
 
+  function bindProjectRow(row) {
+    row.querySelector("[data-project-action='done']")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      row.dataset.status = "done";
+      if (row.children[0]) row.children[0].innerHTML = statusMarkup("done");
+      updateSearch(row);
+      showAdminToast("업무가 완료 처리되었습니다.");
+    });
+  }
+
   function openModal() {
     form?.reset();
     const today = todayValue();
-    if (form?.elements?.orderDate) form.elements.orderDate.value = today;
     if (form?.elements?.dueDate) form.elements.dueDate.value = today;
-    if (hint) {
-      hint.textContent = "크몽 등 외부채널은 금액 구간에 따라 수수료가 자동 계산되어 순수익에 반영됩니다.";
-      hint.classList.remove("is-saved");
-    }
     modal.hidden = false;
     document.body.classList.add("modal-open");
     modal.querySelector("input, select, textarea, button")?.focus();
@@ -4718,46 +4734,35 @@ function initAdminProjectOrderModal() {
 
   openButton?.addEventListener("click", openModal);
   closeButtons.forEach((button) => button.addEventListener("click", closeModal));
+  Array.from(tableBody?.querySelectorAll("[data-admin-row]") || []).forEach(bindProjectRow);
 
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!tableBody) return;
 
-    const channel = form.elements.channel?.value || "site";
-    const orderDate = form.elements.orderDate?.value || todayValue();
     const customerName = form.elements.customerName?.value.trim() || "신규 고객";
-    const customerPhone = form.elements.customerPhone?.value.trim();
     const projectName = form.elements.projectName?.value.trim() || "신규 업무";
     const projectKind = form.elements.projectKind?.value || "디자인";
-    const paymentMethod = form.elements.paymentMethod?.value || "카드결제";
+    const workStatus = form.elements.workStatus?.value || "today";
+    const dueDate = form.elements.dueDate?.value || todayValue();
+    const managerName = form.elements.managerName?.value.trim() || "담당자";
+    const paymentStatus = form.elements.paymentStatus?.value || "입금확인중";
     const invoiceStatus = form.elements.invoiceStatus?.value || "미발행";
+    const memo = form.elements.orderMemo?.value.trim() || "-";
     const amount = parseMoney(form.elements.grossAmount?.value);
-    const externalOrderNo = form.elements.externalOrderNo?.value.trim();
-    const { fee, rate } = calculateFee(channel, amount);
-    const net = amount - fee;
-    const vat = amount ? Math.round(amount / 11) : 0;
-    const channelText = channelLabel(channel);
-    const orderNo = externalOrderNo || transactionNo(orderDate, channel, projectKind);
-    const invoiceClass = invoiceStatus === "발행" ? "done" : "requested";
+    const invoiceClass = invoiceStatus === "발행" ? "done" : invoiceStatus === "해당없음" ? "none" : "requested";
     const row = document.createElement("tr");
 
     row.dataset.adminRow = "";
-    row.dataset.status = "progress";
+    row.dataset.status = workStatus;
     row.dataset.kind = projectKind === "홈페이지" ? "website" : projectKind === "마케팅" ? "marketing" : "design";
-    row.dataset.channel = channel === "external" ? "external" : channel;
-    row.dataset.date = orderDate;
-    row.innerHTML = `<td>${orderNo}</td><td>${displayDate(orderDate)}</td><td>${channel === "kmong" ? '<span class="invoice-status requested">크몽</span>' : channelText}</td><td>${form.elements.anonymous?.checked ? '<span class="status-pill gray">무기명</span>' : `<button class="admin-text-button" type="button" data-admin-customer-popover>${customerName}</button>${customerPhone ? `<small>${customerPhone}</small>` : ""}`}</td><td>${projectKind}</td><td>${projectName}</td><td>${paymentMethod}</td><td>${formatMoney(amount)}</td><td>${formatMoney(vat)}</td><td>${fee > 0 ? `<span class="admin-negative" data-tooltip="${channelText} 수수료율 ${(rate * 100).toFixed(1)}%">-${formatMoney(fee)}</span>` : "0원"}</td><td><strong>${formatMoney(net)}</strong></td><td><span class="invoice-status ${invoiceClass}">${invoiceStatus}</span></td>`;
+    row.dataset.channel = "site";
+    row.dataset.date = dueDate;
+    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${customerName}</button></td><td><strong>${projectName}</strong><small>${projectKind}</small></td><td><strong>${formatMoney(amount)}</strong><small>${paymentStatus}</small></td><td><span class="invoice-status ${invoiceClass}">${invoiceStatus}</span></td><td>${managerName}</td><td>${memo}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button><button class="admin-line-button" type="button" data-project-action="done">완료</button></div></td>`;
     updateSearch(row);
     tableBody.prepend(row);
-    const workButton = row.querySelector("[data-project-work-open]");
-    workButton?.addEventListener("click", () => {
-      if (typeof window.openProjectWorkModal === "function") window.openProjectWorkModal(workButton);
-    });
-
-    if (hint) {
-      hint.textContent = `${orderNo} 주문이 등록되었습니다.`;
-      hint.classList.add("is-saved");
-    }
+    bindProjectRow(row);
+    showAdminToast(`${projectName} 업무를 등록했습니다.`);
     closeModal();
   });
 
