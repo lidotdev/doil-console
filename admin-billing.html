@@ -6,7 +6,7 @@
     <title>매출/매입 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-sales-purchase-1">
+    <link rel="stylesheet" href="styles.css?v=20260713-billing-work-flow-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -46,11 +46,13 @@
                   <button class="admin-line-button primary" type="button" data-purchase-modal-open>매입등록</button>
                 </div>
               </div>
-              <div class="admin-sales-grid">
-                <article><span>이번달 매출</span><strong>2,256,000원</strong><small>업무 등록 매출 연동</small></article>
-                <article><span>이번달 매입</span><strong>319,000원</strong><small>반복/일회성 매입 포함</small></article>
-                <article><span>수수료</span><strong>94,000원</strong><small>외부 거래처 수수료</small></article>
-                <article><span>예상 순수익</span><strong>1,843,000원</strong><small>매출 - 매입 - 수수료</small></article>
+              <div class="admin-sales-grid admin-billing-summary-grid">
+                <article><span>총 판매액</span><strong>2,256,000원</strong></article>
+                <article><span>공급가액</span><strong>2,050,909원</strong></article>
+                <article><span>부가세</span><strong>205,091원</strong></article>
+                <article><span>채널 수수료</span><strong>94,000원</strong></article>
+                <article><span>매입</span><strong>319,000원</strong></article>
+                <article><span>순수익</span><strong>1,637,909원</strong></article>
               </div>
 
               <div class="admin-search-panel">
@@ -83,38 +85,36 @@
               </div>
 
               <div class="admin-table-scroll">
-                <table class="admin-data-table admin-clickable-table">
+                <table class="admin-data-table admin-clickable-table admin-billing-table">
                   <thead>
-                    <tr><th>구분</th><th>거래일</th><th>거래번호</th><th>거래처</th><th>내용</th><th>결제수단</th><th>공급가액</th><th>부가세</th><th>수수료</th><th>합계/순수익</th><th>계산서</th></tr>
+                    <tr><th>구분</th><th>거래일</th><th>거래번호</th><th>거래처</th><th>내용</th><th>결제수단</th><th>총판매액</th><th>공급가액</th><th>부가세</th><th>수수료</th><th>순수익</th><th>계산서</th></tr>
                   </thead>
                   <tbody>
                     <tr data-admin-row data-type="sales" data-status="paid" data-invoice="requested" data-channel="site" data-date="2026-07-10" data-search="가나다식품 상세페이지 제작 자사 카드결제 계산서 발행대기">
-                      <td><span class="status-pill blue">매출</span></td><td>2026.07.10</td><td>20260710-자사-D001</td><td>가나다식품</td><td><strong>상세페이지 제작</strong><small>업무 등록 매출</small></td><td>카드결제</td><td>300,000원</td><td>30,000원</td><td>0원</td><td><strong>330,000원</strong></td><td><span class="invoice-status requested invoice-urgent"><b>!</b> 발행대기</span></td>
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.10</td><td>20260710-직접주문-D001</td><td>가나다식품</td><td><strong>상세페이지 제작</strong><small>디자인</small></td><td>카드결제</td><td><strong>330,000원</strong></td><td>300,000원</td><td>30,000원</td><td>0원</td><td><strong>300,000원</strong></td><td><span class="invoice-status requested invoice-urgent"><b>!</b> 미발행</span></td>
                     </tr>
-                    <tr data-admin-row data-type="sales" data-status="paid" data-invoice="issued" data-channel="kmong" data-date="2026-07-09" data-search="크몽 쇼핑몰 배너 제작 플랫폼 정산 수수료">
-                      <td><span class="status-pill blue">매출</span></td><td>2026.07.09</td><td>20260709-크몽-M001</td><td>크몽 고객</td><td><strong>쇼핑몰 배너 제작</strong><small>외부채널 업무 매출</small></td><td>플랫폼 정산</td><td>909,091원</td><td>90,909원</td><td><span class="admin-negative" data-tooltip="크몽 수수료율 9.4%">-94,000원</span></td><td><strong>906,000원</strong></td><td><span class="invoice-status done">발행완료</span></td>
+                    <tr data-admin-row data-type="sales" data-status="paid" data-invoice="issued" data-channel="kmong" data-date="2026-07-09" data-search="크몽 쇼핑몰 배너 제작 크몽 구간 수수료">
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.09</td><td>20260709-크몽-D001</td><td>크몽 고객</td><td><strong>쇼핑몰 배너</strong><small>디자인</small></td><td>크몽</td><td><strong>1,000,000원</strong></td><td>909,091원</td><td>90,909원</td><td><span class="admin-negative" data-tooltip="크몽 수수료율 9.4%">-94,000원</span></td><td><strong>815,091원</strong></td><td><span class="invoice-status done">발행</span></td>
                     </tr>
-                    <tr data-admin-row data-type="sales" data-status="waiting" data-invoice="requested" data-channel="site" data-date="2026-07-09" data-search="ABC몰 홈페이지 제작 무통장입금 입금확인중 계산서">
-                      <td><span class="status-pill blue">매출</span></td><td>2026.07.09</td><td>20260709-자사-H001</td><td>ABC몰</td><td><strong>홈페이지 제작</strong><small>입금 확인 후 매출 확정</small></td><td>무통장입금</td><td>500,000원</td><td>50,000원</td><td>0원</td><td><strong>550,000원</strong></td><td><span class="invoice-status requested">발행요청</span></td>
+                    <tr data-admin-row data-type="sales" data-status="waiting" data-invoice="requested" data-channel="site" data-date="2026-07-09" data-search="ABC몰 랜딩페이지 직접주문 계좌이체 입금확인중 계산서">
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.09</td><td>20260709-직접주문-H001</td><td>ABC몰</td><td><strong>랜딩페이지</strong><small>홈페이지</small></td><td>계좌이체</td><td><strong>486,000원</strong></td><td>441,818원</td><td>44,182원</td><td>0원</td><td><strong>441,818원</strong></td><td><span class="invoice-status requested">미발행</span></td>
+                    </tr>
+                    <tr data-admin-row data-type="sales" data-status="paid" data-invoice="none" data-channel="site" data-date="2026-07-08" data-search="무기명 블로그 스킨 직접주문 무통장입금 계산서 해당없음">
+                      <td><span class="status-pill blue">매출</span></td><td>2026.07.08</td><td>20260708-직접주문-D002</td><td>무기명</td><td><strong>블로그 스킨</strong><small>디자인</small></td><td>무통장입금</td><td><strong>440,000원</strong></td><td>400,000원</td><td>40,000원</td><td>0원</td><td><strong>400,000원</strong></td><td><span class="invoice-status none">해당없음</span></td>
                     </tr>
                     <tr data-admin-row data-type="purchase" data-status="paid" data-invoice="none" data-channel="purchase" data-date="2026-07-10" data-search="서버 호스팅 비용 매입 운영비">
-                      <td><span class="status-pill orange">매입</span></td><td>2026.07.10</td><td>BUY-20260710-001</td><td>호스팅사</td><td><strong>서버/호스팅 비용</strong><small>매월 반복 매입</small></td><td>카드결제</td><td>90,000원</td><td>9,000원</td><td>-</td><td><strong class="admin-negative">-99,000원</strong></td><td><span class="invoice-status none">해당없음</span></td>
+                      <td><span class="status-pill orange">매입</span></td><td>2026.07.10</td><td>BUY-20260710-001</td><td>호스팅사</td><td><strong>서버/호스팅 비용</strong><small>운영비</small></td><td>카드결제</td><td>-</td><td>90,000원</td><td>9,000원</td><td>-</td><td><strong class="admin-negative">-99,000원</strong></td><td><span class="invoice-status none">해당없음</span></td>
                     </tr>
                     <tr data-admin-row data-type="purchase" data-status="paid" data-invoice="issued" data-channel="purchase" data-date="2026-07-09" data-search="이미지 소스 구매 매입 자료">
-                      <td><span class="status-pill orange">매입</span></td><td>2026.07.09</td><td>BUY-20260709-002</td><td>자료몰</td><td><strong>이미지 소스 구매</strong><small>일회성 매입</small></td><td>계좌이체</td><td>109,091원</td><td>10,909원</td><td>-</td><td><strong class="admin-negative">-120,000원</strong></td><td><span class="invoice-status done">수취완료</span></td>
+                      <td><span class="status-pill orange">매입</span></td><td>2026.07.09</td><td>BUY-20260709-002</td><td>자료몰</td><td><strong>이미지 소스 구매</strong><small>자료구매</small></td><td>계좌이체</td><td>-</td><td>109,091원</td><td>10,909원</td><td>-</td><td><strong class="admin-negative">-120,000원</strong></td><td><span class="invoice-status done">수취완료</span></td>
+                    </tr>
+                    <tr data-admin-row data-type="purchase" data-status="paid" data-invoice="issued" data-channel="purchase" data-date="2026-07-08" data-search="소프트웨어 구독 매입 운영비">
+                      <td><span class="status-pill orange">매입</span></td><td>2026.07.08</td><td>BUY-20260708-003</td><td>소프트웨어</td><td><strong>디자인 툴 구독</strong><small>소프트웨어</small></td><td>카드결제</td><td>-</td><td>90,909원</td><td>9,091원</td><td>-</td><td><strong class="admin-negative">-100,000원</strong></td><td><span class="invoice-status done">수취완료</span></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <p class="admin-empty" data-admin-empty hidden>조건에 맞는 매출/매입 내역이 없습니다.</p>
-            </section>
-
-            <section class="panel">
-              <div class="panel-title"><h3>운영 기준</h3></div>
-              <div class="admin-note-box">
-                <strong>업무 매출 연동</strong>
-                <p>업무 등록 시 판매금액, 부가세, 수수료, 순수익이 매출 항목으로 자동 연동됩니다. 매입은 별도 등록 버튼으로 운영비, 외주비, 자료구매 등을 입력합니다.</p>
-              </div>
             </section>
             <div class="admin-modal" data-purchase-modal hidden>
               <div class="admin-modal-backdrop" data-purchase-modal-close></div>
@@ -146,7 +146,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-sales-purchase-1"></script>
+    <script src="app.js?v=20260713-billing-work-flow-1"></script>
   </body>
 </html>
 

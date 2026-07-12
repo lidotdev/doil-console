@@ -5011,6 +5011,10 @@ h3 {
   margin-bottom: 18px;
 }
 
+.admin-billing-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .admin-sales-grid article {
   display: grid;
   gap: 8px;
@@ -5056,6 +5060,16 @@ h3 {
   color: var(--ink);
   font-size: 23px;
   line-height: 1.15;
+}
+
+.admin-billing-summary-grid article:nth-child(4) strong,
+.admin-billing-summary-grid article:nth-child(5) strong {
+  color: #dc2626;
+}
+
+.admin-billing-summary-grid article:nth-child(6) {
+  border-color: rgba(17, 24, 39, 0.18);
+  background: #f8fafc;
 }
 
 .admin-sales-grid small {
@@ -11716,6 +11730,72 @@ th {
 }
 
 @media (max-width: 900px) {
+  .admin-billing-table,
+  .admin-billing-table thead,
+  .admin-billing-table tbody,
+  .admin-billing-table tr,
+  .admin-billing-table th,
+  .admin-billing-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-billing-table thead {
+    display: none;
+  }
+
+  .admin-billing-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .admin-billing-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .admin-billing-table tbody tr {
+    display: grid;
+    gap: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+  }
+
+  .admin-billing-table td {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 8px 0;
+    border: 0;
+    white-space: normal;
+  }
+
+  .admin-billing-table td + td {
+    border-top: 1px solid #f0f2f5;
+  }
+
+  .admin-billing-table td::before {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .admin-billing-table td:nth-child(1)::before { content: "구분"; }
+  .admin-billing-table td:nth-child(2)::before { content: "거래일"; }
+  .admin-billing-table td:nth-child(3)::before { content: "거래번호"; }
+  .admin-billing-table td:nth-child(4)::before { content: "거래처"; }
+  .admin-billing-table td:nth-child(5)::before { content: "내용"; }
+  .admin-billing-table td:nth-child(6)::before { content: "결제수단"; }
+  .admin-billing-table td:nth-child(7)::before { content: "총판매액"; }
+  .admin-billing-table td:nth-child(8)::before { content: "공급가액"; }
+  .admin-billing-table td:nth-child(9)::before { content: "부가세"; }
+  .admin-billing-table td:nth-child(10)::before { content: "수수료"; }
+  .admin-billing-table td:nth-child(11)::before { content: "순수익"; }
+  .admin-billing-table td:nth-child(12)::before { content: "계산서"; }
+
   .admin-form-grid.compact {
     grid-template-columns: 1fr;
   }
