@@ -6807,6 +6807,11 @@ h3 {
   font-weight: 700;
 }
 
+.admin-customer-load-panel .admin-modal-actions {
+  margin-top: 0;
+  padding: 18px 26px 26px;
+}
+
 .admin-form-actions {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
