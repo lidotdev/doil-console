@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
     <link rel="apple-touch-icon" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260713-dashboard-revenue-1">
+    <link rel="stylesheet" href="styles.css?v=20260713-dashboard-chart-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -65,7 +65,7 @@
                 <div class="admin-profit-grid" aria-label="판매액과 순수익 요약">
                   <article><span>총 판매액</span><strong>2,256,000원</strong></article>
                   <article><span>공급가액</span><strong>2,050,909원</strong></article>
-                  <article><span>세액 유보금</span><strong>205,091원</strong></article>
+                  <article><span>부가세</span><strong>205,091원</strong></article>
                   <article class="is-minus"><span>채널 수수료</span><strong>-94,000원</strong></article>
                   <article class="is-minus"><span>운영지출</span><strong>-319,000원</strong></article>
                   <article class="is-net"><span>순수익</span><strong>1,637,909원</strong></article>
@@ -75,6 +75,12 @@
                     <strong>최근 30일 판매액</strong>
                   </div>
                   <div class="admin-chart-bars">
+                    <div class="admin-chart-grid" aria-hidden="true">
+                      <span style="--grid-y: 100%;"><em>50만원</em></span>
+                      <span style="--grid-y: 75%;"><em>37.5만원</em></span>
+                      <span style="--grid-y: 50%;"><em>25만원</em></span>
+                      <span style="--grid-y: 25%;"><em>12.5만원</em></span>
+                    </div>
                     <span class="admin-chart-bar" data-day="6/11" style="--value: 18%;" data-tooltip="2026.06.11 판매액 88,000원"><i></i></span>
                     <span class="admin-chart-bar" data-day="6/12" style="--value: 24%;" data-tooltip="2026.06.12 판매액 120,000원"><i></i></span>
                     <span class="admin-chart-bar" data-day="6/13" style="--value: 12%;" data-tooltip="2026.06.13 판매액 55,000원"><i></i></span>
@@ -147,7 +153,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260713-dashboard-revenue-1"></script>
+    <script src="app.js?v=20260713-dashboard-chart-1"></script>
   </body>
 </html>
 

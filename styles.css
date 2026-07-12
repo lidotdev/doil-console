@@ -4980,6 +4980,10 @@ h3 {
   overflow-x: auto;
 }
 
+.admin-page-shell .admin-sales-panel {
+  overflow: visible;
+}
+
 .admin-dashboard-shell {
   grid-template-columns: minmax(0, 1180px) 300px;
 }
@@ -5174,18 +5178,57 @@ h3 {
 }
 
 .admin-chart-bars {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(30, minmax(6px, 1fr));
+  grid-template-columns: repeat(30, minmax(0, 1fr));
   align-items: end;
-  gap: 9px;
-  min-height: 148px;
-  padding-top: 24px;
+  gap: clamp(3px, 0.72vw, 9px);
+  min-height: 170px;
+  padding: 30px 0 22px 48px;
   border-bottom: 1px solid var(--line);
   overflow: visible;
 }
 
+.admin-chart-grid {
+  position: absolute;
+  inset: 30px 0 22px 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.admin-chart-grid span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--grid-y);
+  border-top: 1px solid #e5e7eb;
+}
+
+.admin-chart-grid span::after {
+  content: "";
+  position: absolute;
+  left: 48px;
+  right: 0;
+  top: -1px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.admin-chart-grid em {
+  position: absolute;
+  left: 0;
+  top: -8px;
+  width: 38px;
+  color: #94a3b8;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1;
+  text-align: right;
+}
+
 .admin-chart-bar {
   position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: end;
@@ -5198,7 +5241,7 @@ h3 {
   position: absolute;
   left: 50%;
   bottom: calc(var(--value) + 12px);
-  z-index: 5;
+  z-index: 10;
   min-width: max-content;
   max-width: 180px;
   padding: 7px 9px;
@@ -5215,14 +5258,30 @@ h3 {
   white-space: nowrap;
 }
 
+.admin-chart-bar:nth-of-type(-n + 4)::before {
+  left: 0;
+  transform: translate(0, 6px);
+}
+
+.admin-chart-bar:nth-last-of-type(-n + 4)::before {
+  left: auto;
+  right: 0;
+  transform: translate(0, 6px);
+}
+
 .admin-chart-bar:hover::before {
   opacity: 1;
   transform: translate(-50%, 0);
 }
 
+.admin-chart-bar:nth-of-type(-n + 4):hover::before,
+.admin-chart-bar:nth-last-of-type(-n + 4):hover::before {
+  transform: translate(0, 0);
+}
+
 .admin-chart-bar i {
   display: block;
-  width: 6px;
+  width: min(6px, 100%);
   height: var(--value);
   min-height: 6px;
   border-radius: 999px 999px 0 0;
