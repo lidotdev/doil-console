@@ -6723,6 +6723,10 @@ h3 {
   padding: 22px 26px 26px;
 }
 
+.admin-modal-panel > .admin-form-grid {
+  padding: 22px 26px 26px;
+}
+
 .admin-form-grid {
   display: grid;
   gap: 14px;
@@ -6829,7 +6833,7 @@ h3 {
 
 .admin-tier-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 100px 38px;
+  grid-template-columns: minmax(120px, 1fr) minmax(150px, 1fr) 100px 38px;
   gap: 8px;
   align-items: end;
 }
@@ -11722,6 +11726,15 @@ th {
 
   .admin-form-actions span {
     display: none;
+  }
+
+  .admin-tier-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-tier-remove {
+    width: 38px;
+    justify-self: end;
   }
 
   .site-status-grid,
