@@ -4980,6 +4980,15 @@ function initAdminProjectOrderModal() {
     return { fee: amount * tier.rate, rate: tier.rate };
   }
 
+  function paymentChannel(paymentStatus) {
+    return paymentStatus === "크몽" ? "kmong" : "site";
+  }
+
+  function feeLabel(feeInfo, paymentStatus) {
+    if (!feeInfo.fee) return "수수료 없음";
+    return `${paymentStatus} ${(feeInfo.rate * 100).toFixed(1)}%`;
+  }
+
   function updateSearch(row) {
     row.dataset.search = Array.from(row.children)
       .map((cell) => {
@@ -5013,7 +5022,7 @@ function initAdminProjectOrderModal() {
     if (row.dataset.projectStatusBound === "true") return;
     row.dataset.projectStatusBound = "true";
     applyProjectStatus(row, row.dataset.status, true);
-    applyInvoiceStatus(row, row.dataset.invoice || cleanText(row.children[5]), true);
+    applyInvoiceStatus(row, row.dataset.invoice || cleanText(row.children[7]), true);
 
     row.addEventListener("change", (event) => {
       const select = event.target.closest("[data-project-status-select]");
@@ -5101,7 +5110,7 @@ function initAdminProjectOrderModal() {
     const normalized = normalizeInvoiceStatus(status);
     const meta = invoiceStatusMeta(normalized);
     row.dataset.invoice = normalized;
-    if (row.children[5]) row.children[5].innerHTML = invoiceMarkup(normalized);
+    if (row.children[7]) row.children[7].innerHTML = invoiceMarkup(normalized);
     updateProjectCompletion(row);
     updateSearch(row);
     if (!silent) {
@@ -5124,11 +5133,11 @@ function initAdminProjectOrderModal() {
       setSelectedProjectName(savedProjectName, form.elements.projectKind.value);
       form.elements.workStatus.value = normalizeProjectStatus(row.dataset.status);
       form.elements.dueDate.value = row.dataset.date || today;
-      form.elements.managerName.value = cleanText(cells[6]);
+      form.elements.managerName.value = cleanText(cells[8]);
       form.elements.grossAmount.value = cleanText(cells[4]?.querySelector("strong")).replace(/[^\d]/g, "");
-      form.elements.paymentStatus.value = (cleanText(cells[4]?.querySelector("small")).split("·")[0] || "").trim() || "입금확인중";
-      form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[5]));
-      form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[7]);
+      form.elements.paymentStatus.value = row.dataset.paymentStatus || (cleanText(cells[6]?.querySelector("small")).split("·")[0] || "").trim() || "계좌이체";
+      form.elements.invoiceStatus.value = row.dataset.invoice || normalizeInvoiceStatus(cleanText(cells[7]));
+      form.elements.orderMemo.value = row.dataset.memo || cleanText(cells[9]);
     } else if (form) {
       if (form.elements.dueDate) form.elements.dueDate.value = today;
       if (form.elements.managerName) form.elements.managerName.value = currentAdminId();
@@ -5198,6 +5207,10 @@ function initAdminProjectOrderModal() {
     const memo = form.elements.orderMemo?.value.trim() || "-";
     const amount = parseMoney(form.elements.grossAmount?.value);
     const amountParts = taxParts(amount);
+    const channel = paymentChannel(paymentStatus);
+    const feeInfo = calculateFee(channel, amount);
+    const feeAmount = Math.round(feeInfo.fee);
+    const netAmount = Math.max(0, amount - feeAmount);
     const wasEdit = Boolean(activeEditRow);
     const row = activeEditRow || document.createElement("tr");
 
@@ -5205,14 +5218,17 @@ function initAdminProjectOrderModal() {
     row.dataset.status = normalizeProjectStatus(workStatus);
     row.dataset.state = rowStateForStatus(workStatus);
     row.dataset.kind = projectKind === "홈페이지" ? "website" : projectKind === "마케팅" ? "marketing" : "design";
-    row.dataset.channel = "site";
+    row.dataset.channel = channel;
     row.dataset.date = dueDate;
     row.dataset.memo = memo;
+    row.dataset.paymentStatus = paymentStatus;
     row.dataset.grossAmount = String(amount);
     row.dataset.supplyAmount = String(amountParts.supply);
     row.dataset.vatAmount = String(amountParts.vat);
+    row.dataset.feeAmount = String(feeAmount);
+    row.dataset.netAmount = String(netAmount);
     row.dataset.invoice = invoiceStatus;
-    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>${escapeHtml(paymentStatus)} · VAT ${formatMoney(amountParts.vat)}</small></td><td>${invoiceMarkup(invoiceStatus)}</td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button></div></td>`;
+    row.innerHTML = `<td>${statusMarkup(workStatus)}</td><td>${displayDate(dueDate)}</td><td><button class="admin-text-button" type="button" data-admin-customer-popover>${escapeHtml(customerName)}</button></td><td><strong>${escapeHtml(projectName)}</strong><small>${escapeHtml(projectKind)}</small></td><td><strong>${formatMoney(amount)}</strong><small>VAT ${formatMoney(amountParts.vat)}</small></td><td><strong>${formatMoney(feeAmount)}</strong><small>${escapeHtml(feeLabel(feeInfo, paymentStatus))}</small></td><td><strong>${formatMoney(netAmount)}</strong><small>${escapeHtml(paymentStatus)}</small></td><td>${invoiceMarkup(invoiceStatus)}</td><td>${escapeHtml(managerName)}</td><td>${escapeHtml(memo)}</td><td><div class="admin-row-actions"><button class="admin-line-button" type="button" data-project-action="edit">관리</button></div></td>`;
     updateSearch(row);
     if (!wasEdit) {
       tableBody.appendChild(row);
@@ -5235,8 +5251,8 @@ function initAdminProjectOrderModal() {
     activeCompleteRow.dataset.deliverableFile = fileName;
     activeCompleteRow.dataset.completeComment = comment;
     activeCompleteRow.dataset.memo = comment;
-    if (activeCompleteRow.children[7]) {
-      activeCompleteRow.children[7].innerHTML = `${escapeHtml(comment)}<small>${escapeHtml(fileName)}</small>`;
+    if (activeCompleteRow.children[9]) {
+      activeCompleteRow.children[9].innerHTML = `${escapeHtml(comment)}<small>${escapeHtml(fileName)}</small>`;
     }
     applyProjectStatus(activeCompleteRow, "ended");
     closeCompleteModal();
