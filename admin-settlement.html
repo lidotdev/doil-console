@@ -6,7 +6,7 @@
     <title>정산 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-settlement-1">
+    <link rel="stylesheet" href="styles.css?v=20260713-settlement-work-sync-1">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -46,33 +46,46 @@
               <div class="admin-search-panel">
                 <label class="admin-search-field">
                   <span>정산 검색</span>
-                  <input type="search" data-admin-search placeholder="거래처, 거래번호, 정산상태 검색">
+                  <input type="search" data-admin-search placeholder="고객명, 업무명, 계산서 상태 검색">
                 </label>
                 <div class="admin-filter-group">
                   <button class="active" type="button" data-admin-filter="all" aria-pressed="true">전체</button>
-                  <button type="button" data-admin-filter="status:waiting" aria-pressed="false">확인대기</button>
-                  <button type="button" data-admin-filter="status:done" aria-pressed="false">정산완료</button>
-                  <button type="button" data-admin-filter="status:invoice" aria-pressed="false">계산서 필요</button>
+                  <button type="button" data-admin-filter="status:active" aria-pressed="false">진행중</button>
+                  <button type="button" data-admin-filter="status:complete" aria-pressed="false">종료</button>
+                  <button type="button" data-admin-filter="invoice:requested" aria-pressed="false">미발행</button>
+                  <button type="button" data-admin-filter="invoice:done" aria-pressed="false">발행</button>
                 </div>
               </div>
               <div class="admin-table-scroll">
-                <table class="admin-data-table admin-clickable-table">
-                  <thead><tr><th>정산일</th><th>거래처</th><th>내용</th><th>총액</th><th>수수료/매입</th><th>정산액</th><th>상태</th></tr></thead>
+                <table class="admin-data-table admin-settlement-work-table admin-clickable-table">
+                  <thead>
+                    <tr>
+                      <th>상태</th>
+                      <th>고객명</th>
+                      <th>업무명</th>
+                      <th>총 판매액</th>
+                      <th>공급가액</th>
+                      <th>부가세</th>
+                      <th>수수료</th>
+                      <th>순수익</th>
+                      <th>계산서</th>
+                    </tr>
+                  </thead>
                   <tbody>
-                    <tr data-admin-row data-status="invoice" data-search="가나다식품 세금계산서 발행대기 상세페이지">
-                      <td>2026.07.10</td><td>가나다식품</td><td><strong>상세페이지 제작</strong><small>계산서 발행 후 완료 처리</small></td><td>330,000원</td><td>0원</td><td><strong>330,000원</strong></td><td><span class="invoice-status requested invoice-urgent"><b>!</b> 계산서 필요</span></td>
+                    <tr data-admin-row data-status="active" data-invoice="requested" data-search="가나다식품 상세페이지 제작 작업중 미발행 카드결제">
+                      <td><span class="status-pill blue">작업중</span></td><td>가나다식품</td><td><strong>상세페이지 제작</strong><small>디자인</small></td><td><strong>330,000원</strong><small>카드결제</small></td><td><strong>300,000원</strong></td><td><strong>30,000원</strong></td><td><strong>0원</strong></td><td><strong>300,000원</strong></td><td><span class="invoice-status requested">미발행</span></td>
                     </tr>
-                    <tr data-admin-row data-status="waiting" data-search="ABC몰 홈페이지 제작 입금확인중">
-                      <td>2026.07.09</td><td>ABC몰</td><td><strong>홈페이지 제작</strong><small>입금 확인 필요</small></td><td>550,000원</td><td>0원</td><td><strong>550,000원</strong></td><td><span class="status-pill orange">확인대기</span></td>
+                    <tr data-admin-row data-status="active" data-invoice="done" data-search="ABC몰 랜딩페이지 제작 자료대기 발행 계좌이체">
+                      <td><span class="status-pill gray">자료대기</span></td><td>ABC몰</td><td><strong>랜딩페이지 제작</strong><small>홈페이지</small></td><td><strong>440,000원</strong><small>계좌이체</small></td><td><strong>400,000원</strong></td><td><strong>40,000원</strong></td><td><strong>0원</strong></td><td><strong>400,000원</strong></td><td><span class="invoice-status done">발행</span></td>
                     </tr>
-                    <tr data-admin-row data-status="done" data-search="크몽 쇼핑몰 배너 수수료 정산완료">
-                      <td>2026.07.09</td><td>크몽</td><td><strong>쇼핑몰 배너 제작</strong><small>외부채널 수수료 차감</small></td><td>1,000,000원</td><td><span class="admin-negative">-94,000원</span></td><td><strong>906,000원</strong></td><td><span class="status-pill green">정산완료</span></td>
+                    <tr data-admin-row data-status="complete" data-invoice="requested" data-search="크몽 고객 쇼핑몰 배너 제작 종료 미발행 크몽">
+                      <td><span class="status-pill gray">종료</span></td><td>크몽 고객</td><td><strong>쇼핑몰 배너 제작</strong><small>마케팅</small></td><td><strong>1,000,000원</strong><small>크몽</small></td><td><strong>909,091원</strong></td><td><strong>90,909원</strong></td><td><strong>94,000원</strong></td><td><strong>815,091원</strong></td><td><span class="invoice-status requested">미발행</span></td>
                     </tr>
-                    <tr data-admin-row data-status="done" data-search="호스팅사 서버 비용 매입">
-                      <td>2026.07.10</td><td>호스팅사</td><td><strong>서버/호스팅 비용</strong><small>매월 반복 매입</small></td><td>-</td><td><span class="admin-negative">-99,000원</span></td><td><strong class="admin-negative">-99,000원</strong></td><td><span class="status-pill green">반영완료</span></td>
+                    <tr class="is-work-complete" data-admin-row data-status="complete" data-invoice="done" data-search="호스팅사 서버 호스팅 운영 종료 발행">
+                      <td><span class="status-pill gray">종료</span></td><td>호스팅사</td><td><strong>서버/호스팅 운영</strong><small>운영지출</small></td><td><strong>99,000원</strong><small>계좌이체</small></td><td><strong>90,000원</strong></td><td><strong>9,000원</strong></td><td><strong>0원</strong></td><td><strong class="admin-negative">-90,000원</strong></td><td><span class="invoice-status done">발행</span></td>
                     </tr>
-                    <tr data-admin-row data-status="done" data-search="자료몰 이미지 소스 구매 매입">
-                      <td>2026.07.09</td><td>자료몰</td><td><strong>이미지 소스 구매</strong><small>일회성 매입</small></td><td>-</td><td><span class="admin-negative">-120,000원</span></td><td><strong class="admin-negative">-120,000원</strong></td><td><span class="status-pill green">반영완료</span></td>
+                    <tr class="is-work-complete" data-admin-row data-status="complete" data-invoice="none" data-search="무기명 블로그 스킨 제작 종료 해당없음 무통장입금">
+                      <td><span class="status-pill gray">종료</span></td><td>무기명</td><td><strong>블로그 스킨 제작</strong><small>디자인</small></td><td><strong>220,000원</strong><small>무통장입금</small></td><td><strong>200,000원</strong></td><td><strong>20,000원</strong></td><td><strong>0원</strong></td><td><strong>200,000원</strong></td><td><span class="invoice-status none">해당없음</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -83,7 +96,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-settlement-1"></script>
+    <script src="app.js?v=20260713-settlement-work-sync-1"></script>
   </body>
 </html>
 

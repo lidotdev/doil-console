@@ -11191,6 +11191,63 @@ th {
   opacity: 0.72;
 }
 
+.admin-settlement-work-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.admin-settlement-work-table th,
+.admin-settlement-work-table td {
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.admin-settlement-work-table th:nth-child(1),
+.admin-settlement-work-table td:nth-child(1) {
+  width: 8%;
+}
+
+.admin-settlement-work-table th:nth-child(2),
+.admin-settlement-work-table td:nth-child(2) {
+  width: 10%;
+}
+
+.admin-settlement-work-table th:nth-child(3),
+.admin-settlement-work-table td:nth-child(3) {
+  width: 16%;
+}
+
+.admin-settlement-work-table th:nth-child(4),
+.admin-settlement-work-table td:nth-child(4),
+.admin-settlement-work-table th:nth-child(5),
+.admin-settlement-work-table td:nth-child(5),
+.admin-settlement-work-table th:nth-child(6),
+.admin-settlement-work-table td:nth-child(6),
+.admin-settlement-work-table th:nth-child(7),
+.admin-settlement-work-table td:nth-child(7),
+.admin-settlement-work-table th:nth-child(8),
+.admin-settlement-work-table td:nth-child(8) {
+  width: 10%;
+}
+
+.admin-settlement-work-table th:nth-child(9),
+.admin-settlement-work-table td:nth-child(9) {
+  width: 16%;
+}
+
+.admin-settlement-work-table tbody tr.is-work-complete {
+  color: #98a2b3;
+  background: #f8fafc;
+}
+
+.admin-settlement-work-table tbody tr.is-work-complete td,
+.admin-settlement-work-table tbody tr.is-work-complete strong,
+.admin-settlement-work-table tbody tr.is-work-complete small {
+  color: #98a2b3;
+}
+
 @media (max-width: 900px) {
   .admin-work-filter-panel {
     grid-template-columns: 1fr;
@@ -11286,6 +11343,71 @@ th {
   .admin-work-table .admin-row-actions {
     justify-content: center;
   }
+
+  .admin-settlement-work-table,
+  .admin-settlement-work-table thead,
+  .admin-settlement-work-table tbody,
+  .admin-settlement-work-table tr,
+  .admin-settlement-work-table th,
+  .admin-settlement-work-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-settlement-work-table thead {
+    display: none;
+  }
+
+  .admin-settlement-work-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+
+  .admin-settlement-work-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .admin-settlement-work-table tbody tr {
+    display: grid;
+    gap: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: none;
+  }
+
+  .admin-settlement-work-table td {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 8px 0;
+    border: 0;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .admin-settlement-work-table td + td {
+    border-top: 1px solid #f0f2f5;
+  }
+
+  .admin-settlement-work-table td::before {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .admin-settlement-work-table td:nth-child(1)::before { content: "상태"; }
+  .admin-settlement-work-table td:nth-child(2)::before { content: "고객명"; }
+  .admin-settlement-work-table td:nth-child(3)::before { content: "업무명"; }
+  .admin-settlement-work-table td:nth-child(4)::before { content: "총 판매액"; }
+  .admin-settlement-work-table td:nth-child(5)::before { content: "공급가액"; }
+  .admin-settlement-work-table td:nth-child(6)::before { content: "부가세"; }
+  .admin-settlement-work-table td:nth-child(7)::before { content: "수수료"; }
+  .admin-settlement-work-table td:nth-child(8)::before { content: "순수익"; }
+  .admin-settlement-work-table td:nth-child(9)::before { content: "계산서"; }
 }
 
 .admin-text-button {
@@ -11895,4 +12017,42 @@ th {
     align-items: flex-start;
     flex-direction: column;
   }
+}
+
+@media (max-width: 900px) {
+  .admin-work-table td:nth-child(1)::before { content: "상태"; }
+  .admin-work-table td:nth-child(2)::before { content: "마감일"; }
+  .admin-work-table td:nth-child(3)::before { content: "고객명"; }
+  .admin-work-table td:nth-child(4)::before { content: "업무명"; }
+  .admin-work-table td:nth-child(5)::before { content: "총 판매액"; }
+  .admin-work-table td:nth-child(6)::before { content: "공급가액"; }
+  .admin-work-table td:nth-child(7)::before { content: "세액"; }
+  .admin-work-table td:nth-child(8)::before { content: "수수료"; }
+  .admin-work-table td:nth-child(9)::before { content: "순수익"; }
+  .admin-work-table td:nth-child(10)::before { content: "계산서"; }
+  .admin-work-table td:nth-child(11)::before { content: "담당자"; }
+  .admin-work-table td:nth-child(12)::before { content: "관리"; }
+
+  .admin-settlement-work-table td:nth-child(1)::before { content: "상태"; }
+  .admin-settlement-work-table td:nth-child(2)::before { content: "고객명"; }
+  .admin-settlement-work-table td:nth-child(3)::before { content: "업무명"; }
+  .admin-settlement-work-table td:nth-child(4)::before { content: "총 판매액"; }
+  .admin-settlement-work-table td:nth-child(5)::before { content: "공급가액"; }
+  .admin-settlement-work-table td:nth-child(6)::before { content: "부가세"; }
+  .admin-settlement-work-table td:nth-child(7)::before { content: "수수료"; }
+  .admin-settlement-work-table td:nth-child(8)::before { content: "순수익"; }
+  .admin-settlement-work-table td:nth-child(9)::before { content: "계산서"; }
+
+  .admin-billing-table td:nth-child(1)::before { content: "구분"; }
+  .admin-billing-table td:nth-child(2)::before { content: "거래일"; }
+  .admin-billing-table td:nth-child(3)::before { content: "거래번호"; }
+  .admin-billing-table td:nth-child(4)::before { content: "거래처"; }
+  .admin-billing-table td:nth-child(5)::before { content: "내용"; }
+  .admin-billing-table td:nth-child(6)::before { content: "결제수단"; }
+  .admin-billing-table td:nth-child(7)::before { content: "총 판매액"; }
+  .admin-billing-table td:nth-child(8)::before { content: "공급가액"; }
+  .admin-billing-table td:nth-child(9)::before { content: "부가세"; }
+  .admin-billing-table td:nth-child(10)::before { content: "수수료"; }
+  .admin-billing-table td:nth-child(11)::before { content: "순수익"; }
+  .admin-billing-table td:nth-child(12)::before { content: "계산서"; }
 }
