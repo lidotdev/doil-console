@@ -5067,26 +5067,12 @@ function initAdminProjectOrderModal() {
     const isComplete = isCompletedWork(row);
     row.classList.toggle("is-work-complete", isComplete);
     row.dataset.complete = isComplete ? "true" : "false";
-    updateActualSalesSummary();
   }
 
   function isCompletedWork(row) {
     const isFinishedStatus = normalizeProjectStatus(row.dataset.status) === "ended";
     const invoiceStatus = normalizeInvoiceStatus(row.dataset.invoice);
     return isFinishedStatus && (invoiceStatus === "issued" || invoiceStatus === "none");
-  }
-
-  function rowProfitAmount(row) {
-    return parseMoney(row.dataset.profitAmount || row.children[8]?.querySelector("strong")?.textContent || row.children[8]?.textContent || "");
-  }
-
-  function updateActualSalesSummary() {
-    const target = document.querySelector("[data-work-actual-sales] strong");
-    if (!target || !tableBody) return;
-    const total = Array.from(tableBody.querySelectorAll("[data-admin-row]")).reduce((sum, row) => {
-      return isCompletedWork(row) ? sum + rowProfitAmount(row) : sum;
-    }, 0);
-    target.textContent = formatMoney(total);
   }
 
   function applyProjectStatus(row, status, silent = false) {

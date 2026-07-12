@@ -4621,29 +4621,6 @@ h3 {
   line-height: 1.35;
 }
 
-.admin-work-revenue {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-  padding: 7px 10px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #f8fafc;
-}
-
-.admin-work-revenue span {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.admin-work-revenue strong {
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 900;
-}
-
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -5097,7 +5074,7 @@ h3 {
 
 .admin-profit-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 0 0 18px;
 }
