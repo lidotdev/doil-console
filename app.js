@@ -4048,8 +4048,8 @@ function initAdminBillingActions() {
 
   exportButton?.addEventListener("click", () => {
     const rows = Array.from(billingTable?.querySelectorAll("tbody tr") || []).filter((row) => !row.hidden);
-    const header = ["구분", "거래일", "거래번호", "거래처", "내용", "결제수단", "총판매액", "공급가액", "부가세", "수수료", "순수익", "계산서"];
-    const lines = rows.map((row) => Array.from(row.children).slice(0, 12).map((cell) => `"${cleanText(cell).replace(/"/g, '""')}"`).join(","));
+    const header = ["구분", "거래처", "내용", "총판매액", "공급가액", "부가세", "수수료", "순수익", "계산서"];
+    const lines = rows.map((row) => Array.from(row.children).slice(0, 9).map((cell) => `"${cleanText(cell).replace(/"/g, '""')}"`).join(","));
     const csv = `\uFEFF${header.join(",")}\n${lines.join("\n")}`;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -4181,7 +4181,6 @@ function initAdminPurchaseModal() {
     const vat = parseAmount(form.elements.vat?.value);
     const total = supply + vat;
     const invoice = form.elements.invoice?.value || "해당없음";
-    const compactDate = date.replaceAll("-", "");
     const row = document.createElement("tr");
     row.dataset.adminRow = "";
     row.dataset.type = "purchase";
@@ -4190,7 +4189,7 @@ function initAdminPurchaseModal() {
     row.dataset.invoice = invoice === "수취완료" ? "issued" : invoice === "수취대기" ? "requested" : "none";
     row.dataset.date = date;
     row.dataset.search = `${vendor} ${category} ${memo} ${method} 매입`;
-    row.innerHTML = `<td><span class="status-pill orange">매입</span></td><td>${date.replaceAll("-", ".")}</td><td>BUY-${compactDate}-NEW</td><td>${vendor}</td><td><strong>${memo}</strong><small>${category}</small></td><td>${method}</td><td>-</td><td>${formatWon(supply)}</td><td>${formatWon(vat)}</td><td>-</td><td><strong class="admin-negative">-${formatWon(total)}</strong></td><td>${invoiceCell(invoice)}</td>`;
+    row.innerHTML = `<td><span class="status-pill red">매입</span></td><td>${vendor}</td><td><strong>${memo}</strong><small>${category} · ${method}</small></td><td><strong class="admin-negative">-${formatWon(total)}</strong></td><td>${formatWon(supply)}</td><td>${formatWon(vat)}</td><td>0원</td><td><strong class="admin-negative">-${formatWon(total)}</strong></td><td>${invoiceCell(invoice)}</td>`;
     tableBody?.prepend(row);
     closeModal();
     showAdminToast("매입 내역이 등록되었습니다.");

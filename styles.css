@@ -5072,6 +5072,52 @@ h3 {
   background: #f8fafc;
 }
 
+.admin-billing-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.admin-billing-table th,
+.admin-billing-table td {
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.admin-billing-table th:nth-child(1),
+.admin-billing-table td:nth-child(1) {
+  width: 8%;
+}
+
+.admin-billing-table th:nth-child(2),
+.admin-billing-table td:nth-child(2) {
+  width: 11%;
+}
+
+.admin-billing-table th:nth-child(3),
+.admin-billing-table td:nth-child(3) {
+  width: 17%;
+}
+
+.admin-billing-table th:nth-child(4),
+.admin-billing-table td:nth-child(4),
+.admin-billing-table th:nth-child(5),
+.admin-billing-table td:nth-child(5),
+.admin-billing-table th:nth-child(6),
+.admin-billing-table td:nth-child(6),
+.admin-billing-table th:nth-child(7),
+.admin-billing-table td:nth-child(7),
+.admin-billing-table th:nth-child(8),
+.admin-billing-table td:nth-child(8) {
+  width: 10%;
+}
+
+.admin-billing-table th:nth-child(9),
+.admin-billing-table td:nth-child(9) {
+  width: 14%;
+}
+
 .admin-sales-grid small {
   color: var(--muted);
   font-size: 12px;
@@ -11906,17 +11952,14 @@ th {
   }
 
   .admin-billing-table td:nth-child(1)::before { content: "구분"; }
-  .admin-billing-table td:nth-child(2)::before { content: "거래일"; }
-  .admin-billing-table td:nth-child(3)::before { content: "거래번호"; }
-  .admin-billing-table td:nth-child(4)::before { content: "거래처"; }
-  .admin-billing-table td:nth-child(5)::before { content: "내용"; }
-  .admin-billing-table td:nth-child(6)::before { content: "결제수단"; }
-  .admin-billing-table td:nth-child(7)::before { content: "총판매액"; }
-  .admin-billing-table td:nth-child(8)::before { content: "공급가액"; }
-  .admin-billing-table td:nth-child(9)::before { content: "부가세"; }
-  .admin-billing-table td:nth-child(10)::before { content: "수수료"; }
-  .admin-billing-table td:nth-child(11)::before { content: "순수익"; }
-  .admin-billing-table td:nth-child(12)::before { content: "계산서"; }
+  .admin-billing-table td:nth-child(2)::before { content: "거래처"; }
+  .admin-billing-table td:nth-child(3)::before { content: "내용"; }
+  .admin-billing-table td:nth-child(4)::before { content: "총 판매액"; }
+  .admin-billing-table td:nth-child(5)::before { content: "공급가액"; }
+  .admin-billing-table td:nth-child(6)::before { content: "부가세"; }
+  .admin-billing-table td:nth-child(7)::before { content: "수수료"; }
+  .admin-billing-table td:nth-child(8)::before { content: "순수익"; }
+  .admin-billing-table td:nth-child(9)::before { content: "계산서"; }
 
   .admin-form-grid.compact {
     grid-template-columns: 1fr;
@@ -12044,15 +12087,12 @@ th {
   .admin-settlement-work-table td:nth-child(9)::before { content: "계산서"; }
 
   .admin-billing-table td:nth-child(1)::before { content: "구분"; }
-  .admin-billing-table td:nth-child(2)::before { content: "거래일"; }
-  .admin-billing-table td:nth-child(3)::before { content: "거래번호"; }
-  .admin-billing-table td:nth-child(4)::before { content: "거래처"; }
-  .admin-billing-table td:nth-child(5)::before { content: "내용"; }
-  .admin-billing-table td:nth-child(6)::before { content: "결제수단"; }
-  .admin-billing-table td:nth-child(7)::before { content: "총 판매액"; }
-  .admin-billing-table td:nth-child(8)::before { content: "공급가액"; }
-  .admin-billing-table td:nth-child(9)::before { content: "부가세"; }
-  .admin-billing-table td:nth-child(10)::before { content: "수수료"; }
-  .admin-billing-table td:nth-child(11)::before { content: "순수익"; }
-  .admin-billing-table td:nth-child(12)::before { content: "계산서"; }
+  .admin-billing-table td:nth-child(2)::before { content: "거래처"; }
+  .admin-billing-table td:nth-child(3)::before { content: "내용"; }
+  .admin-billing-table td:nth-child(4)::before { content: "총 판매액"; }
+  .admin-billing-table td:nth-child(5)::before { content: "공급가액"; }
+  .admin-billing-table td:nth-child(6)::before { content: "부가세"; }
+  .admin-billing-table td:nth-child(7)::before { content: "수수료"; }
+  .admin-billing-table td:nth-child(8)::before { content: "순수익"; }
+  .admin-billing-table td:nth-child(9)::before { content: "계산서"; }
 }
