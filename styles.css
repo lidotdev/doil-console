@@ -6599,6 +6599,10 @@ h3 {
   padding: 28px;
 }
 
+.admin-sub-modal {
+  z-index: 1300;
+}
+
 .admin-modal-backdrop {
   position: absolute;
   inset: 0;
@@ -6618,6 +6622,10 @@ h3 {
 
 .admin-modal-panel-wide {
   width: min(1040px, 100%);
+}
+
+.admin-customer-load-panel {
+  width: min(560px, 100%);
 }
 
 .admin-modal-head {
@@ -6727,6 +6735,12 @@ h3 {
   line-height: 44px;
 }
 
+.admin-project-order-form input[readonly].is-loaded-field {
+  border-color: #d0d5dd;
+  color: #667085;
+  background: #f2f4f7;
+}
+
 .admin-project-order-form .admin-form-grid label {
   align-content: start;
 }
@@ -6749,6 +6763,48 @@ h3 {
 .admin-field-with-action .admin-line-button {
   padding-inline: 14px;
   white-space: nowrap;
+}
+
+.admin-customer-load-body {
+  display: grid;
+  gap: 14px;
+  padding: 22px 26px 8px;
+}
+
+.admin-customer-load-list {
+  display: grid;
+  gap: 8px;
+  max-height: 330px;
+  overflow: auto;
+}
+
+.admin-customer-load-list button {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: var(--white);
+  text-align: left;
+}
+
+.admin-customer-load-list button:hover,
+.admin-customer-load-list button.is-selected {
+  border-color: var(--brand);
+  background: #eef4ff;
+}
+
+.admin-customer-load-list strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.admin-customer-load-list small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .admin-form-actions {

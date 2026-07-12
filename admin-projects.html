@@ -6,7 +6,7 @@
     <title>업무 관리 | DOIL SERVICE</title>
     <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="icon" type="image/png" href="assets/doil-logo-symbol.png">
-    <link rel="stylesheet" href="styles.css?v=20260712-work-picker-1">
+    <link rel="stylesheet" href="styles.css?v=20260712-work-picker-2">
   </head>
   <body class="app-body client-page admin-page">
     <header class="site-header">
@@ -97,19 +97,12 @@
                     <label>
                       <span>회원 검색</span>
                       <div class="admin-field-with-action">
-                        <input type="text" name="customerName" list="projectCustomerOptions" autocomplete="off" placeholder="회원명 검색 후 선택">
-                        <button class="admin-line-button" type="button" data-project-customer-apply>적용</button>
+                        <input type="text" name="customerName" autocomplete="off" placeholder="회원을 불러와 주세요" readonly>
+                        <button class="admin-line-button" type="button" data-project-customer-load>불러오기</button>
                       </div>
-                      <small data-project-customer-hint>회원 목록에서 선택해 주세요.</small>
+                      <small data-project-customer-hint>불러오기를 눌러 회원을 선택해 주세요.</small>
                     </label>
                     <label><span>마감일</span><input type="date" name="dueDate"></label>
-                    <datalist id="projectCustomerOptions">
-                      <option value="가나다식품"></option>
-                      <option value="ABC몰"></option>
-                      <option value="홍길동"></option>
-                      <option value="크몽 고객"></option>
-                      <option value="무기명"></option>
-                    </datalist>
                     <datalist id="projectNameOptions">
                       <option value="상세페이지"></option>
                       <option value="랜딩페이지"></option>
@@ -143,6 +136,31 @@
               </section>
             </div>
 
+            <div class="admin-modal admin-sub-modal" data-project-customer-modal hidden>
+              <div class="admin-modal-backdrop" data-project-customer-close></div>
+              <section class="admin-modal-panel admin-customer-load-panel" role="dialog" aria-modal="true" aria-labelledby="projectCustomerModalTitle">
+                <div class="admin-modal-head">
+                  <div><span>MEMBER LOAD</span><h3 id="projectCustomerModalTitle">회원 불러오기</h3></div>
+                  <button class="admin-modal-close" type="button" aria-label="닫기" data-project-customer-close>×</button>
+                </div>
+                <div class="admin-customer-load-body">
+                  <label class="admin-search-field"><span>회원 검색</span><input type="search" data-project-customer-search placeholder="상호명, 성함, 연락처 검색"></label>
+                  <div class="admin-customer-load-list" data-project-customer-list>
+                    <button type="button" data-project-customer-option data-customer-name="가나다식품" data-customer-meta="사업자 · 광고디자인 · 010-1234-5678"><strong>가나다식품</strong><small>사업자 · 광고디자인 · 010-1234-5678</small></button>
+                    <button type="button" data-project-customer-option data-customer-name="ABC몰" data-customer-meta="사업자 · 쇼핑몰 · 010-5555-6666"><strong>ABC몰</strong><small>사업자 · 쇼핑몰 · 010-5555-6666</small></button>
+                    <button type="button" data-project-customer-option data-customer-name="홍길동" data-customer-meta="개인 · 010-2222-3333"><strong>홍길동</strong><small>개인 · 010-2222-3333</small></button>
+                    <button type="button" data-project-customer-option data-customer-name="크몽 고객" data-customer-meta="외부채널 · 크몽"><strong>크몽 고객</strong><small>외부채널 · 크몽</small></button>
+                    <button type="button" data-project-customer-option data-customer-name="무기명" data-customer-meta="고객 미지정"><strong>무기명</strong><small>고객 미지정</small></button>
+                  </div>
+                  <p class="admin-empty" data-project-customer-empty hidden>검색 결과가 없습니다.</p>
+                </div>
+                <div class="admin-modal-actions">
+                  <button class="admin-line-button" type="button" data-project-customer-close>취소</button>
+                  <button class="admin-line-button primary" type="button" data-project-customer-confirm>확인</button>
+                </div>
+              </section>
+            </div>
+
             <div class="admin-modal" data-project-complete-modal hidden>
               <div class="admin-modal-backdrop" data-project-complete-close></div>
               <section class="admin-modal-panel admin-project-work-panel" role="dialog" aria-modal="true" aria-labelledby="workCompleteModalTitle">
@@ -167,7 +185,7 @@
         </div>
       </section>
     </main>
-    <script src="app.js?v=20260712-work-invoice-2"></script>
+    <script src="app.js?v=20260712-work-picker-2"></script>
   </body>
 </html>
 

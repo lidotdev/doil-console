@@ -4659,17 +4659,24 @@ function initAdminProjectOrderModal() {
   const modalTitle = modal.querySelector("#workOrderModalTitle");
   const submitButton = modal.querySelector("[data-project-order-submit]");
   const taxPreview = modal.querySelector("[data-project-tax-preview]");
-  const customerApplyButton = modal.querySelector("[data-project-customer-apply]");
+  const customerLoadButton = modal.querySelector("[data-project-customer-load]");
   const projectNameAddButton = modal.querySelector("[data-project-name-add]");
   const customerHint = modal.querySelector("[data-project-customer-hint]");
   const projectNameHint = modal.querySelector("[data-project-name-hint]");
   const tableBody = document.querySelector(".admin-project-table tbody");
+  const customerModal = document.querySelector("[data-project-customer-modal]");
+  const customerSearch = customerModal?.querySelector("[data-project-customer-search]");
+  const customerOptions = Array.from(customerModal?.querySelectorAll("[data-project-customer-option]") || []);
+  const customerConfirmButton = customerModal?.querySelector("[data-project-customer-confirm]");
+  const customerCloseButtons = Array.from(document.querySelectorAll("[data-project-customer-close]"));
+  const customerEmpty = customerModal?.querySelector("[data-project-customer-empty]");
   const completeModal = document.querySelector("[data-project-complete-modal]");
   const completeForm = completeModal?.querySelector("form");
   const completeSummary = completeModal?.querySelector("[data-project-complete-summary]");
   const completeCloseButtons = Array.from(document.querySelectorAll("[data-project-complete-close]"));
   let activeEditRow = null;
   let activeCompleteRow = null;
+  let pendingCustomerOption = null;
 
   const kmongFeeTiers = [
     { min: 1, max: 700000, rate: 0.164 },
@@ -4732,16 +4739,17 @@ function initAdminProjectOrderModal() {
     const projectInput = form.elements.projectName;
     const customerValue = customerInput?.value.trim() || "";
     const projectValue = projectInput?.value.trim() || "";
-    const customerOk = !customerValue || valueExists(customerValue, datalistValues("projectCustomerOptions"));
+    const customerOk = Boolean(customerValue && customerInput?.dataset.customerSelected === "true");
     const projectOk = !projectValue || valueExists(projectValue, datalistValues("projectNameOptions"));
 
     if (customerInput) {
       customerInput.setCustomValidity(customerOk ? "" : "회원 목록에서 검색해 선택해 주세요.");
+      customerInput.classList.toggle("is-loaded-field", Boolean(customerValue && customerOk));
     }
     if (customerHint) {
       customerHint.textContent = customerValue
-        ? customerOk ? "선택된 회원입니다." : "회원 목록에서 검색해 선택해 주세요."
-        : "회원 목록에서 선택해 주세요.";
+        ? customerOk ? "불러온 회원입니다." : "불러오기를 눌러 회원을 선택해 주세요."
+        : "불러오기를 눌러 회원을 선택해 주세요.";
     }
     if (projectInput) {
       projectInput.setCustomValidity(projectOk ? "" : "업무명을 목록에서 선택하거나 추가해 주세요.");
@@ -4773,6 +4781,48 @@ function initAdminProjectOrderModal() {
 
   function currentAdminId() {
     return localStorage.getItem("doilAdminId") || localStorage.getItem("adminUserId") || document.body.dataset.adminId || "lidotdev";
+  }
+
+  function setSelectedCustomer(name, meta = "") {
+    const customerInput = form?.elements?.customerName;
+    if (!customerInput) return;
+    customerInput.value = String(name || "").trim();
+    customerInput.dataset.customerSelected = customerInput.value ? "true" : "false";
+    customerInput.dataset.customerMeta = String(meta || "").trim();
+    syncProjectPickers();
+  }
+
+  function filterCustomerOptions() {
+    if (!customerModal) return;
+    const keyword = (customerSearch?.value || "").replace(/\s+/g, "").toLowerCase();
+    let visibleCount = 0;
+    customerOptions.forEach((button) => {
+      const haystack = `${button.dataset.customerName || ""} ${button.dataset.customerMeta || ""} ${button.textContent || ""}`
+        .replace(/\s+/g, "")
+        .toLowerCase();
+      const visible = !keyword || haystack.includes(keyword);
+      button.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    if (customerEmpty) customerEmpty.hidden = visibleCount > 0;
+  }
+
+  function openCustomerModal() {
+    if (!customerModal) return;
+    pendingCustomerOption = null;
+    customerOptions.forEach((button) => button.classList.remove("is-selected"));
+    if (customerSearch) customerSearch.value = "";
+    filterCustomerOptions();
+    customerModal.hidden = false;
+    document.body.classList.add("modal-open");
+    customerSearch?.focus();
+  }
+
+  function closeCustomerModal() {
+    if (!customerModal) return;
+    customerModal.hidden = true;
+    pendingCustomerOption = null;
+    customerOptions.forEach((button) => button.classList.remove("is-selected"));
   }
 
   function todayValue() {
@@ -5049,7 +5099,7 @@ function initAdminProjectOrderModal() {
     if (submitButton) submitButton.textContent = row ? "수정" : "등록";
     if (row && form) {
       const cells = Array.from(row.children);
-      form.elements.customerName.value = cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]);
+      setSelectedCustomer(cleanText(cells[2]?.querySelector("button")) || cleanText(cells[2]));
       const savedProjectName = normalizeProjectName(cleanText(cells[3]?.querySelector("strong")) || cleanText(cells[3]));
       addDatalistValue("projectNameOptions", savedProjectName);
       form.elements.projectName.value = savedProjectName;
@@ -5066,6 +5116,7 @@ function initAdminProjectOrderModal() {
       if (form.elements.managerName) form.elements.managerName.value = currentAdminId();
       if (form.elements.workStatus) form.elements.workStatus.value = "received";
       if (form.elements.invoiceStatus) form.elements.invoiceStatus.value = "unissued";
+      setSelectedCustomer("");
     }
     updateTaxPreview();
     syncProjectPickers();
@@ -5106,6 +5157,7 @@ function initAdminProjectOrderModal() {
 
   openButton?.addEventListener("click", () => openModal());
   closeButtons.forEach((button) => button.addEventListener("click", closeModal));
+  customerCloseButtons.forEach((button) => button.addEventListener("click", closeCustomerModal));
   completeCloseButtons.forEach((button) => button.addEventListener("click", closeCompleteModal));
   Array.from(tableBody?.querySelectorAll("[data-admin-row]") || []).forEach(bindProjectRow);
   sortProjectRowsByDueDate();
@@ -5171,19 +5223,23 @@ function initAdminProjectOrderModal() {
   });
 
   form?.elements?.grossAmount?.addEventListener("input", updateTaxPreview);
-  form?.elements?.customerName?.addEventListener("input", syncProjectPickers);
   form?.elements?.projectName?.addEventListener("input", syncProjectPickers);
-  customerApplyButton?.addEventListener("click", () => {
-    syncProjectPickers();
-    const customerInput = form?.elements?.customerName;
-    if (!customerInput) return;
-    if (!customerInput.checkValidity()) {
-      customerInput.reportValidity();
+  customerLoadButton?.addEventListener("click", openCustomerModal);
+  customerSearch?.addEventListener("input", filterCustomerOptions);
+  customerOptions.forEach((button) => {
+    button.addEventListener("click", () => {
+      pendingCustomerOption = button;
+      customerOptions.forEach((item) => item.classList.toggle("is-selected", item === button));
+    });
+  });
+  customerConfirmButton?.addEventListener("click", () => {
+    if (!pendingCustomerOption) {
+      showAdminToast("불러올 회원을 선택해 주세요.");
       return;
     }
-    if (customerInput.value.trim()) {
-      showAdminToast(`${customerInput.value.trim()} 회원을 적용했습니다.`);
-    }
+    setSelectedCustomer(pendingCustomerOption.dataset.customerName, pendingCustomerOption.dataset.customerMeta);
+    showAdminToast(`${pendingCustomerOption.dataset.customerName} 회원을 불러왔습니다.`);
+    closeCustomerModal();
   });
   projectNameAddButton?.addEventListener("click", () => {
     const projectInput = form?.elements?.projectName;
@@ -5197,6 +5253,10 @@ function initAdminProjectOrderModal() {
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
+    if (customerModal && !customerModal.hidden) {
+      closeCustomerModal();
+      return;
+    }
     if (!modal.hidden) closeModal();
     if (completeModal && !completeModal.hidden) closeCompleteModal();
   });
